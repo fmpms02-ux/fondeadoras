@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="./data.js"></script>
+<style>
+:root{--bg:#0a0c0e;--panel:#12161a;--panel2:#191f24;--chip:#1e262c;--line:#272f36;--line2:#39434b;--fg:#e7ecef;--fg2:#98a4ad;--fg3:#828d95;--acc:oklch(0.74 0.11 200);--accbg:oklch(0.74 0.11 200 / 0.14);--ok:oklch(0.76 0.13 155);--okbg:oklch(0.76 0.13 155 / 0.13);--warn:oklch(0.80 0.13 78);--warnbg:oklch(0.80 0.13 78 / 0.14);--bad:oklch(0.68 0.17 28);--badbg:oklch(0.68 0.17 28 / 0.14);--shadow:0 -8px 40px rgba(0,0,0,.6)}
+:root[data-tema="claro"]{--bg:#f3f2ef;--panel:#ffffff;--panel2:#f7f6f3;--chip:#eceae5;--line:#dddbd5;--line2:#c7c4bc;--fg:#15181a;--fg2:#5b636a;--fg3:#666e74;--acc:oklch(0.52 0.10 200);--accbg:oklch(0.52 0.10 200 / 0.10);--ok:oklch(0.52 0.12 155);--okbg:oklch(0.52 0.12 155 / 0.10);--warn:oklch(0.56 0.12 68);--warnbg:oklch(0.56 0.12 68 / 0.12);--bad:oklch(0.52 0.17 28);--badbg:oklch(0.52 0.17 28 / 0.10);--shadow:0 -8px 40px rgba(0,0,0,.18)}
+body{margin:0;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:var(--acc);text-decoration:none}a:hover{color:var(--fg);text-decoration:underline}
+input,button,select{font:inherit;color:inherit}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:44px}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:3px solid var(--panel);margin-top:-10px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line2)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(--panel);border-radius:50%;background:var(--acc)}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:5px}::-webkit-scrollbar-track{background:transparent}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style></helmet>
+<div style="height:100dvh;min-height:520px;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px">
+
+<header style="flex:none;border-bottom:1px solid var(--line);background:var(--panel)">
+<div style="display:flex;align-items:center;gap:8px;padding:10px 12px 8px">
+<div style="flex:1;min-width:0">
+<div style="font:700 13px/1.2 'IBM Plex Sans',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ meta.titulo }}</div>
+<div style="font:500 10px/1.4 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em;text-transform:uppercase;margin-top:2px">{{ cabeceraSub }}</div>
+</div>
+<button onClick="{{ onTema }}" title="Cambiar tema" style="flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font:500 10px 'JetBrains Mono',monospace;color:var(--fg2);cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">{{ temaIcono }}</button>
+</div>
+<div style="padding:0 12px 10px;display:flex;gap:8px">
+<div style="flex:1;position:relative;display:flex;align-items:center">
+<span style="position:absolute;left:11px;font:500 11px 'JetBrains Mono',monospace;color:var(--fg3);pointer-events:none">/</span>
+<input value="{{ q }}" onChange="{{ onQ }}" placeholder="Buscar firma o plan" aria-label="Buscar firma o plan" style="width:100%;height:44px;padding:0 38px 0 26px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:400 14px 'IBM Plex Sans',sans-serif;outline:none" style-focus="border-color:var(--acc)">
+<sc-if value="{{ hayQ }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onQClear }}" aria-label="Limpiar busqueda" style="position:absolute;right:4px;width:36px;height:36px;border:0;background:transparent;color:var(--fg3);font:500 15px 'JetBrains Mono',monospace;cursor:pointer" style-hover="color:var(--fg)">×</button></sc-if>
+</div>
+<button onClick="{{ onFavsToggle }}" title="Solo favoritos" style="flex:none;width:44px;height:44px;border:1px solid {{ favBorde }};border-radius:8px;background:{{ favFondo }};color:{{ favColor }};font-size:17px;line-height:1;cursor:pointer">★</button>
+</div>
+<div style="display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto">
+<button onClick="{{ onSheetFiltros }}" style="flex:none;height:38px;padding:0 13px;border:1px solid {{ filtrosBorde }};border-radius:19px;background:{{ filtrosFondo }};color:{{ filtrosColor }};font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer">Filtros{{ filtrosSufijo }}</button>
+<button onClick="{{ onSheetOrden }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">{{ ordenEtiqueta }}</button>
+<button onClick="{{ onSheetColumnas }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">Metricas · 3</button>
+<button onClick="{{ onCSV }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">CSV</button>
+<sc-if value="{{ hayFiltros }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onLimpiar }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:transparent;color:var(--bad);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer">Limpiar todo</button></sc-if>
+</div>
+</header>
+
+<main style="flex:1;overflow-y:auto;overflow-x:hidden">
+
+<sc-if value="{{ esLista }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:11px 14px 7px;font:500 10px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"><span>{{ recuento }}</span><span>{{ ordenResumen }}</span></div>
+
+<sc-if value="{{ esAncho }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 12px 20px;overflow-x:auto">
+<table style="width:100%;border-collapse:collapse;font-size:13px">
+<thead><tr>
+<th style="padding:0 0 7px;text-align:left;width:34px"></th>
+<sc-for list="{{ tablaCabeceras }}" as="h" hint-placeholder-count="5">
+<th onClick="{{ h.onSort }}" title="Ordenar" style="padding:0 10px 7px;text-align:{{ h.align }};font:600 10px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:{{ h.color }};border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap">{{ h.label }}</th>
+</sc-for>
+</tr></thead>
+<tbody>
+<sc-for list="{{ filas }}" as="f" hint-placeholder-count="8">
+<tr onClick="{{ f.onAbrir }}" style="cursor:pointer;background:{{ f.fondo }}" style-hover="background:var(--panel2)">
+<td style="padding:9px 0;text-align:center;border-bottom:1px solid var(--line)"><button onClick="{{ f.onFav }}" aria-label="Favorito" style="width:28px;height:28px;border:0;background:transparent;color:{{ f.favColor }};font-size:14px;cursor:pointer">★</button></td>
+<sc-for list="{{ f.celdas }}" as="c" hint-placeholder-count="5">
+<td style="padding:9px 10px;text-align:{{ c.align }};border-bottom:1px solid var(--line);font-family:{{ c.fuente }};font-variant-numeric:tabular-nums;color:{{ c.color }};white-space:nowrap;max-width:230px;overflow:hidden;text-overflow:ellipsis">{{ c.txt }}</td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>
+
+<sc-if value="{{ esEstrecho }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:9px;padding:2px 12px 22px;max-width:560px;margin:0 auto">
+<sc-for list="{{ tarjetas }}" as="p" hint-placeholder-count="6">
+<article style="border:1px solid {{ p.borde }};border-radius:11px;background:var(--panel);overflow:hidden">
+<div style="display:flex;align-items:flex-start;gap:8px;padding:11px 12px 0">
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:7px">
+<span style="font:600 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ p.puestoTxt }}</span>
+<span style="font:600 12px 'IBM Plex Sans',sans-serif;color:var(--acc);letter-spacing:-.01em">{{ p.firma }}</span>
+</div>
+<div style="font:500 14px/1.3 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty">{{ p.plan }}</div>
+</div>
+<button onClick="{{ p.onFav }}" aria-label="Favorito" style="flex:none;width:44px;height:44px;margin:-8px -6px 0 0;border:0;background:transparent;color:{{ p.favColor }};font-size:17px;cursor:pointer">★</button>
+</div>
+
+<div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding:9px 12px 0">
+<span style="font:700 27px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em">{{ p.precioTxt }}</span>
+<sc-if value="{{ p.hayDescuento }}" hint-placeholder-val="{{ true }}"><span style="font:400 14px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--fg3);text-decoration:line-through">{{ p.tarifaTxt }}</span></sc-if>
+<span style="font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ p.tipoTxt }}</span>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px 0">
+<sc-for list="{{ p.badges }}" as="b" hint-placeholder-count="2">
+<span title="{{ b.title }}" style="display:inline-flex;align-items:center;max-width:100%;padding:4px 8px;border:1px solid {{ b.borde }};border-radius:6px;background:{{ b.fondo }};color:{{ b.color }};font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.txt }}</span>
+</sc-for>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:11px 0 0;background:var(--line);border-top:1px solid var(--line)">
+<sc-for list="{{ p.metricas }}" as="m" hint-placeholder-count="3">
+<div style="background:var(--panel);padding:8px 10px 9px;min-width:0">
+<div style="font:500 9px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.label }}</div>
+<div style="font:500 13px/1.35 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.valor }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="display:flex;gap:1px;background:var(--line)">
+<button onClick="{{ p.onAbrir }}" style="flex:1;height:44px;border:0;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer" style-hover="color:var(--fg)">Ver ficha</button>
+<button onClick="{{ p.onComparar }}" style="flex:1;height:44px;border:0;background:{{ p.cmpFondo }};color:{{ p.cmpColor }};font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ p.cmpTxt }}</button>
+</div>
+</article>
+</sc-for>
+<sc-if value="{{ vacio }}" hint-placeholder-val="{{ false }}">
+<div style="padding:36px 16px;text-align:center;color:var(--fg3);font-size:13px">Ningun plan cumple los filtros.<br><button onClick="{{ onLimpiar }}" style="margin-top:12px;height:40px;padding:0 15px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);cursor:pointer">Limpiar filtros</button></div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ esComparar }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 12px 24px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+<div style="font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase">{{ cmpResumen }}</div>
+<button onClick="{{ onSoloDif }}" style="height:34px;padding:0 11px;border:1px solid {{ difBorde }};border-radius:17px;background:{{ difFondo }};color:{{ difColor }};font:500 11px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer">Solo diferencias</button>
+</div>
+<sc-if value="{{ cmpVacio }}" hint-placeholder-val="{{ true }}">
+<div style="padding:34px 14px;border:1px dashed var(--line2);border-radius:11px;text-align:center;color:var(--fg3);font-size:13px;line-height:1.6">Elige 2 o 3 planes en la lista con el boton <span style="color:var(--fg2)">Comparar</span> y apareceran aqui enfrentados.</div>
+</sc-if>
+<sc-if value="{{ cmpListo }}" hint-placeholder-val="{{ false }}">
+<div style="overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--panel)">
+<table style="border-collapse:collapse;width:100%;min-width:{{ cmpMin }}">
+<thead><tr>
+<th style="position:sticky;left:0;z-index:2;background:var(--panel);padding:10px;text-align:left;border-bottom:1px solid var(--line);width:128px;min-width:128px"></th>
+<sc-for list="{{ cmpCols }}" as="c" hint-placeholder-count="2">
+<th style="padding:10px;text-align:left;border-bottom:1px solid var(--line);border-left:1px solid var(--line);vertical-align:top;min-width:164px">
+<div style="font:600 10px 'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.03em">{{ c.firma }}</div>
+<div style="font:500 12.5px/1.35 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty">{{ c.plan }}</div>
+<button onClick="{{ c.onQuitar }}" style="margin-top:7px;height:30px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg3);font:500 10px 'JetBrains Mono',monospace;cursor:pointer">QUITAR</button>
+</th>
+</sc-for>
+</tr></thead>
+<tbody>
+<sc-for list="{{ cmpFilas }}" as="r" hint-placeholder-count="10">
+<tr style="background:{{ r.fondo }}">
+<th style="position:sticky;left:0;z-index:1;background:{{ r.fondoLabel }};padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);border-left:3px solid {{ r.marca }};font:500 10.5px/1.4 'JetBrains Mono',monospace;color:var(--fg2);letter-spacing:.02em">{{ r.label }}</th>
+<sc-for list="{{ r.celdas }}" as="c" hint-placeholder-count="2">
+<td style="padding:9px 10px;vertical-align:top;border-bottom:1px solid var(--line);border-left:1px solid var(--line);font:400 12.5px/1.5 {{ c.fuente }};font-variant-numeric:tabular-nums;color:{{ c.color }};max-width:280px;overflow-wrap:anywhere">{{ c.txt }}</td>
+</sc-for>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ esCoste }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 12px 24px">
+<div style="border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:13px 13px 6px">
+<div style="font:600 12px 'IBM Plex Sans',sans-serif">Coste real hasta el primer cobro</div>
+<div style="font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);margin-top:5px;text-wrap:pretty">Los planes mensuales se cobran cada mes hasta que pasas; los de pago unico, una sola vez. La cuota de activacion se suma siempre.</div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:12px">
+<span style="font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase">Meses hasta pasar la evaluacion</span>
+<span style="font:700 20px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--acc)">{{ meses }}</span>
+</div>
+<input type="range" min="1" max="12" step="1" value="{{ meses }}" onChange="{{ onMeses }}" aria-label="Meses hasta pasar la evaluacion" style="width:100%">
+<div style="display:flex;justify-content:space-between;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);margin:-6px 0 8px"><span>1</span><span>6</span><span>12</span></div>
+</div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:12px 2px 7px;font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"><span>{{ recuento }}</span><span>orden: coste con promo</span></div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<sc-for list="{{ costes }}" as="c" hint-placeholder-count="8">
+<div onClick="{{ c.onAbrir }}" style="border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:10px 11px;cursor:pointer" style-hover="border-color:var(--line2)">
+<div style="display:flex;align-items:baseline;gap:7px">
+<span style="font:600 10px 'JetBrains Mono',monospace;color:var(--acc)">{{ c.firma }}</span>
+<span style="font:500 12.5px/1.3 'IBM Plex Sans',sans-serif;flex:1;min-width:0;text-wrap:pretty">{{ c.plan }}</span>
+<span style="font:500 9.5px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ c.tipo }}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px">
+<div><div style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em">A TARIFA</div><div style="font:500 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--fg2);margin-top:2px">{{ c.tarifa }}</div></div>
+<div><div style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em">CON PROMO</div><div style="font:700 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;margin-top:2px">{{ c.promo }}</div></div>
+<div><div style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em">AHORRO</div><div style="font:500 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:{{ c.ahorroColor }};margin-top:2px">{{ c.ahorro }}</div></div>
+</div>
+</div>
+</sc-for>
+</div>
+<p style="font:400 11px/1.6 'IBM Plex Sans',sans-serif;color:var(--fg3);margin:14px 2px 0;text-wrap:pretty">{{ meta.coste_real_nota }}</p>
+<p style="font:400 11px/1.6 'IBM Plex Sans',sans-serif;color:var(--warn);margin:8px 2px 0;text-wrap:pretty">{{ meta.coste_real_aviso }}</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ esMetodo }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 14px 28px;max-width:720px">
+<h2 style="font:700 16px/1.3 'IBM Plex Sans',sans-serif;margin:0 0 4px;text-wrap:pretty">{{ meta.metodo_titulo }}</h2>
+<div style="font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px">Datos consultados el {{ fechaConsultaTxt }}</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ metodo }}" as="m" hint-placeholder-count="6">
+<section style="border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:9px;background:var(--panel);padding:11px 12px">
+<div style="font:600 12px 'IBM Plex Sans',sans-serif;margin-bottom:5px">{{ m.titulo }}</div>
+<div style="font:400 12.5px/1.65 'IBM Plex Sans',sans-serif;color:var(--fg2);text-wrap:pretty">{{ m.texto }}</div>
+</section>
+</sc-for>
+</div>
+<section style="margin-top:12px;border:1px solid var(--warn);border-radius:9px;background:var(--warnbg);padding:11px 12px">
+<div style="font:600 12px 'IBM Plex Sans',sans-serif;color:var(--warn);margin-bottom:5px">Antes de pagar nada</div>
+<div style="font:400 12.5px/1.65 'IBM Plex Sans',sans-serif;text-wrap:pretty">Las condiciones de las prop firms cambian sin aviso y estas cifras se leyeron el {{ fechaConsultaTxt }}. Verifica precio, drawdown, cuota de activacion, regla de consistencia y plataforma en la web oficial de la firma antes de contratar.</div>
+</section>
+<div style="margin-top:14px;font:400 11px/1.6 'JetBrains Mono',monospace;color:var(--fg3);text-wrap:pretty">{{ meta.nota_generacion }}</div>
+<div style="margin-top:10px;font:400 11px/1.6 'JetBrains Mono',monospace;color:var(--fg3);text-wrap:pretty">{{ meta.leyenda }}</div>
+</div>
+</sc-if>
+
+</main>
+
+<nav style="flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--panel);padding-bottom:env(safe-area-inset-bottom)">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.onClick }}" style="height:54px;border:0;border-top:2px solid {{ t.marca }};background:transparent;color:{{ t.color }};font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 2px;overflow:hidden">
+<span style="white-space:nowrap">{{ t.label }}</span>
+<span style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em;white-space:nowrap">{{ t.sub }}</span>
+</button>
+</sc-for>
+</nav>
+
+<sc-if value="{{ hojaAbierta }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:flex-end">
+<div onClick="{{ onCerrarHoja }}" style="position:absolute;inset:0;background:rgba(0,0,0,.55);animation:fadeIn .16s ease"></div>
+<div style="position:relative;max-height:82dvh;display:flex;flex-direction:column;border-top:1px solid var(--line2);border-radius:16px 16px 0 0;background:var(--panel);box-shadow:var(--shadow);animation:sheetUp .2s cubic-bezier(.2,.8,.3,1)">
+<div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)">
+<div style="font:600 13px 'IBM Plex Sans',sans-serif">{{ hojaTitulo }}</div>
+<div style="display:flex;gap:6px">
+<sc-if value="{{ hojaEsFiltros }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onLimpiar }}" style="height:36px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--bad);font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer">Limpiar</button></sc-if>
+<button onClick="{{ onCerrarHoja }}" style="height:36px;min-width:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--fg);font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer">Hecho</button>
+</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:4px 14px 20px">
+
+<sc-if value="{{ hojaEsFiltros }}" hint-placeholder-val="{{ false }}">
+<div>
+<sc-for list="{{ facetas }}" as="f" hint-placeholder-count="5">
+<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px">
+<span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg2)">{{ f.label }}</span>
+<span style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ f.grupo }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:5px">
+<sc-for list="{{ f.valores }}" as="v" hint-placeholder-count="3">
+<button onClick="{{ v.onToggle }}" style="display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:7px 10px;border:1px solid {{ v.borde }};border-radius:8px;background:{{ v.fondo }};text-align:left;cursor:pointer">
+<span style="flex:none;width:17px;height:17px;border:1px solid {{ v.marcaBorde }};border-radius:4px;background:{{ v.marcaFondo }};color:var(--bg);font:700 11px/15px 'JetBrains Mono',monospace;text-align:center">{{ v.tick }}</span>
+<span style="flex:1;min-width:0;font:400 12px/1.4 'IBM Plex Sans',sans-serif;color:{{ v.color }};overflow-wrap:anywhere">{{ v.etiqueta }}</span>
+<span style="flex:none;font:500 10.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:{{ v.nColor }}">{{ v.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<sc-for list="{{ rangos }}" as="r" hint-placeholder-count="4">
+<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+<span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg2)">{{ r.label }}</span>
+<span style="font:500 10.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:{{ r.color }}">{{ r.resumen }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:9px;margin-top:-2px">
+<span style="flex:none;width:30px;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3)">MIN</span>
+<input type="range" min="{{ r.min }}" max="{{ r.max }}" step="{{ r.step }}" value="{{ r.lo }}" onChange="{{ r.onLo }}" aria-label="Minimo" style="flex:1">
+</div>
+<div style="display:flex;align-items:center;gap:9px;margin-top:-14px">
+<span style="flex:none;width:30px;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3)">MAX</span>
+<input type="range" min="{{ r.min }}" max="{{ r.max }}" step="{{ r.step }}" value="{{ r.hi }}" onChange="{{ r.onHi }}" aria-label="Maximo" style="flex:1">
+</div>
+<div style="font:500 9.5px 'JetBrains Mono',monospace;color:var(--fg3);margin-top:-6px">deja {{ r.n }} planes</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ hojaEsOrden }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="display:flex;gap:6px;padding:10px 0 12px">
+<sc-for list="{{ dirs }}" as="d" hint-placeholder-count="2">
+<button onClick="{{ d.onClick }}" style="flex:1;height:44px;border:1px solid {{ d.borde }};border-radius:8px;background:{{ d.fondo }};color:{{ d.color }};font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ d.label }}</button>
+</sc-for>
+</div>
+<sc-for list="{{ ordenGrupos }}" as="g" hint-placeholder-count="4">
+<div style="padding:6px 0 10px">
+<div style="font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:6px">{{ g.grupo }}</div>
+<div style="display:flex;flex-wrap:wrap;gap:5px">
+<sc-for list="{{ g.campos }}" as="c" hint-placeholder-count="4">
+<button onClick="{{ c.onClick }}" style="min-height:40px;padding:8px 11px;border:1px solid {{ c.borde }};border-radius:8px;background:{{ c.fondo }};color:{{ c.color }};font:500 11.5px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ c.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ hojaEsColumnas }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);padding:10px 0 4px">Elige las tres metricas que quieres ver en cada tarjeta. En pantalla ancha son tambien las columnas de la tabla.</div>
+<sc-for list="{{ colGrupos }}" as="g" hint-placeholder-count="5">
+<div style="padding:8px 0 10px;border-bottom:1px solid var(--line)">
+<div style="font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:6px">{{ g.grupo }}</div>
+<div style="display:flex;flex-direction:column;gap:5px">
+<sc-for list="{{ g.campos }}" as="c" hint-placeholder-count="4">
+<button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:7px 10px;border:1px solid {{ c.borde }};border-radius:8px;background:{{ c.fondo }};text-align:left;cursor:pointer">
+<span style="flex:none;width:19px;font:700 10px 'JetBrains Mono',monospace;color:var(--acc)">{{ c.pos }}</span>
+<span style="flex:1;min-width:0;font:400 12px/1.4 'IBM Plex Sans',sans-serif;color:{{ c.color }}">{{ c.label }}</span>
+<span style="flex:none;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ c.tipo }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ fichaAbierta }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:var(--bg);animation:fadeIn .14s ease">
+<div style="flex:none;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--panel)">
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:7px">
+<span style="font:600 10px 'JetBrains Mono',monospace;color:var(--fg3)">{{ ficha.puestoTxt }}</span>
+<span style="font:600 12px 'IBM Plex Sans',sans-serif;color:var(--acc)">{{ ficha.firma }}</span>
+</div>
+<div style="font:600 15px/1.3 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty">{{ ficha.plan }}</div>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px">
+<span style="font:700 22px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ ficha.precioTxt }}</span>
+<sc-if value="{{ ficha.hayDescuento }}" hint-placeholder-val="{{ false }}"><span style="font:400 13px 'JetBrains Mono',monospace;color:var(--fg3);text-decoration:line-through">{{ ficha.tarifaTxt }}</span></sc-if>
+</div>
+</div>
+<div style="flex:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+<button onClick="{{ onCerrarFicha }}" style="width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--fg);font:400 17px 'JetBrains Mono',monospace;cursor:pointer">×</button>
+<button onClick="{{ ficha.onFav }}" style="width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:{{ ficha.favColor }};font-size:16px;cursor:pointer">★</button>
+</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:10px 12px 26px">
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px">
+<sc-for list="{{ ficha.badges }}" as="b" hint-placeholder-count="2">
+<span title="{{ b.title }}" style="padding:5px 9px;border:1px solid {{ b.borde }};border-radius:6px;background:{{ b.fondo }};color:{{ b.color }};font:500 10.5px/1.3 'JetBrains Mono',monospace;white-space:nowrap">{{ b.txt }}</span>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<sc-for list="{{ ficha.grupos }}" as="g" hint-placeholder-count="6">
+<section style="border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden">
+<button onClick="{{ g.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:46px;padding:11px 12px;border:0;background:transparent;cursor:pointer;text-align:left">
+<span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg)">{{ g.grupo }}</span>
+<span style="display:flex;align-items:center;gap:8px;font:500 10px 'JetBrains Mono',monospace;color:var(--fg3)"><span>{{ g.n }}</span><span style="font-size:11px;color:var(--fg2)">{{ g.chevron }}</span></span>
+</button>
+<sc-if value="{{ g.abierto }}" hint-placeholder-val="{{ true }}">
+<div style="border-top:1px solid var(--line)">
+<sc-for list="{{ g.campos }}" as="c" hint-placeholder-count="5">
+<div style="padding:9px 12px;border-bottom:1px solid var(--line)">
+<div style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3)">{{ c.label }}</div>
+<div style="font:400 {{ c.tam }}/1.6 {{ c.fuente }};font-variant-numeric:tabular-nums;color:{{ c.color }};margin-top:3px;overflow-wrap:anywhere;text-wrap:pretty">{{ c.valor }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</section>
+</sc-for>
+</div>
+<div style="display:flex;gap:7px;margin-top:12px">
+<button onClick="{{ ficha.onComparar }}" style="flex:1;height:46px;border:1px solid {{ ficha.cmpBorde }};border-radius:9px;background:{{ ficha.cmpFondo }};color:{{ ficha.cmpColor }};font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">{{ ficha.cmpTxt }}</button>
+<button onClick="{{ onCerrarFicha }}" style="flex:1;height:46px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--fg2);font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer">Volver a la lista</button>
+</div>
+<div style="font:400 10.5px/1.6 'JetBrains Mono',monospace;color:var(--fg3);margin-top:12px">Leido en la documentacion oficial el {{ fechaConsultaTxt }}. Verificalo en la web de la firma antes de pagar.</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;temaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;oscuro&quot;,&quot;claro&quot;],&quot;default&quot;:&quot;oscuro&quot;,&quot;tsType&quot;:&quot;'oscuro' | 'claro'&quot;,&quot;section&quot;:&quot;Arranque&quot;},&quot;mesesInicial&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:1,&quot;max&quot;:12,&quot;default&quot;:2,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Arranque&quot;},&quot;avisoPromoDias&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:1,&quot;max&quot;:30,&quot;default&quot;:7,&quot;unit&quot;:&quot;dias&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Avisos&quot;}}">
+class Component extends DCLogic {
+  state = {
+    listo: false, q: '', vista: 'lista', hoja: null, tema: 'oscuro',
+    enums: {}, rangos: {}, ordenKey: 'puesto', ordenDir: 'asc',
+    cols: ['precio_tarifa', 'drawdown', 'dias_min'],
+    favs: [], soloFavs: false, meses: 2, comparar: [], ficha: null,
+    abiertos: { Identidad: true, Precio: true, Reglas: true, Cobros: false, Plataforma: false, Fiabilidad: false },
+    soloDif: true, ancho: false
+  };
+
+  CLAVE = 'ff.comparador.v1';
+  DERIVADOS = [
+    { key: '_coste_tarifa', label: 'Coste real a tarifa', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true },
+    { key: '_coste_promo', label: 'Coste real con promo', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true },
+    { key: '_ahorro', label: 'Ahorro de la promo', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true }
+  ];
+
+  componentDidMount() {
+    const ti = this.props.temaInicial;
+    if (ti === 'claro' || ti === 'oscuro') {
+      document.documentElement.setAttribute('data-tema', ti);
+      this.setState({ tema: ti });
+    }
+    if (this.num(this.props.mesesInicial)) this.setState({ meses: this.props.mesesInicial });
+    this.restaurar();
+    this.esperarDatos();
+    this.medir();
+    window.addEventListener('resize', this.medir);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.medir);
+    clearTimeout(this._t);
+  }
+  componentDidUpdate() { this.guardar(); }
+
+  esperarDatos = () => {
+    if (window.DATA && window.DATA.campos) { this.setState({ listo: true }); return; }
+    this._t = setTimeout(this.esperarDatos, 60);
+  };
+  medir = () => {
+    const w = (this.base && this.base.offsetWidth) || window.innerWidth || 390;
+    const ancho = /movil/.test(location.hash) ? false : w >= 780;
+    if (ancho !== this.state.ancho) this.setState({ ancho });
+  };
+
+  restaurar() {
+    try {
+      const raw = localStorage.getItem(this.CLAVE);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      const ok = {};
+      ['enums', 'rangos', 'ordenKey', 'ordenDir', 'cols', 'favs', 'soloFavs', 'meses', 'tema', 'vista', 'abiertos', 'soloDif'].forEach(k => {
+        if (s[k] !== undefined && s[k] !== null) ok[k] = s[k];
+      });
+      if (ok.tema) document.documentElement.setAttribute('data-tema', ok.tema === 'claro' ? 'claro' : 'oscuro');
+      this.setState(ok);
+    } catch (e) { /* almacenamiento no disponible */ }
+  }
+  guardar() {
+    try {
+      const s = this.state;
+      localStorage.setItem(this.CLAVE, JSON.stringify({
+        enums: s.enums, rangos: s.rangos, ordenKey: s.ordenKey, ordenDir: s.ordenDir,
+        cols: s.cols, favs: s.favs, soloFavs: s.soloFavs, meses: s.meses, tema: s.tema,
+        vista: s.vista, abiertos: s.abiertos, soloDif: s.soloDif
+      }));
+    } catch (e) { /* almacenamiento no disponible */ }
+  }
+
+  // ---------- datos ----------
+  D() { return window.DATA || { meta: {}, campos: [], planes: [] }; }
+  campo(key) { return this.D().campos.find(c => c.key === key) || this.DERIVADOS.find(c => c.key === key) || { key, label: key, tipo: 'texto' }; }
+
+  num(v) { return typeof v === 'number' && isFinite(v); }
+  miles(v) { return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(v); }
+  fmt(v, c) {
+    if (v === null || v === undefined || v === '') return '—';
+    if (c.tipo === 'numero' && this.num(v)) {
+      if (c.unidad === 'USD') return this.miles(v) + ' USD';
+      if (c.unidad === '%') return this.miles(v) + ' %';
+      if (c.unidad === 'dias') return v === 1 ? '1 dia' : this.miles(v) + ' dias';
+      return this.miles(v);
+    }
+    if (c.tipo === 'fecha') return this.fecha(v);
+    return String(v);
+  }
+  fmtCorto(v, c) {
+    if (v === null || v === undefined || v === '') return '—';
+    if (c.tipo === 'numero' && this.num(v)) {
+      if (c.unidad === 'USD') return this.miles(v) + ' $';
+      if (c.unidad === '%') return this.miles(v) + '%';
+      if (c.unidad === 'dias') return this.miles(v) + ' d';
+      return this.miles(v);
+    }
+    return String(v);
+  }
+  fecha(s) {
+    const m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(s || ''));
+    return m ? m[3] + '/' + m[2] + '/' + m[1] : String(s || '—');
+  }
+  mensual(p) { return String(p.tipo_precio || '') === 'mensual'; }
+  costeTarifa(p, m) { return (p.precio_tarifa || 0) * (this.mensual(p) ? m : 1) + (p.activacion || 0); }
+  costePromo(p, m) {
+    const base = this.num(p.precio_promo) ? p.precio_promo : (p.precio_tarifa || 0);
+    return base * (this.mensual(p) ? m : 1) + (p.activacion || 0);
+  }
+  diasPromo(p) {
+    const m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(p.promo_caduca || ''));
+    if (!m) return null;
+    const fin = new Date(+m[1], +m[2] - 1, +m[3], 23, 59, 59);
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return Math.round((fin - hoy) / 86400000);
+  }
+  tvOk(p) { return /^si/i.test(String(p.tradingview || '')); }
+  excluido(p) { return /DESCARTADA/i.test(String(p.estado || '')); }
+  penalizado(p) { return /penalizada/i.test(String(p.estado || '')); }
+  referencia(p) { return /^REFERENCIA/i.test(String(p.firma || '')); }
+
+  valorEnum(p, key) {
+    const v = p[key];
+    return (v === null || v === undefined || v === '') ? '(sin dato)' : String(v);
+  }
+  extremos(key) {
+    const vs = this.D().planes.map(p => p[key]).filter(v => this.num(v));
+    if (!vs.length) return { min: 0, max: 1 };
+    let min = Math.floor(Math.min.apply(null, vs)), max = Math.ceil(Math.max.apply(null, vs));
+    if (min === max) max = min + 1;
+    return { min, max };
+  }
+  rangoActivo(key) {
+    const r = this.state.rangos[key];
+    if (!r) return null;
+    const e = this.extremos(key);
+    if (r[0] <= e.min && r[1] >= e.max) return null;
+    return r;
+  }
+
+  pasa(p, omitir) {
+    const s = this.state;
+    const q = s.q.trim().toLowerCase();
+    if (q && !((String(p.firma) + ' ' + String(p.plan)).toLowerCase().includes(q))) return false;
+    if (s.soloFavs && s.favs.indexOf(p.id) < 0) return false;
+    for (const key in s.enums) {
+      if (key === omitir) continue;
+      const sel = s.enums[key];
+      if (sel && sel.length && sel.indexOf(this.valorEnum(p, key)) < 0) return false;
+    }
+    for (const key in s.rangos) {
+      if (key === omitir) continue;
+      const r = this.rangoActivo(key);
+      if (!r) continue;
+      const v = p[key];
+      if (!this.num(v)) return false;
+      if (v < r[0] || v > r[1]) return false;
+    }
+    return true;
+  }
+  filtrados(omitir) { return this.D().planes.filter(p => this.pasa(p, omitir)); }
+
+  ordenar(lista) {
+    const s = this.state, key = s.ordenKey, dir = s.ordenDir === 'desc' ? -1 : 1;
+    const c = this.campo(key);
+    const val = p => {
+      if (key === '_coste_tarifa') return this.costeTarifa(p, s.meses);
+      if (key === '_coste_promo') return this.costePromo(p, s.meses);
+      if (key === '_ahorro') return this.costeTarifa(p, s.meses) - this.costePromo(p, s.meses);
+      return p[key];
+    };
+    return lista.slice().sort((a, b) => {
+      const va = val(a), vb = val(b);
+      const na = va === null || va === undefined || va === '', nb = vb === null || vb === undefined || vb === '';
+      if (na && nb) return 0;
+      if (na) return 1;
+      if (nb) return -1;
+      if (c.tipo === 'numero' && this.num(va) && this.num(vb)) return (va - vb) * dir;
+      return String(va).localeCompare(String(vb), 'es') * dir;
+    });
+  }
+  visibles() {
+    const l = this.filtrados();
+    if (this.state.vista === 'coste') {
+      const m = this.state.meses;
+      const v = p => (!this.num(p.precio_tarifa) && !this.num(p.precio_promo)) ? Infinity : this.costePromo(p, m);
+      return l.slice().sort((a, b) => v(a) - v(b));
+    }
+    return this.ordenar(l);
+  }
+  nFiltros() {
+    const s = this.state; let n = 0;
+    for (const k in s.enums) if (s.enums[k] && s.enums[k].length) n++;
+    for (const k in s.rangos) if (this.rangoActivo(k)) n++;
+    if (s.soloFavs) n++;
+    if (s.q.trim()) n++;
+    return n;
+  }
+
+  // ---------- acciones ----------
+  set = (o) => this.setState(o);
+  onQ = e => this.setState({ q: e.target.value });
+  onQClear = () => this.setState({ q: '' });
+  onTema = () => {
+    const t = this.state.tema === 'claro' ? 'oscuro' : 'claro';
+    document.documentElement.setAttribute('data-tema', t);
+    this.setState({ tema: t });
+  };
+  onFavsToggle = () => this.setState({ soloFavs: !this.state.soloFavs });
+  onLimpiar = () => this.setState({ enums: {}, rangos: {}, q: '', soloFavs: false });
+  toggleEnum(key, valor) {
+    const cur = (this.state.enums[key] || []).slice();
+    const i = cur.indexOf(valor);
+    if (i < 0) cur.push(valor); else cur.splice(i, 1);
+    const enums = Object.assign({}, this.state.enums);
+    if (cur.length) enums[key] = cur; else delete enums[key];
+    this.setState({ enums });
+  }
+  setRango(key, i, v) {
+    const e = this.extremos(key);
+    const cur = (this.state.rangos[key] || [e.min, e.max]).slice();
+    cur[i] = +v;
+    if (cur[0] > cur[1]) cur[i === 0 ? 1 : 0] = cur[i];
+    this.setState({ rangos: Object.assign({}, this.state.rangos, { [key]: cur }) });
+  }
+  toggleFav(id) {
+    const favs = this.state.favs.slice();
+    const i = favs.indexOf(id);
+    if (i < 0) favs.push(id); else favs.splice(i, 1);
+    this.setState({ favs });
+  }
+  toggleComparar(id) {
+    const c = this.state.comparar.slice();
+    const i = c.indexOf(id);
+    if (i >= 0) c.splice(i, 1);
+    else { if (c.length >= 3) c.shift(); c.push(id); }
+    this.setState({ comparar: c });
+  }
+  toggleCol(key) {
+    const cols = this.state.cols.slice();
+    const i = cols.indexOf(key);
+    if (i >= 0) { if (cols.length > 1) cols.splice(i, 1); }
+    else { if (cols.length >= 3) cols.shift(); cols.push(key); }
+    this.setState({ cols });
+  }
+  ordenarPor(key) {
+    if (this.state.ordenKey === key) this.setState({ ordenDir: this.state.ordenDir === 'asc' ? 'desc' : 'asc' });
+    else this.setState({ ordenKey: key, ordenDir: 'asc' });
+  }
+  csv = () => {
+    const campos = this.D().campos;
+    const filas = this.visibles();
+    const esc = v => '"' + String(v === null || v === undefined ? '' : v).replace(/"/g, '""') + '"';
+    const m = this.state.meses;
+    const cab = campos.map(c => c.label).concat(['Coste real a tarifa (' + m + 'm)', 'Coste real con promo (' + m + 'm)', 'Ahorro']);
+    const cuerpo = filas.map(p => campos.map(c => esc(p[c.key])).concat([
+      esc(this.costeTarifa(p, m)), esc(this.costePromo(p, m)), esc(this.costeTarifa(p, m) - this.costePromo(p, m))
+    ]).join(';'));
+    const txt = '\ufeff' + cab.map(esc).join(';') + '\n' + cuerpo.join('\n');
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([txt], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'fondeadoras_seleccion.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    } catch (e) { /* descarga no disponible */ }
+  };
+
+  // ---------- presentacion ----------
+  badges(p) {
+    const b = [];
+    const d = this.diasPromo(p);
+    const umbral = this.num(this.props.avisoPromoDias) ? this.props.avisoPromoDias : 7;
+    if (d !== null) {
+      const col = d <= 0 ? 'var(--bad)' : (d < umbral ? 'var(--warn)' : 'var(--fg2)');
+      const bg = d <= 0 ? 'var(--badbg)' : (d < umbral ? 'var(--warnbg)' : 'transparent');
+      b.push({
+        txt: d < 0 ? 'PROMO CADUCADA' : (d === 0 ? 'LA PROMO CADUCA HOY' : 'PROMO: ' + d + (d === 1 ? ' DIA' : ' DIAS')),
+        color: col, fondo: bg, borde: col, title: String(p.promo_caduca || '')
+      });
+    }
+    if (p.cupon) b.push({ txt: 'CUPON ' + String(p.cupon).split(' ')[0], color: 'var(--fg)', fondo: 'var(--chip)', borde: 'var(--line2)', title: String(p.cupon) });
+    if (this.tvOk(p)) b.push({ txt: 'TRADINGVIEW', color: 'var(--ok)', fondo: 'var(--okbg)', borde: 'var(--ok)', title: String(p.tradingview) });
+    if (this.excluido(p)) b.push({ txt: 'EXCLUIDA DEL RANKING', color: 'var(--bad)', fondo: 'var(--badbg)', borde: 'var(--bad)', title: String(p.estado) });
+    else if (this.penalizado(p)) b.push({ txt: 'PENALIZADA −12', color: 'var(--warn)', fondo: 'var(--warnbg)', borde: 'var(--warn)', title: String(p.estado) });
+    if (this.referencia(p)) b.push({ txt: 'FILA DE REFERENCIA', color: 'var(--fg2)', fondo: 'var(--chip)', borde: 'var(--line2)', title: String(p.estado) });
+    return b;
+  }
+  precioTxt(p) {
+    const v = this.num(p.precio_promo) ? p.precio_promo : p.precio_tarifa;
+    if (!this.num(v)) return 's/precio';
+    return this.miles(v) + ' $';
+  }
+  puestoTxt(p) { return this.num(p.puesto) ? '#' + p.puesto : String(p.puesto || '—'); }
+
+  renderVals() {
+    const s = this.state, D = this.D(), meta = D.meta || {};
+    if (!s.listo) {
+      return {
+        meta: { titulo: 'Comparador de fondeadoras' }, cabeceraSub: 'Cargando datos…',
+        tarjetas: [], filas: [], tabs: [], facetas: [], rangos: [], metodo: [], costes: [],
+        esLista: true, esEstrecho: true, recuento: '—',
+        temaIcono: 'NOC', filtrosSufijo: '', ordenEtiqueta: 'Orden: Puesto ↑', ordenResumen: ''
+      };
+    }
+    const vis = this.visibles();
+    const nF = this.nFiltros();
+    const acc = 'var(--acc)', fg = 'var(--fg)', fg2 = 'var(--fg2)', fg3 = 'var(--fg3)', linea = 'var(--line)', panel2 = 'var(--panel2)';
+    const mono = "'JetBrains Mono',monospace", sans = "'IBM Plex Sans',sans-serif";
+
+    // tarjetas
+    const colCampos = s.cols.map(k => this.campo(k));
+    const tarjetas = vis.map(p => ({
+      id: p.id, firma: p.firma, plan: p.plan, puestoTxt: this.puestoTxt(p),
+      precioTxt: this.precioTxt(p),
+      tarifaTxt: this.num(p.precio_tarifa) ? this.miles(p.precio_tarifa) + ' $' : '',
+      hayDescuento: this.num(p.precio_promo) && this.num(p.precio_tarifa) && p.precio_promo < p.precio_tarifa,
+      tipoTxt: (p.tipo_precio ? String(p.tipo_precio).toUpperCase() : 'S/TIPO') + (p.activacion ? ' + ' + this.miles(p.activacion) + ' $ ACTIVACION' : ''),
+      borde: this.excluido(p) ? 'var(--bad)' : (s.comparar.indexOf(p.id) >= 0 ? acc : linea),
+      favColor: s.favs.indexOf(p.id) >= 0 ? 'var(--warn)' : fg3,
+      badges: this.badges(p),
+      metricas: colCampos.map(c => ({ label: c.label, valor: this.fmt(p[c.key], c) })),
+      cmpTxt: s.comparar.indexOf(p.id) >= 0 ? 'En el comparador' : 'Comparar',
+      cmpFondo: s.comparar.indexOf(p.id) >= 0 ? 'var(--accbg)' : panel2,
+      cmpColor: s.comparar.indexOf(p.id) >= 0 ? acc : fg2,
+      onFav: e => { e.stopPropagation(); this.toggleFav(p.id); },
+      onComparar: e => { e.stopPropagation(); this.toggleComparar(p.id); },
+      onAbrir: () => this.setState({ ficha: p.id })
+    }));
+
+    // tabla ancha
+    const cabCampos = [this.campo('puesto'), this.campo('firma'), this.campo('plan'), this.campo('precio_promo')].concat(colCampos);
+    const tablaCabeceras = cabCampos.map(c => ({
+      label: c.label + (s.ordenKey === c.key ? (s.ordenDir === 'asc' ? ' ↑' : ' ↓') : ''),
+      align: c.tipo === 'numero' ? 'right' : 'left',
+      color: s.ordenKey === c.key ? acc : fg3,
+      onSort: e => { e.stopPropagation(); this.ordenarPor(c.key); }
+    }));
+    const filas = vis.map(p => ({
+      id: p.id,
+      fondo: s.comparar.indexOf(p.id) >= 0 ? 'var(--accbg)' : 'transparent',
+      favColor: s.favs.indexOf(p.id) >= 0 ? 'var(--warn)' : fg3,
+      onFav: e => { e.stopPropagation(); this.toggleFav(p.id); },
+      onAbrir: () => this.setState({ ficha: p.id }),
+      celdas: cabCampos.map(c => ({
+        txt: c.key === 'puesto' ? this.puestoTxt(p) : this.fmtCorto(p[c.key], c),
+        align: c.tipo === 'numero' ? 'right' : 'left',
+        fuente: c.tipo === 'numero' ? mono : sans,
+        color: c.key === 'firma' ? acc : (c.key === 'plan' ? fg : fg2)
+      }))
+    }));
+
+    // facetas
+    const facetas = D.campos.filter(c => c.filtrable && (c.tipo === 'enum' || c.tipo === 'texto' || c.tipo === 'booleano')).map(c => {
+      const base = this.filtrados(c.key);
+      const todos = {};
+      D.planes.forEach(p => { const v = this.valorEnum(p, c.key); todos[v] = (todos[v] || 0); });
+      base.forEach(p => { const v = this.valorEnum(p, c.key); todos[v] = (todos[v] || 0) + 1; });
+      const sel = s.enums[c.key] || [];
+      const valores = Object.keys(todos).sort((a, b) => todos[b] - todos[a] || a.localeCompare(b, 'es')).map(v => {
+        const activo = sel.indexOf(v) >= 0;
+        return {
+          valor: v, etiqueta: v, n: todos[v], tick: activo ? '×' : '',
+          activo, borde: activo ? acc : linea, fondo: activo ? 'var(--accbg)' : 'transparent',
+          marcaBorde: activo ? acc : 'var(--line2)', marcaFondo: activo ? acc : 'transparent',
+          color: todos[v] === 0 && !activo ? fg3 : fg,
+          nColor: todos[v] === 0 ? fg3 : fg2,
+          onToggle: () => this.toggleEnum(c.key, v)
+        };
+      });
+      return { key: c.key, label: c.label, grupo: c.grupo, valores };
+    });
+
+    // rangos
+    const rangos = D.campos.filter(c => c.filtrable && c.tipo === 'numero').map(c => {
+      const e = this.extremos(c.key);
+      const r = s.rangos[c.key] || [e.min, e.max];
+      const activo = !!this.rangoActivo(c.key);
+      const step = (e.max - e.min) > 600 ? 10 : ((e.max - e.min) > 60 ? 1 : 1);
+      return {
+        key: c.key, label: c.label, min: e.min, max: e.max, step, lo: r[0], hi: r[1],
+        resumen: this.fmtCorto(r[0], c) + ' – ' + this.fmtCorto(r[1], c),
+        color: activo ? acc : fg3,
+        n: this.filtrados().length,
+        onLo: ev => this.setRango(c.key, 0, ev.target.value),
+        onHi: ev => this.setRango(c.key, 1, ev.target.value)
+      };
+    });
+
+    // orden
+    const ordenables = D.campos.filter(c => c.ordenable).concat(this.DERIVADOS);
+    const grupos = [];
+    ordenables.forEach(c => {
+      let g = grupos.find(x => x.grupo === c.grupo);
+      if (!g) { g = { grupo: c.grupo, campos: [] }; grupos.push(g); }
+      g.campos.push({
+        label: c.label, borde: s.ordenKey === c.key ? acc : linea,
+        fondo: s.ordenKey === c.key ? 'var(--accbg)' : panel2,
+        color: s.ordenKey === c.key ? acc : fg2,
+        onClick: () => this.ordenarPor(c.key)
+      });
+    });
+    const dirs = [
+      { label: 'Ascendente', borde: s.ordenDir === 'asc' ? acc : linea, fondo: s.ordenDir === 'asc' ? 'var(--accbg)' : panel2, color: s.ordenDir === 'asc' ? acc : fg2, onClick: () => this.setState({ ordenDir: 'asc' }) },
+      { label: 'Descendente', borde: s.ordenDir === 'desc' ? acc : linea, fondo: s.ordenDir === 'desc' ? 'var(--accbg)' : panel2, color: s.ordenDir === 'desc' ? acc : fg2, onClick: () => this.setState({ ordenDir: 'desc' }) }
+    ];
+
+    // columnas
+    const colGrupos = [];
+    D.campos.filter(c => c.key !== 'firma' && c.key !== 'plan').forEach(c => {
+      let g = colGrupos.find(x => x.grupo === c.grupo);
+      if (!g) { g = { grupo: c.grupo, campos: [] }; colGrupos.push(g); }
+      const i = s.cols.indexOf(c.key);
+      g.campos.push({
+        label: c.label, tipo: (c.tipo + (c.unidad ? ' · ' + c.unidad : '')).toUpperCase(),
+        pos: i >= 0 ? String(i + 1) : '',
+        borde: i >= 0 ? acc : linea, fondo: i >= 0 ? 'var(--accbg)' : 'transparent',
+        color: i >= 0 ? acc : fg,
+        onClick: () => this.toggleCol(c.key)
+      });
+    });
+
+    // comparador
+    const cmpPlanes = s.comparar.map(id => D.planes.find(p => p.id === id)).filter(Boolean);
+    const cmpFilas = [];
+    if (cmpPlanes.length >= 2) {
+      D.meta.grupos.forEach(gr => {
+        const campos = D.campos.filter(c => c.grupo === gr);
+        campos.forEach(c => {
+          const vals = cmpPlanes.map(p => this.fmt(p[c.key], c));
+          const dif = vals.some(v => v !== vals[0]);
+          if (s.soloDif && !dif) return;
+          cmpFilas.push({
+            label: c.label, marca: dif ? acc : 'transparent',
+            fondo: dif && !s.soloDif ? 'var(--accbg)' : 'transparent',
+            fondoLabel: dif ? 'var(--panel2)' : 'var(--panel)',
+            celdas: vals.map(v => ({ txt: v, fuente: c.tipo === 'numero' ? mono : sans, color: dif ? fg : fg2 }))
+          });
+        });
+      });
+    }
+    const cmpCols = cmpPlanes.map(p => ({ firma: p.firma, plan: p.plan, onQuitar: () => this.toggleComparar(p.id) }));
+
+    // coste real
+    const costes = vis.map(p => {
+      const t = this.costeTarifa(p, s.meses), pr = this.costePromo(p, s.meses);
+      const sinPrecio = !this.num(p.precio_tarifa) && !this.num(p.precio_promo);
+      return {
+        firma: p.firma, plan: p.plan,
+        tipo: (p.tipo_precio ? String(p.tipo_precio) : 's/tipo').toUpperCase(),
+        tarifa: sinPrecio ? 'sin precio' : this.miles(t) + ' $',
+        promo: sinPrecio ? 'sin precio' : this.miles(pr) + ' $',
+        ahorro: sinPrecio ? 'n/d' : (t - pr > 0 ? '−' + this.miles(t - pr) + ' $' : '—'),
+        ahorroColor: t - pr > 0 ? 'var(--ok)' : fg3,
+        onAbrir: () => this.setState({ ficha: p.id })
+      };
+    });
+
+    // ficha
+    const fp = s.ficha ? D.planes.find(p => p.id === s.ficha) : null;
+    let ficha = null;
+    if (fp) {
+      ficha = {
+        firma: fp.firma, plan: fp.plan, puestoTxt: this.puestoTxt(fp),
+        precioTxt: this.precioTxt(fp),
+        tarifaTxt: this.num(fp.precio_tarifa) ? this.miles(fp.precio_tarifa) + ' $' : '',
+        hayDescuento: this.num(fp.precio_promo) && this.num(fp.precio_tarifa) && fp.precio_promo < fp.precio_tarifa,
+        favColor: s.favs.indexOf(fp.id) >= 0 ? 'var(--warn)' : fg3,
+        onFav: () => this.toggleFav(fp.id),
+        badges: this.badges(fp),
+        cmpTxt: s.comparar.indexOf(fp.id) >= 0 ? 'Quitar del comparador' : 'Anadir al comparador',
+        cmpBorde: s.comparar.indexOf(fp.id) >= 0 ? acc : linea,
+        cmpFondo: s.comparar.indexOf(fp.id) >= 0 ? 'var(--accbg)' : panel2,
+        cmpColor: s.comparar.indexOf(fp.id) >= 0 ? acc : fg2,
+        grupos: (D.meta.grupos || []).map(gr => {
+          const campos = D.campos.filter(c => c.grupo === gr);
+          const abierto = !!s.abiertos[gr];
+          return {
+            grupo: gr, n: campos.length + ' campos', abierto, chevron: abierto ? '▲' : '▼',
+            onToggle: () => this.setState({ abiertos: Object.assign({}, s.abiertos, { [gr]: !abierto }) }),
+            campos: campos.map(c => {
+              const largo = c.tipo === 'texto' && String(fp[c.key] || '').length > 90;
+              return {
+                label: c.label, valor: this.fmt(fp[c.key], c),
+                fuente: c.tipo === 'numero' || c.tipo === 'fecha' ? mono : sans,
+                tam: largo ? '12px' : '13.5px',
+                color: fp[c.key] === null || fp[c.key] === undefined || fp[c.key] === '' ? fg3 : (largo ? fg2 : fg)
+              };
+            })
+          };
+        })
+      };
+    }
+
+    const tabs = [
+      { k: 'lista', label: 'Lista', sub: vis.length + '/' + D.planes.length },
+      { k: 'comparar', label: 'Comparar', sub: s.comparar.length + '/3' },
+      { k: 'coste', label: 'Coste real', sub: s.meses + ' mes' + (s.meses === 1 ? '' : 'es') },
+      { k: 'metodo', label: 'Metodo', sub: 'avisos' }
+    ].map(t => ({
+      label: t.label, sub: t.sub,
+      marca: s.vista === t.k ? acc : 'transparent',
+      color: s.vista === t.k ? fg : fg3,
+      onClick: () => this.setState({ vista: t.k })
+    }));
+
+    const ordenCampo = this.campo(s.ordenKey);
+
+    return {
+      meta, metodo: meta.metodo || [],
+      fechaConsultaTxt: this.fecha(meta.fecha_consulta),
+      cabeceraSub: (meta.subtitulo || '') + ' · ' + D.planes.length + ' planes · ' + this.fecha(meta.fecha_consulta),
+      q: s.q, hayQ: !!s.q, onQ: this.onQ, onQClear: this.onQClear,
+      onTema: this.onTema, temaIcono: s.tema === 'claro' ? 'DÍA' : 'NOC',
+      favBorde: s.soloFavs ? 'var(--warn)' : linea, favFondo: s.soloFavs ? 'var(--warnbg)' : panel2, favColor: s.soloFavs ? 'var(--warn)' : fg3,
+      onFavsToggle: this.onFavsToggle, onLimpiar: this.onLimpiar, onCSV: this.csv,
+      hayFiltros: nF > 0,
+      filtrosSufijo: nF > 0 ? ' · ' + nF : '',
+      filtrosBorde: nF > 0 ? acc : linea, filtrosFondo: nF > 0 ? 'var(--accbg)' : panel2, filtrosColor: nF > 0 ? acc : fg2,
+      ordenEtiqueta: 'Orden: ' + ordenCampo.label + (s.ordenDir === 'asc' ? ' ↑' : ' ↓'),
+      ordenResumen: s.vista === 'coste' ? 'coste con promo ↑' : ordenCampo.label.toLowerCase() + (s.ordenDir === 'asc' ? ' ↑' : ' ↓'),
+      recuento: vis.length + ' de ' + D.planes.length + ' planes',
+      onSheetFiltros: () => this.setState({ hoja: 'filtros' }),
+      onSheetOrden: () => this.setState({ hoja: 'orden' }),
+      onSheetColumnas: () => this.setState({ hoja: 'columnas' }),
+      onCerrarHoja: () => this.setState({ hoja: null }),
+      hojaAbierta: !!s.hoja, hojaEsFiltros: s.hoja === 'filtros', hojaEsOrden: s.hoja === 'orden', hojaEsColumnas: s.hoja === 'columnas',
+      hojaTitulo: s.hoja === 'filtros' ? 'Filtros' : (s.hoja === 'orden' ? 'Ordenar por' : 'Metricas de la tarjeta'),
+      esLista: s.vista === 'lista', esComparar: s.vista === 'comparar', esCoste: s.vista === 'coste', esMetodo: s.vista === 'metodo',
+      esAncho: s.vista === 'lista' && s.ancho, esEstrecho: s.vista === 'lista' && !s.ancho,
+      vacio: vis.length === 0,
+      tarjetas, filas, tablaCabeceras, facetas, rangos, ordenGrupos: grupos, dirs, colGrupos, costes, tabs,
+      cmpCols, cmpFilas, cmpVacio: cmpPlanes.length < 2, cmpListo: cmpPlanes.length >= 2,
+      cmpMin: (128 + cmpPlanes.length * 180) + 'px',
+      cmpResumen: cmpPlanes.length + ' de 3 planes seleccionados · ' + cmpFilas.length + ' filas',
+      soloDif: s.soloDif, onSoloDif: () => this.setState({ soloDif: !s.soloDif }),
+      difBorde: s.soloDif ? acc : linea, difFondo: s.soloDif ? 'var(--accbg)' : panel2, difColor: s.soloDif ? acc : fg2,
+      meses: s.meses, onMeses: e => this.setState({ meses: +e.target.value }),
+      ficha, fichaAbierta: !!ficha, onCerrarFicha: () => this.setState({ ficha: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
