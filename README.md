@@ -23,11 +23,12 @@ El móvil, añadida a la pantalla de inicio
 |---|---|
 | `exportar_json.py` | Excel → `fondeadoras.json`. Lo ejecutas tú cuando cambian los datos. |
 | `fondeadoras.json` | Los datos con su esquema de campos. |
-| `docs/` | **Lo que publica GitHub Pages**: `index.html`, `fondeadoras.json`, `manifest.webmanifest`. |
-| `build/construir_app.py` | Convierte el documento de Claude Design en la app autónoma. |
-| `build/runtime.js` | El micro-runtime de plantillas (~5 KB) que sustituye al de Design. |
-| `build/probar_app.js` | 36 comprobaciones automáticas sobre la app ya construida. |
-| `design_src/diseno.html` | El diseño original exportado de Claude Design. Fuente, no se publica. |
+| `docs\` | **Lo que se sube a GitHub**: `index.html`, `fondeadoras.json`, `manifest.webmanifest`. |
+| `build\construir_app.py` | Convierte el documento de Claude Design en la app autónoma. |
+| `build\runtime.js` | El micro-runtime de plantillas (~5 KB) que sustituye al de Design. |
+| `build\probar_app.js` | 36 comprobaciones automáticas sobre la app ya construida. |
+| `design_src\` | El diseño original exportado de Claude Design. Fuente, no se publica. |
+| `artifact.html` | La misma app empaquetada para publicarla como artifact. |
 
 ## Por qué no se sube el .dc.html tal cual
 
@@ -43,7 +44,7 @@ plantillas de unos 5 KB que entiende el mismo lenguaje (`{{ }}`, `<sc-if>`, `<sc
 las dos fuentes de Google, y que funciona aunque te quedes sin cobertura.
 
 **Consecuencia importante:** el diseño manda. Si retocas algo en Claude Design, vuelves a
-exportar, sustituyes `design_src/diseno.html` y ejecutas `construir_app.py` otra vez. No
+exportar, sustituyes `design_src\diseno.html` y ejecutas `construir_app.py` otra vez. No
 hay que tocar el HTML generado a mano: se sobrescribe en cada compilación.
 
 ## Uso
@@ -86,6 +87,29 @@ Dos detalles del exportador que conviene conocer:
   ranking cambie de orden, tus favoritos y el comparador seguirán apuntando al plan
   correcto en vez de al que ocupe ahora esa posición.
 
+## El repositorio
+
+Ya está montado y publicado en **https://fmpms02-ux.github.io/fondeadoras/**. Es público
+porque si fuera privado el `fetch` del JSON necesitaría un token, y eso no se pone en una web.
+
+Estructura:
+
+```
+fondeadoras/
+├─ docs/
+│  ├─ index.html
+│  ├─ fondeadoras.json
+│  └─ manifest.webmanifest
+├─ build/
+├─ design_src/
+├─ exportar_json.py
+└─ comparativa_fondeadoras.xlsx   (tu fuente de verdad; súbela cuando quieras)
+```
+
+Pages está configurado en **Settings → Pages → Deploy from a branch → `main` / `/docs`**.
+Abre la URL en el móvil y *Añadir a pantalla de inicio*: el `manifest.webmanifest` hace que
+se abra a pantalla completa, sin barra de navegador.
+
 ## Cómo se comporta al arrancar
 
 1. Pinta **al instante** con la copia de los datos incrustada en el propio `index.html`.
@@ -116,6 +140,8 @@ consultar.
   igual, simplemente no recuerda nada.
 - Por debajo de 780 px se ven tarjetas; por encima, la tabla completa con las métricas que
   hayas elegido. Añadiendo `#movil` a la URL se fuerzan las tarjetas en cualquier pantalla.
+- El botón **CSV** funciona en GitHub Pages, pero no dentro de la vista previa del artifact:
+  ahí el visor no permite descargas.
 
 ## Aviso
 
@@ -123,5 +149,3 @@ Las condiciones de las prop firms cambian sin publicar cambios. Cada fila lleva 
 consulta. Antes de pagar nada, vuelve a mirar en la web oficial el precio vigente, el tipo
 exacto de drawdown en las **dos** fases, la cuota de activación, la regla de consistencia y
 si TradingView permite **ejecutar** o solo ver gráficos.
-[README.md](https://github.com/user-attachments/files/32392169/README.md)[README.md](https://github.com/user-attachments/files/32392166/README.md)
-[README.md](https://github.com/user-attachments/files/32392167/README.md)
