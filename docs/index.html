@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Comparativa de fondeadoras — cuenta de 50.000 USD</title>
+<meta name="description" content="Comparador de fondeadoras de futuros: filtros, orden, comparador y coste real.">
+<meta name="theme-color" content="#0a0c0e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f2ef" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0c0e'/%3E%3Crect x='14' y='30' width='8' height='20' rx='2' fill='%2359b8c8'/%3E%3Crect x='28' y='22' width='8' height='28' rx='2' fill='%2359b8c8'/%3E%3Crect x='42' y='14' width='8' height='36' rx='2' fill='%2359b8c8'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0c0e'/%3E%3Crect x='14' y='30' width='8' height='20' rx='2' fill='%2359b8c8'/%3E%3Crect x='28' y='22' width='8' height='28' rx='2' fill='%2359b8c8'/%3E%3Crect x='42' y='14' width='8' height='36' rx='2' fill='%2359b8c8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0c0e;--panel:#12161a;--panel2:#191f24;--chip:#1e262c;--line:#272f36;--line2:#39434b;--fg:#e7ecef;--fg2:#98a4ad;--fg3:#828d95;--acc:oklch(0.74 0.11 200);--accbg:oklch(0.74 0.11 200 / 0.14);--ok:oklch(0.76 0.13 155);--okbg:oklch(0.76 0.13 155 / 0.13);--warn:oklch(0.80 0.13 78);--warnbg:oklch(0.80 0.13 78 / 0.14);--bad:oklch(0.68 0.17 28);--badbg:oklch(0.68 0.17 28 / 0.14);--shadow:0 -8px 40px rgba(0,0,0,.6)}
+:root[data-tema="claro"]{--bg:#f3f2ef;--panel:#ffffff;--panel2:#f7f6f3;--chip:#eceae5;--line:#dddbd5;--line2:#c7c4bc;--fg:#15181a;--fg2:#5b636a;--fg3:#666e74;--acc:oklch(0.52 0.10 200);--accbg:oklch(0.52 0.10 200 / 0.10);--ok:oklch(0.52 0.12 155);--okbg:oklch(0.52 0.12 155 / 0.10);--warn:oklch(0.56 0.12 68);--warnbg:oklch(0.56 0.12 68 / 0.12);--bad:oklch(0.52 0.17 28);--badbg:oklch(0.52 0.17 28 / 0.10);--shadow:0 -8px 40px rgba(0,0,0,.18)}
+body{margin:0;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:var(--acc);text-decoration:none}a:hover{color:var(--fg);text-decoration:underline}
+input,button,select{font:inherit;color:inherit}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:44px}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:3px solid var(--panel);margin-top:-10px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line2)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(--panel);border-radius:50%;background:var(--acc)}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:5px}::-webkit-scrollbar-track{background:transparent}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.dh1:hover{border-color:var(--line2) !important;color:var(--fg) !important;}
+.dh2:hover{color:var(--fg) !important;}
+.dh3:hover{background:var(--panel2) !important;}
+.dh4:hover{border-color:var(--line2) !important;}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>/* ---------------------------------------------------------------------------
+   Micro-runtime de plantillas — sustituye a dc-runtime.
+   Sin React, sin Babel, sin CDN: ~5 KB y todo local.
+
+   Interpreta el mismo lenguaje de plantilla que usa Claude Design:
+     {{ expresion }}            en texto y dentro de atributos
+     <sc-if value="{{ x }}">    condicional
+     <sc-for list="{{ l }}" as="p">  repeticion
+     onClick / onChange="{{ h }}"    manejadores
+     style-hover="..."               estilos al pasar el raton
+
+   La plantilla llega ya compilada a arbol de instrucciones (JSON) desde
+   construir_app.py, asi que aqui no se parsea HTML: los nodos se crean con
+   createElement, lo que evita que el parser del navegador reubique un
+   <sc-for> que este dentro de una <table>.
+
+   El render construye un arbol nuevo y despues lo fusiona (morphing) contra
+   el vivo, emparejando por clave. Asi no se pierde el foco del buscador ni
+   la posicion del scroll al teclear.
+--------------------------------------------------------------------------- */
+(function (global) {
+  'use strict';
+
+  var VACIOS = { input: 1, br: 1, img: 1, hr: 1, meta: 1, link: 1, source: 1 };
+
+  // ---- evaluacion de expresiones (solo rutas y literales) ----
+  function evaluar(scope, expr) {
+    if (expr === 'true') return true;
+    if (expr === 'false') return false;
+    if (expr === 'null') return null;
+    var partes = expr.split('.');
+    var v = scope[partes[0]];
+    for (var i = 1; i < partes.length && v !== null && v !== undefined; i++) v = v[partes[i]];
+    return v;
+  }
+
+  // Une los trozos de un atributo o de un texto: ["px ", {e:"x"}, ";"]
+  function unir(partes, scope) {
+    if (partes.length === 1 && typeof partes[0] === 'object') {
+      var u = evaluar(scope, partes[0].e);
+      return u === null || u === undefined ? '' : u;
+    }
+    var s = '';
+    for (var i = 0; i < partes.length; i++) {
+      var p = partes[i];
+      if (typeof p === 'string') s += p;
+      else {
+        var v = evaluar(scope, p.e);
+        s += (v === null || v === undefined) ? '' : v;
+      }
+    }
+    return s;
+  }
+
+  // ---- construccion del arbol nuevo ----
+  function construir(inst, scope, salida, clave) {
+    for (var i = 0; i < inst.length; i++) {
+      var n = inst[i];
+      var k = clave + '/' + i;
+
+      if (n.t === 'tx') {
+        var txt = String(unir(n.p, scope));
+        var nodo = document.createTextNode(txt);
+        nodo.__k = k;
+        salida.push(nodo);
+
+      } else if (n.t === 'if') {
+        if (evaluar(scope, n.e)) construir(n.k, scope, salida, k + ':si');
+
+      } else if (n.t === 'for') {
+        var lista = evaluar(scope, n.e);
+        if (lista && lista.length) {
+          for (var j = 0; j < lista.length; j++) {
+            var hijo = Object.create(scope);
+            hijo[n.as] = lista[j];
+            // la clave usa el id del elemento si lo tiene: asi reordenar no recrea
+            var idj = (lista[j] && (lista[j].id || lista[j].key || lista[j].valor || lista[j].label));
+            construir(n.k, hijo, salida, k + '#' + (idj !== undefined ? idj : j));
+          }
+        }
+
+      } else if (n.t === 'el') {
+        var el = document.createElement(n.g);
+        el.__k = k;
+        for (var a in n.a) el.setAttribute(a, unir(n.a[a], scope));
+        if (n.v !== undefined) {
+          var val = unir(n.v, scope);
+          if (el.value !== val) el.value = val;
+        }
+        if (n.ev) {
+          el.__on = {};
+          for (var ev in n.ev) {
+            var h = evaluar(scope, n.ev[ev]);
+            if (typeof h === 'function') el.__on[ev] = h;
+          }
+        }
+        if (n.k && n.k.length) {
+          var hijos = [];
+          construir(n.k, scope, hijos, k);
+          for (var m = 0; m < hijos.length; m++) el.appendChild(hijos[m]);
+        }
+        salida.push(el);
+      }
+    }
+  }
+
+  // ---- fusion contra el DOM vivo ----
+  function sincronizarAtributos(viejo, nuevo) {
+    var na = nuevo.attributes, i, at;
+    for (i = 0; i < na.length; i++) {
+      at = na[i];
+      if (viejo.getAttribute(at.name) !== at.value) viejo.setAttribute(at.name, at.value);
+    }
+    var va = viejo.attributes;
+    for (i = va.length - 1; i >= 0; i--) {
+      at = va[i];
+      if (!nuevo.hasAttribute(at.name)) viejo.removeAttribute(at.name);
+    }
+    if ('value' in nuevo && nuevo.tagName === 'INPUT') {
+      if (viejo.value !== nuevo.value) viejo.value = nuevo.value;
+    }
+  }
+
+  function fusionar(viejo, nuevo) {
+    if (nuevo.nodeType === 3) {
+      if (viejo.nodeValue !== nuevo.nodeValue) viejo.nodeValue = nuevo.nodeValue;
+      return viejo;
+    }
+    sincronizarAtributos(viejo, nuevo);
+    viejo.__on = nuevo.__on;
+    fusionarHijos(viejo, nuevo.childNodes);
+    return viejo;
+  }
+
+  function fusionarHijos(padre, nuevos) {
+    var viejos = [], i;
+    for (i = 0; i < padre.childNodes.length; i++) viejos.push(padre.childNodes[i]);
+
+    var porClave = {};
+    for (i = 0; i < viejos.length; i++) {
+      if (viejos[i].__k !== undefined) porClave[viejos[i].__k] = viejos[i];
+    }
+
+    var resultado = [], usados = [];
+    for (i = 0; i < nuevos.length; i++) {
+      var n = nuevos[i];
+      var v = porClave[n.__k];
+      if (v && v.nodeName === n.nodeName && !v.__usado) {
+        v.__usado = true;
+        usados.push(v);
+        resultado.push(fusionar(v, n));
+      } else {
+        resultado.push(n);
+      }
+    }
+    for (i = 0; i < usados.length; i++) usados[i].__usado = false;
+
+    // fuera los que ya no estan
+    var vivos = {};
+    for (i = 0; i < resultado.length; i++) vivos[i] = resultado[i];
+    for (i = 0; i < viejos.length; i++) {
+      var q = viejos[i], sigue = false;
+      for (var j = 0; j < resultado.length; j++) if (resultado[j] === q) { sigue = true; break; }
+      if (!sigue && q.parentNode === padre) padre.removeChild(q);
+    }
+
+    // coloca en orden (insertBefore mueve si ya estaba)
+    var ref = null;
+    for (i = resultado.length - 1; i >= 0; i--) {
+      var nodo = resultado[i];
+      if (nodo.parentNode !== padre || nodo.nextSibling !== ref) padre.insertBefore(nodo, ref);
+      ref = nodo;
+    }
+  }
+
+  // ---- delegacion de eventos ----
+  function delegar(raiz, tipo) {
+    raiz.addEventListener(tipo, function (e) {
+      var n = e.target;
+      while (n && n !== raiz.parentNode) {
+        if (n.__on && n.__on[tipo]) {
+          n.__on[tipo](e);
+          if (e.cancelBubble) return;   // el manejador llamo a stopPropagation()
+        }
+        n = n.parentNode;
+      }
+    }, false);
+  }
+
+  // ---- clase base ----
+  function Logic(raiz, inst, props) {
+    this.base = raiz;
+    this._inst = inst;
+    this.props = props || {};
+    this._pendiente = false;
+    if (!this.state) this.state = {};
+  }
+
+  Logic.prototype.setState = function (o) {
+    for (var k in o) this.state[k] = o[k];
+    this.programar();
+  };
+
+  // Se repinta en una microtarea, no en requestAnimationFrame: rAF se congela
+  // cuando la pestana no esta en primer plano y la app se quedaria muerta.
+  var aplazar = (typeof queueMicrotask === 'function')
+    ? queueMicrotask
+    : function (f) { Promise.resolve().then(f); };
+
+  Logic.prototype.programar = function () {
+    if (this._pendiente) return;
+    this._pendiente = true;
+    var self = this;
+    aplazar(function () {
+      self._pendiente = false;
+      try { self.pintar(); } catch (e) { console.error('Error al pintar:', e); }
+    });
+  };
+
+  Logic.prototype.pintar = function () {
+    var scope = this.renderVals();
+    var hijos = [];
+    construir(this._inst, scope, hijos, '');
+    var contenedor = document.createDocumentFragment();
+    for (var i = 0; i < hijos.length; i++) contenedor.appendChild(hijos[i]);
+    fusionarHijos(this.base, contenedor.childNodes);
+    if (this.componentDidUpdate) this.componentDidUpdate();
+  };
+
+  Logic.prototype.montar = function () {
+    delegar(this.base, 'click');
+    delegar(this.base, 'input');
+    this.pintar();
+    if (this.componentDidMount) this.componentDidMount();
+    this.programar();
+  };
+
+  global.Logic = Logic;
+  global.DCRuntime = { evaluar: evaluar, construir: construir, fusionar: fusionar };
+
+})(typeof window !== 'undefined' ? window : this);
+</script>
+<script>var SNAPSHOT = {"meta":{"esquema_version":2,"titulo":"Comparativa de fondeadoras — cuenta de 50.000 USD","subtitulo":"Cuenta de 50.000 USD","n_planes":35,"fecha_consulta":"2026-09-18","fecha_consulta_min":"2026-08-27","generado":"18/09/2026 19:58","fuente":"comparativa_fondeadoras.xlsx","grupos":["Identidad","Precio","Reglas","Cobros","Plataforma","Fiabilidad"],"meses_default":2,"coste_real_nota":"COSTE TARIFA es el precio oficial sin descuentos: es lo comparable en el tiempo y es con lo que puntua el ranking. COSTE CON PROMO es lo que pagarias HOY con la oferta vigente. Cuando caduque una promocion, esa columna deja de ser cierta: mira siempre la fecha de caducidad.","coste_real_aviso":"Ninguno de los dos costes incluye resets ni renovaciones tras un incumplimiento, que en la practica es la partida que mas se dispara.","metodo_titulo":"Como se ha construido esto y que no hay que creerse","metodo":[{"titulo":"Fuente de los datos","texto":"Documentacion oficial de cada firma -sus centros de ayuda y sus paginas de precios-, leida entre el 28 y el 29/08/2026. 27 de las 30 filas estan marcadas como verificadas en fuente oficial. El registro arranco el 27/08 con datos de webs comparadoras, pero esos ya se han sustituido uno a uno."},{"titulo":"Lo que sigue sin confirmar","texto":"Tres filas figuran como 'parcial'. Dos son planes de Lucid Trading -LucidFlex y LucidDaily- cuyo PRECIO solo aparece en el checkout tras registrarse: entran sin precio y el ranking les asigna nota provisional de coste. La tercera es la fila de referencia, que no es una fondeadora. Ordena por la columna 'Verificado en fuente oficial' para tenerlas a la vista."},{"titulo":"Verificado no es auditado","texto":"Verificado significa 'leido en la documentacion de la firma', no 'comprobado por un tercero'. Para las REGLAS y los PRECIOS eso basta, porque la firma se compromete publicamente a ellos. Para las CIFRAS DE PAGOS no: los 439 M USD de Apex o los 400 M de Lucid los declara cada firma y nadie los ha contrastado. Por eso el bloque de fiabilidad pesa solo un 10%, y por eso Alpha Futures puntua un 5 en pagos pese a tener su documentacion perfectamente verificada: lo que la hunde es un impago real, no la fuente."},{"titulo":"Antes de contratar","texto":"Aunque este verificado, vuelve a mirar lo que te va a costar dinero: precio vigente, tipo exacto de drawdown en las DOS fases, cuota de activacion, regla de consistencia y si TradingView permite EJECUTAR o solo ver graficos."},{"titulo":"Las condiciones caducan","texto":"En este sector cambian sin aviso. Cada fila lleva fecha de consulta. Un dato de hace tres meses no sirve para decidir."},{"titulo":"Topstep queda fuera","texto":"Desde 2026 opera solo en su plataforma propia TopstepX: no conecta NinjaTrader, Tradovate, Rithmic ni TradingView. Con tu operativa actual es incompatible, por buena que sea la firma."},{"titulo":"El cambio de drawdown al fondearse","texto":"Varias firmas endurecen el drawdown cuando pasas a cuenta fondeada. Take Profit Trader pasa de EOD a intradia; MyFundedFutures Rapid tambien. Es la letra pequena que mas cuentas rompe: la evaluacion se pasa con unas reglas y se opera con otras."},{"titulo":"Trailing intradia frente a EOD","texto":"El trailing intradia mueve tu suelo de perdida con cada maximo no realizado: una posicion que va a favor y se da la vuelta te sube el suelo aunque cierres plano. El EOD solo recalcula al cierre. Para operativa intradia la diferencia es enorme."},{"titulo":"La fila de referencia","texto":"'Cuenta propia' no es una fondeadora. Esta para que el ranking tenga contra que medirse. Su ventaja son cero cuotas y el 100% del beneficio; su coste es que arriesgas capital real y la perdida puede superar lo depositado."},{"titulo":"Limite","texto":"Esta herramienta recopila, ordena y compara. No recomienda donde poner dinero. La decision es de Fernando."}],"nota_generacion":"Generado desde fondeadoras.csv. Para actualizar una condicion, edita el CSV y vuelve a generar este libro. Puesto calculado con los pesos de pesos.csv: drawdown 45 · cobro 25 · coste 20 · fiabilidad 10. Generado el 18/09/2026 10:29. OJO: si cambias los pesos a mano en la hoja 'Pesos' del ranking, esta columna NO se entera hasta que edites pesos.csv y regeneres los dos libros.","leyenda":"Verde: compatible con TradingView y NinjaTrader.   Rojo: descartada por incompatibilidad de plataforma.   Gris: fila de referencia, no es una fondeadora.   Las tres ultimas columnas explican por que cada plan tiene su puesto y, en las descartadas, en cual entrarian si cambiaras de plataforma: estan descartadas por la plataforma, NO por sus condiciones.","avisos_exportacion":[]},"campos":[{"key":"puesto","tipo":"numero","grupo":"Identidad","ordenable":true,"label":"Puesto","filtrable":false},{"key":"firma","tipo":"enum","grupo":"Identidad","filtrable":true,"ordenable":true,"label":"Firma"},{"key":"plan","tipo":"texto","grupo":"Identidad","ordenable":true,"label":"Plan","filtrable":false},{"key":"precio_tarifa","tipo":"numero","unidad":"USD","grupo":"Precio","filtrable":true,"ordenable":true,"label":"Precio tarifa"},{"key":"precio_promo","tipo":"numero","unidad":"USD","grupo":"Precio","filtrable":true,"ordenable":true,"label":"Precio con promo"},{"key":"cupon","tipo":"texto","grupo":"Precio","label":"Cupon","filtrable":false,"ordenable":false},{"key":"promo_caduca","tipo":"texto","grupo":"Precio","label":"Promo caduca","filtrable":false,"ordenable":false},{"key":"tipo_precio","tipo":"enum","grupo":"Precio","filtrable":true,"ordenable":true,"label":"Tipo precio"},{"key":"activacion","tipo":"numero","unidad":"USD","grupo":"Precio","filtrable":true,"ordenable":true,"label":"Activacion"},{"key":"objetivo","tipo":"numero","unidad":"USD","grupo":"Reglas","filtrable":true,"ordenable":true,"label":"Objetivo"},{"key":"dd_evaluacion","tipo":"enum","grupo":"Reglas","filtrable":true,"ordenable":true,"label":"Drawdown en evaluacion"},{"key":"dd_fondeada","tipo":"enum","grupo":"Reglas","filtrable":true,"label":"Drawdown en cuenta fondeada","ordenable":false},{"key":"cambia_fondearse","tipo":"enum","grupo":"Reglas","filtrable":true,"label":"Cambia al fondearse","ordenable":false},{"key":"drawdown","tipo":"numero","unidad":"USD","grupo":"Reglas","filtrable":true,"ordenable":true,"label":"Drawdown"},{"key":"perdida_diaria","tipo":"numero","unidad":"USD","grupo":"Reglas","filtrable":true,"ordenable":true,"label":"Perdida diaria"},{"key":"consistencia_pct","tipo":"numero","unidad":"%","grupo":"Reglas","filtrable":true,"ordenable":true,"label":"Consistencia %"},{"key":"consistencia_donde","tipo":"enum","grupo":"Reglas","filtrable":true,"label":"Consistencia: donde aplica","ordenable":false},{"key":"min_diario_cobro","tipo":"numero","unidad":"USD","grupo":"Cobros","filtrable":true,"ordenable":true,"label":"Min. diario para cobrar"},{"key":"techo_cobros","tipo":"texto","grupo":"Cobros","label":"Techo total de cobros","filtrable":false,"ordenable":false},{"key":"dias_min","tipo":"numero","unidad":"dias","grupo":"Cobros","filtrable":true,"ordenable":true,"label":"Dias min."},{"key":"reparto","tipo":"enum","grupo":"Cobros","filtrable":true,"ordenable":true,"label":"Reparto"},{"key":"buffer_cobro","tipo":"numero","unidad":"USD","grupo":"Cobros","filtrable":true,"ordenable":true,"label":"Buffer cobro"},{"key":"broker","tipo":"texto","grupo":"Plataforma","label":"Broker","filtrable":false,"ordenable":false},{"key":"tradingview","tipo":"enum","grupo":"Plataforma","filtrable":true,"label":"TradingView","ordenable":false},{"key":"ninjatrader","tipo":"enum","grupo":"Plataforma","filtrable":true,"label":"NinjaTrader","ordenable":false},{"key":"capital_riesgo","tipo":"enum","grupo":"Fiabilidad","filtrable":true,"label":"Capital propio en riesgo","ordenable":false},{"key":"verificado","tipo":"enum","grupo":"Fiabilidad","filtrable":true,"ordenable":true,"label":"Verificado en fuente oficial"},{"key":"fecha_consulta","tipo":"fecha","grupo":"Fiabilidad","ordenable":true,"label":"Fecha consulta","filtrable":false},{"key":"lastra_nota","tipo":"texto","grupo":"Fiabilidad","label":"QUE LE LASTRA LA NOTA","filtrable":false,"ordenable":false},{"key":"fiabilidad_por_que","tipo":"texto","grupo":"Fiabilidad","label":"Fiabilidad: por que esa nota","filtrable":false,"ordenable":false},{"key":"estado","tipo":"texto","grupo":"Identidad","label":"Estado y motivo de exclusion","filtrable":false,"ordenable":false},{"key":"fiabilidad_nota","label":"Nota de fiabilidad","tipo":"numero","unidad":"/100","grupo":"Fiabilidad","filtrable":true,"ordenable":true}],"planes":[{"puesto":1,"firma":"Tradeify","plan":"Select 50K - Flex (Add-On Consistencia 50%)","precio_tarifa":205,"precio_promo":123,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":150,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":2,"reparto":"90/10","buffer_cobro":0,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Precio de la evaluacion 87/100 (-1.8 pts): 205 USD (pago unico) · Holgura del drawdown 80/100 (-1.8 pts): 2,000 USD de margen","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--select-50k-flex-add-on-consistencia-50"},{"puesto":2,"firma":"Lucid Trading","plan":"LucidFlex 50K","precio_tarifa":146,"precio_promo":90.2,"cupon":"VAULT","promo_caduca":null,"tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1200,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":150,"techo_cobros":"10.000 USD en 5 y pasa a live retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"CQG / Rithmic","tradingview":"si (ejecucion via CQG)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Techo total de cobros 67/100 (-2.1 pts): la cuenta se cierra tras 5 y pasa a live cobros, techo de 10,000 USD · Holgura del drawdown 80/100 (-1.8 pts): 2,000 USD de margen","fiabilidad_por_que":"66/100 — Antiguedad de la firma 40/100: perfil de Trustpilot reclamado en abril de 2025: ano y medio. No ha pasado todavia un ciclo malo · Reputacion publica 70/100: 4,4/5 con 5.514 resenas, pero responde solo al 1% de las resenas negativas · Historial de pagos 75/100: 400 M USD pagados declarados por la firma, sin auditar; sin incidentes de impago conocidos y pagos en minutos segun las resenas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":66,"id":"lucid-trading--lucidflex-50k"},{"puesto":3,"firma":"Tradeify","plan":"Select 50K - Flex","precio_tarifa":165,"precio_promo":99,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":40,"consistencia_donde":"evaluacion","min_diario_cobro":150,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":3,"reparto":"90/10","buffer_cobro":0,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Regla de consistencia 60/100 (-4.0 pts): consistencia del 40%, solo en la evaluacion (desaparece al fondearse) · Holgura del drawdown 80/100 (-1.8 pts): 2,000 USD de margen","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--select-50k-flex"},{"puesto":4,"firma":"UProfit","plan":"ONE 50K (estatico)","precio_tarifa":120,"precio_promo":null,"cupon":null,"promo_caduca":null,"tipo_precio":"unico","activacion":0,"objetivo":2500,"dd_evaluacion":"Estatico","dd_fondeada":"Estatico","cambia_fondearse":"no, el mismo en las dos fases","drawdown":1000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":150,"techo_cobros":"12.000 USD en 6 retiros y la cuenta se cierra","dias_min":2,"reparto":"sin split fijo","buffer_cobro":0,"broker":"Tradovate / R Trader / NinjaTrader","tradingview":"si (via Tradovate)","ninjatrader":"sin confirmar","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Holgura del drawdown 40/100 (-5.4 pts): 1,000 USD de margen · Reparto de beneficios 40/100 (-4.5 pts): sin split fijo · Historial de pagos 55/100 (-2.0 pts): BAJA DE 70 EL 31/08/2026. Siguen los 13.445 cobros aprobados declarados y sin auditar, pero en Trustpilot hay quejas concretas de 2026: un caso de enero con dos payouts denegados tras un correo de aprobacion (21.000 USD reclamados, la firma lo niega por falta de datos de cuenta) y otro de julio con un cobro de 1.176 USD parado siete dias habiles frente a las 24 horas que promete el contrato. No hay impago masivo documentado como el de Alpha Futures, por eso no baja mas","fiabilidad_por_que":"58/100 — Antiguedad de la firma 85/100: operando desde 2019: siete anos, el segundo historial mas largo del registro · Reputacion publica 45/100: BAJA DE 85 EL 31/08/2026. Trustpilot ha RETIRADO la nota de UProfit: 'This company's rating is unavailable due to a breach of our guidelines' y 'This company is displaying Trustpilot content in a misleading way'. El 4,8/5 con 6.223 resenas que la propia web sigue exhibiendo es justo lo que Trustpilot senala como uso enganoso. Datos reales del perfil: 6.546 resenas historicas pero solo 76 en los ultimos 12 meses, con un 5% de una estrella · Historial de pagos 55/100: BAJA DE 70 EL 31/08/2026. Siguen los 13.445 cobros aprobados declarados y sin auditar, pero en Trustpilot hay quejas concretas de 2026: un caso de enero con dos payouts denegados tras un correo de aprobacion (21.000 USD reclamados, la firma lo niega por falta de datos de cuenta) y otro de julio con un cobro de 1.176 USD parado siete dias habiles frente a las 24 horas que promete el contrato. No hay impago masivo documentado como el de Alpha Futures, por eso no baja mas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":58,"id":"uprofit--one-50k-estatico"},{"puesto":5,"firma":"Tradeify","plan":"Select 50K - Daily (Add-On Consistencia 50%)","precio_tarifa":205,"precio_promo":123,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":125,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":2,"reparto":"90/10","buffer_cobro":2100,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar · Precio de la evaluacion 87/100 (-1.8 pts): 205 USD (pago unico)","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--select-50k-daily-add-on-consistencia-50"},{"puesto":6,"firma":"MyFundedFutures","plan":"Rapid EOD 50K","precio_tarifa":209,"precio_promo":104.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":30,"consistencia_donde":"evaluacion","min_diario_cobro":0,"techo_cobros":"100.000 USD · retiros sin tope","dias_min":4,"reparto":"90/10","buffer_cobro":2100,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Regla de consistencia 60/100 (-4.0 pts): consistencia del 30%, solo en la evaluacion (desaparece al fondearse) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--rapid-eod-50k"},{"puesto":7,"firma":"Tradeify","plan":"Select 50K - Daily","precio_tarifa":165,"precio_promo":99,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":40,"consistencia_donde":"evaluacion","min_diario_cobro":125,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":3,"reparto":"90/10","buffer_cobro":2100,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Regla de consistencia 60/100 (-4.0 pts): consistencia del 40%, solo en la evaluacion (desaparece al fondearse) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--select-50k-daily"},{"puesto":8,"firma":"MyFundedFutures","plan":"Pro 50K","precio_tarifa":265,"precio_promo":132.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":0,"techo_cobros":"100.000 USD · retiros sin tope","dias_min":2,"reparto":"80/20","buffer_cobro":2100,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar · Reparto de beneficios 60/100 (-3.0 pts): 80/20","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--pro-50k"},{"puesto":9,"firma":"MyFundedFutures","plan":"Pro 50K (Add-On One Day to Pass)","precio_tarifa":379,"precio_promo":189.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":4000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":null,"consistencia_donde":null,"min_diario_cobro":0,"techo_cobros":"100.000 USD · retiros sin tope","dias_min":1,"reparto":"80/20","buffer_cobro":2100,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar · Precio de la evaluacion 76/100 (-3.3 pts): 379 USD (pago unico)","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--pro-50k-add-on-one-day-to-pass"},{"puesto":10,"firma":"Lucid Trading","plan":"LucidPro 50K","precio_tarifa":192,"precio_promo":115.4,"cupon":"VAULT","promo_caduca":"sin fecha declarada (rotulo LIMITED TIME permanente en la web)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1200,"consistencia_pct":40,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":0,"reparto":"90/10","buffer_cobro":2100,"broker":"CQG / Rithmic","tradingview":"si (ejecucion via CQG)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 40%, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"66/100 — Antiguedad de la firma 40/100: perfil de Trustpilot reclamado en abril de 2025: ano y medio. No ha pasado todavia un ciclo malo · Reputacion publica 70/100: 4,4/5 con 5.514 resenas, pero responde solo al 1% de las resenas negativas · Historial de pagos 75/100: 400 M USD pagados declarados por la firma, sin auditar; sin incidentes de impago conocidos y pagos en minutos segun las resenas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":66,"id":"lucid-trading--lucidpro-50k"},{"puesto":11,"firma":"Tradeify","plan":"Growth 50K","precio_tarifa":145,"precio_promo":87,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1250,"consistencia_pct":35,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":null,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":1,"reparto":"90/10","buffer_cobro":2100,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 35%, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--growth-50k"},{"puesto":12,"firma":"Take Profit Trader","plan":"PRO+ 50K (cuenta real)","precio_tarifa":170,"precio_promo":102,"cupon":"NOFEE40","promo_caduca":"sin fecha publicada (vigente el 11/09/2026)","tipo_precio":"mensual","activacion":130,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1100,"consistencia_pct":null,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":3,"reparto":"90/10","buffer_cobro":0,"broker":"CQG / Rithmic","tradingview":"si (via feed de CQG: NinjaTrader, TradingView y Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado (cuenta LIVE, no simulada)","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 50/100 (-5.0 pts): consistencia sin umbral conocido, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Precio de la evaluacion 79/100 (-3.0 pts): 340 USD (2 meses de suscripcion)","fiabilidad_por_que":"64/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada · Reputacion publica 70/100: documentacion publica muy detallada y verificada, que es senal de seriedad; valoracion publica NO medida · Historial de pagos 60/100: no publica ninguna cifra de pagos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":64,"id":"take-profit-trader--pro-50k-cuenta-real"},{"puesto":13,"firma":"Lucid Trading","plan":"LucidDirect 50K (straight to funded)","precio_tarifa":515,"precio_promo":360.5,"cupon":"VAULT","promo_caduca":"sin fecha declarada (rotulo LIMITED TIME permanente en la web)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1200,"consistencia_pct":20,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"11.000 USD en 5 retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"CQG / Rithmic","tradingview":"si (ejecucion via CQG)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 20%, condiciona cada cobro de la cuenta fondeada · Precio de la evaluacion 68/100 (-4.5 pts): 515 USD (pago unico) · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD)","fiabilidad_por_que":"66/100 — Antiguedad de la firma 40/100: perfil de Trustpilot reclamado en abril de 2025: ano y medio. No ha pasado todavia un ciclo malo · Reputacion publica 70/100: 4,4/5 con 5.514 resenas, pero responde solo al 1% de las resenas negativas · Historial de pagos 75/100: 400 M USD pagados declarados por la firma, sin auditar; sin incidentes de impago conocidos y pagos en minutos segun las resenas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":66,"id":"lucid-trading--luciddirect-50k-straight-to-funded"},{"puesto":14,"firma":"MyFundedFutures","plan":"Builder 50K (Default, MLL 2000)","precio_tarifa":153,"precio_promo":76.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"10.000 USD en 5 (cobros sim; el 5o da paso a cuenta Live) retiros y la cuenta se cierra","dias_min":1,"reparto":"80/20","buffer_cobro":2100,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar · Reparto de beneficios 60/100 (-3.0 pts): 80/20","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--builder-50k-default-mll-2000"},{"puesto":15,"firma":"MyFundedFutures","plan":"Flex 50K","precio_tarifa":null,"precio_promo":null,"cupon":"CLUB","promo_caduca":null,"tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":150,"techo_cobros":"10.000 USD en 5 (cobros sim; el 5o da paso a cuenta Live) retiros y la cuenta se cierra","dias_min":2,"reparto":"80/20","buffer_cobro":0,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Precio de la evaluacion 40/100 (-8.4 pts): SIN PRECIO CONOCIDO: nota provisional · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Reparto de beneficios 60/100 (-3.0 pts): 80/20","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--flex-50k"},{"puesto":16,"firma":"Tradeify","plan":"Lightning 50K (fondeo instantaneo)","precio_tarifa":492,"precio_promo":295,"cupon":"SEP (40%, maximo 5 usos y luego 30%; hay que teclearlo)","promo_caduca":"2026-09-30 23:59 EST (fecha declarada en el banner oficial)","tipo_precio":"unico","activacion":0,"objetivo":0,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1250,"consistencia_pct":20,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":null,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":0,"reparto":"90/10","buffer_cobro":null,"broker":"Tradovate / Rithmic / WealthCharts","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 20%, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Precio de la evaluacion 69/100 (-4.3 pts): 492 USD (pago unico)","fiabilidad_por_que":"73/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada; el volumen de resenas apunta a una firma joven · Reputacion publica 75/100: 4,5/5 con unas 4.000 resenas: buena nota, poco volumen · Historial de pagos 75/100: 150 M USD pagados y 80.000 traders declarados por la firma","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":73,"id":"tradeify--lightning-50k-fondeo-instantaneo"},{"puesto":17,"firma":"MyFundedFutures","plan":"Builder 50K (Add-On, MLL 1500)","precio_tarifa":125,"precio_promo":62.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":1500,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"10.000 USD en 5 (cobros sim; el 5o da paso a cuenta Live) retiros y la cuenta se cierra","dias_min":1,"reparto":"80/20","buffer_cobro":1600,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Holgura del drawdown 60/100 (-3.6 pts): 1,500 USD de margen · Reparto de beneficios 60/100 (-3.0 pts): 80/20","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":80,"id":"myfundedfutures--builder-50k-add-on-mll-1500"},{"puesto":18,"firma":"Alpha Futures","plan":"Standard 50K","precio_tarifa":129,"precio_promo":64.5,"cupon":"APP50","promo_caduca":"sin fecha publicada (vigente el 17/09/2026)","tipo_precio":"mensual","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"ambas","min_diario_cobro":200,"techo_cobros":"sin limite declarado en 4 al mes, sin tope total declarado retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"AlphaTrader propio / WealthCharts / Deepchart / Quantower","tradingview":"si (ejecucion en TradingView, conectividad de Plus500, disponible en el checkout de todos los planes)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Historial de pagos 5/100 (-4.3 pts): EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch · Regla de consistencia 58/100 (-4.2 pts): consistencia del 50%, en evaluacion Y en cuenta fondeada","fiabilidad_por_que":"30/100 — Antiguedad de la firma 45/100: perfil reclamado en julio de 2024: dos anos · Reputacion publica 55/100: 4,4/5 con 5.819 resenas y un 8% de una estrella; ademas su web declara 4,9/5 con 17.000 resenas, cifra que Trustpilot no respalda · Historial de pagos 5/100: EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":30,"id":"alpha-futures--standard-50k"},{"puesto":19,"firma":"Alpha Futures","plan":"Advanced 50K","precio_tarifa":209,"precio_promo":104.5,"cupon":"APP50","promo_caduca":"sin fecha publicada (vigente el 17/09/2026)","tipo_precio":"mensual","activacion":0,"objetivo":4000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":1750,"perdida_diaria":null,"consistencia_pct":40,"consistencia_donde":"evaluacion","min_diario_cobro":200,"techo_cobros":"sin limite declarado en 4 al mes, sin tope total declarado retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"AlphaTrader propio / WealthCharts / Deepchart / Quantower","tradingview":"si (ejecucion en TradingView, conectividad de Plus500, disponible en el checkout de todos los planes)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Historial de pagos 5/100 (-4.3 pts): EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch · Regla de consistencia 60/100 (-4.0 pts): consistencia del 40%, solo en la evaluacion (desaparece al fondearse)","fiabilidad_por_que":"30/100 — Antiguedad de la firma 45/100: perfil reclamado en julio de 2024: dos anos · Reputacion publica 55/100: 4,4/5 con 5.819 resenas y un 8% de una estrella; ademas su web declara 4,9/5 con 17.000 resenas, cifra que Trustpilot no respalda · Historial de pagos 5/100: EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":30,"id":"alpha-futures--advanced-50k"},{"puesto":20,"firma":"Alpha Futures","plan":"Direct 50K (straight to funded)","precio_tarifa":519,"precio_promo":null,"cupon":"APP50","promo_caduca":"sin fecha publicada (vigente el 17/09/2026)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":20,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"sin limite declarado en 4 al mes, sin tope total declarado retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"AlphaTrader propio / WealthCharts / Deepchart / Quantower","tradingview":"si (ejecucion en TradingView, conectividad de Plus500, disponible en el checkout de todos los planes)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 20%, condiciona cada cobro de la cuenta fondeada · Precio de la evaluacion 67/100 (-4.6 pts): 519 USD (pago unico) · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD)","fiabilidad_por_que":"30/100 — Antiguedad de la firma 45/100: perfil reclamado en julio de 2024: dos anos · Reputacion publica 55/100: 4,4/5 con 5.819 resenas y un 8% de una estrella; ademas su web declara 4,9/5 con 17.000 resenas, cifra que Trustpilot no respalda · Historial de pagos 5/100: EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":30,"id":"alpha-futures--direct-50k-straight-to-funded"},{"puesto":21,"firma":"Alpha Futures","plan":"Zero 50K","precio_tarifa":139,"precio_promo":69.5,"cupon":"APP50","promo_caduca":"sin fecha publicada (vigente el 17/09/2026)","tipo_precio":"mensual","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":40,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":200,"techo_cobros":"sin limite declarado en 4 al mes, sin tope total declarado retiros y la cuenta se cierra","dias_min":0,"reparto":"90/10","buffer_cobro":0,"broker":"AlphaTrader propio / WealthCharts / Deepchart / Quantower","tradingview":"si (ejecucion en TradingView, conectividad de Plus500, disponible en el checkout de todos los planes)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 40%, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Historial de pagos 5/100 (-4.3 pts): EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch","fiabilidad_por_que":"30/100 — Antiguedad de la firma 45/100: perfil reclamado en julio de 2024: dos anos · Reputacion publica 55/100: 4,4/5 con 5.819 resenas y un 8% de una estrella; ademas su web declara 4,9/5 con 17.000 resenas, cifra que Trustpilot no respalda · Historial de pagos 5/100: EL 12/07/2026 DEJO SIN PAGAR los cobros pendientes del plan Premium, devolviendo solo la cuota. Quejas de retrasos en agosto de 2026 y deslistada por PropFirmMatch","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":30,"id":"alpha-futures--zero-50k"},{"puesto":22,"firma":"UProfit","plan":"DAY 2.0 Flex 50K","precio_tarifa":147,"precio_promo":73,"cupon":"sin codigo (automatico)","promo_caduca":"sin fecha publicada (vigente el 11/09/2026)","tipo_precio":"mensual","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":40,"consistencia_donde":"ambas","min_diario_cobro":0,"techo_cobros":"8.100 USD en 6 retiros y la cuenta se cierra","dias_min":2,"reparto":"90/10","buffer_cobro":2500,"broker":"Tradovate","tradingview":"si (ejecucion)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 23/100 (-7.6 pts): consistencia del 40%, en evaluacion Y en cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 20/100 (-4.2 pts): 2,500 USD de buffer antes de cobrar","fiabilidad_por_que":"58/100 — Antiguedad de la firma 85/100: operando desde 2019: siete anos, el segundo historial mas largo del registro · Reputacion publica 45/100: BAJA DE 85 EL 31/08/2026. Trustpilot ha RETIRADO la nota de UProfit: 'This company's rating is unavailable due to a breach of our guidelines' y 'This company is displaying Trustpilot content in a misleading way'. El 4,8/5 con 6.223 resenas que la propia web sigue exhibiendo es justo lo que Trustpilot senala como uso enganoso. Datos reales del perfil: 6.546 resenas historicas pero solo 76 en los ultimos 12 meses, con un 5% de una estrella · Historial de pagos 55/100: BAJA DE 70 EL 31/08/2026. Siguen los 13.445 cobros aprobados declarados y sin auditar, pero en Trustpilot hay quejas concretas de 2026: un caso de enero con dos payouts denegados tras un correo de aprobacion (21.000 USD reclamados, la firma lo niega por falta de datos de cuenta) y otro de julio con un cobro de 1.176 USD parado siete dias habiles frente a las 24 horas que promete el contrato. No hay impago masivo documentado como el de Alpha Futures, por eso no baja mas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":58,"id":"uprofit--day-2-0-flex-50k"},{"puesto":23,"firma":"UProfit","plan":"DAY 2.0 Soft 50K","precio_tarifa":130,"precio_promo":65,"cupon":"sin codigo (automatico)","promo_caduca":"sin fecha publicada (vigente el 11/09/2026)","tipo_precio":"mensual","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1100,"consistencia_pct":40,"consistencia_donde":"ambas","min_diario_cobro":0,"techo_cobros":"8.100 USD en 6 retiros y la cuenta se cierra","dias_min":2,"reparto":"90/10","buffer_cobro":2500,"broker":"Tradovate","tradingview":"si (ejecucion)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 23/100 (-7.6 pts): consistencia del 40%, en evaluacion Y en cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 20/100 (-4.2 pts): 2,500 USD de buffer antes de cobrar","fiabilidad_por_que":"58/100 — Antiguedad de la firma 85/100: operando desde 2019: siete anos, el segundo historial mas largo del registro · Reputacion publica 45/100: BAJA DE 85 EL 31/08/2026. Trustpilot ha RETIRADO la nota de UProfit: 'This company's rating is unavailable due to a breach of our guidelines' y 'This company is displaying Trustpilot content in a misleading way'. El 4,8/5 con 6.223 resenas que la propia web sigue exhibiendo es justo lo que Trustpilot senala como uso enganoso. Datos reales del perfil: 6.546 resenas historicas pero solo 76 en los ultimos 12 meses, con un 5% de una estrella · Historial de pagos 55/100: BAJA DE 70 EL 31/08/2026. Siguen los 13.445 cobros aprobados declarados y sin auditar, pero en Trustpilot hay quejas concretas de 2026: un caso de enero con dos payouts denegados tras un correo de aprobacion (21.000 USD reclamados, la firma lo niega por falta de datos de cuenta) y otro de julio con un cobro de 1.176 USD parado siete dias habiles frente a las 24 horas que promete el contrato. No hay impago masivo documentado como el de Alpha Futures, por eso no baja mas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":58,"id":"uprofit--day-2-0-soft-50k"},{"puesto":24,"firma":"Apex Trader Funding","plan":"EOD Trail 50K (Standard)","precio_tarifa":550,"precio_promo":55,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"unico","activacion":139,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":250,"techo_cobros":"13.000 USD en 6 retiros y la cuenta se cierra","dias_min":5,"reparto":"100% del pago aprobado","buffer_cobro":2100,"broker":"Rithmic / Tradovate / WealthCharts","tradingview":"no","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Precio de la evaluacion 65/100 (-4.9 pts): 550 USD (pago unico) · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Dias reales hasta cobrar 25/100 (-4.5 pts): 5 dias que superen 250 USD; con tu historial eso son ~30 dias naturales (aciertas el 17% de los dias) — por encima de tu umbral de 5 dias","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--eod-trail-50k-standard"},{"puesto":25,"firma":"UProfit","plan":"LEGACY 50K","precio_tarifa":160,"precio_promo":null,"cupon":null,"promo_caduca":null,"tipo_precio":"mensual","activacion":null,"objetivo":2500,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1100,"consistencia_pct":30,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"SIN VERIFICAR","dias_min":5,"reparto":"80/20","buffer_cobro":2500,"broker":"Rithmic","tradingview":"no","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 35/100 (-6.4 pts): consistencia del 30%, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Buffer para el primer cobro 20/100 (-4.2 pts): 2,500 USD de buffer antes de cobrar","fiabilidad_por_que":"58/100 — Antiguedad de la firma 85/100: operando desde 2019: siete anos, el segundo historial mas largo del registro · Reputacion publica 45/100: BAJA DE 85 EL 31/08/2026. Trustpilot ha RETIRADO la nota de UProfit: 'This company's rating is unavailable due to a breach of our guidelines' y 'This company is displaying Trustpilot content in a misleading way'. El 4,8/5 con 6.223 resenas que la propia web sigue exhibiendo es justo lo que Trustpilot senala como uso enganoso. Datos reales del perfil: 6.546 resenas historicas pero solo 76 en los ultimos 12 meses, con un 5% de una estrella · Historial de pagos 55/100: BAJA DE 70 EL 31/08/2026. Siguen los 13.445 cobros aprobados declarados y sin auditar, pero en Trustpilot hay quejas concretas de 2026: un caso de enero con dos payouts denegados tras un correo de aprobacion (21.000 USD reclamados, la firma lo niega por falta de datos de cuenta) y otro de julio con un cobro de 1.176 USD parado siete dias habiles frente a las 24 horas que promete el contrato. No hay impago masivo documentado como el de Alpha Futures, por eso no baja mas","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":58,"id":"uprofit--legacy-50k"},{"puesto":26,"firma":"Apex Trader Funding","plan":"LEGACY 50K FULL (Tradovate)","precio_tarifa":197,"precio_promo":19.7,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"mensual","activacion":125,"objetivo":3000,"dd_evaluacion":"Trailing intradia","dd_fondeada":"Trailing intradia","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2500,"perdida_diaria":null,"consistencia_pct":30,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":50,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":null,"reparto":"100% primeros 25k luego 90/10","buffer_cobro":2600,"broker":"Tradovate","tradingview":"si (ejecucion)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing intradia · Regla de consistencia 35/100 (-6.4 pts): consistencia del 30%, condiciona cada cobro de la cuenta fondeada · Buffer para el primer cobro 20/100 (-4.2 pts): 2,600 USD de buffer antes de cobrar","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--legacy-50k-full-tradovate"},{"puesto":27,"firma":"Apex Trader Funding","plan":"LEGACY 25K FULL (Tradovate)","precio_tarifa":167,"precio_promo":16.7,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"mensual","activacion":125,"objetivo":1500,"dd_evaluacion":"Trailing intradia","dd_fondeada":"Trailing intradia","cambia_fondearse":"no, el mismo en las dos fases","drawdown":1500,"perdida_diaria":null,"consistencia_pct":30,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":50,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":null,"reparto":"100% primeros 25k luego 90/10","buffer_cobro":1600,"broker":"Tradovate","tradingview":"si (ejecucion)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing intradia · Regla de consistencia 35/100 (-6.4 pts): consistencia del 30%, condiciona cada cobro de la cuenta fondeada · Holgura del drawdown 60/100 (-3.6 pts): 1,500 USD de margen","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--legacy-25k-full-tradovate"},{"puesto":28,"firma":"Apex Trader Funding","plan":"EOD Trail 50K (No Activation Fee)","precio_tarifa":1190,"precio_promo":119,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":250,"techo_cobros":"13.000 USD en 6 retiros y la cuenta se cierra","dias_min":5,"reparto":"100% del pago aprobado","buffer_cobro":2100,"broker":"Rithmic / Tradovate / WealthCharts","tradingview":"no","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Precio de la evaluacion 25/100 (-10.5 pts): 1,190 USD (pago unico) · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Dias reales hasta cobrar 25/100 (-4.5 pts): 5 dias que superen 250 USD; con tu historial eso son ~30 dias naturales (aciertas el 17% de los dias) — por encima de tu umbral de 5 dias","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--eod-trail-50k-no-activation-fee"},{"puesto":29,"firma":"Apex Trader Funding","plan":"Intraday Trail 50K (No Activation Fee)","precio_tarifa":490,"precio_promo":49,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing intradia","dd_fondeada":"Trailing intradia","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":250,"techo_cobros":"13.000 USD en 6 retiros y la cuenta se cierra","dias_min":5,"reparto":"100% del pago aprobado","buffer_cobro":2100,"broker":"Rithmic / Tradovate / WealthCharts","tradingview":"no","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing intradia · Dias reales hasta cobrar 25/100 (-4.5 pts): 5 dias que superen 250 USD; con tu historial eso son ~30 dias naturales (aciertas el 17% de los dias) — por encima de tu umbral de 5 dias · Precio de la evaluacion 69/100 (-4.3 pts): 490 USD (pago unico)","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--intraday-trail-50k-no-activation-fee"},{"puesto":30,"firma":"Lucid Trading","plan":"LucidDaily 50K","precio_tarifa":185,"precio_promo":119,"cupon":"VAULT","promo_caduca":null,"tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing intradia","cambia_fondearse":"SI — SE ENDURECE al fondearse","drawdown":2000,"perdida_diaria":1200,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":0,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":0,"reparto":"90/10","buffer_cobro":2100,"broker":"CQG / Rithmic","tradingview":"si (ejecucion via CQG)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing al cierre (EOD) en la evaluacion y Trailing intradia al fondearse: se punta por el regimen mas duro · Penalizacion por endurecer el drawdown 0/100 (-12.0 pts): pasa de EOD a trailing intradia al llegar a cuenta fondeada · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"66/100 — Antiguedad de la firma 40/100: perfil de Trustpilot reclamado en abril de 2025: ano y medio. No ha pasado todavia un ciclo malo · Reputacion publica 70/100: 4,4/5 con 5.514 resenas, pero responde solo al 1% de las resenas negativas · Historial de pagos 75/100: 400 M USD pagados declarados por la firma, sin auditar; sin incidentes de impago conocidos y pagos en minutos segun las resenas","estado":"En el ranking, pero penalizada con -12 puntos por endurecer el drawdown al fondearse, y puntuada ademas por el regimen mas duro. Doble castigo a proposito.","fiabilidad_nota":66,"id":"lucid-trading--luciddaily-50k"},{"puesto":31,"firma":"MyFundedFutures","plan":"Rapid 50K","precio_tarifa":209,"precio_promo":104.5,"cupon":"CLUB (50%; se aplica solo al entrar desde los botones de su web, que llevan ?coupon=CLUB)","promo_caduca":"sin fecha declarada (4 usos por cliente)","tipo_precio":"unico","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing intradia","cambia_fondearse":"SI — SE ENDURECE al fondearse","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"evaluacion","min_diario_cobro":0,"techo_cobros":"100.000 USD · retiros sin tope","dias_min":2,"reparto":"90/10","buffer_cobro":2100,"broker":"Tradovate / Quantower","tradingview":"si (ejecucion via Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing al cierre (EOD) en la evaluacion y Trailing intradia al fondearse: se punta por el regimen mas duro · Penalizacion por endurecer el drawdown 0/100 (-12.0 pts): pasa de EOD a trailing intradia al llegar a cuenta fondeada · Buffer para el primer cobro 30/100 (-3.7 pts): 2,100 USD de buffer antes de cobrar","fiabilidad_por_que":"80/100 — Antiguedad de la firma 70/100: fecha de fundacion NO verificada; por volumen de resenas parece de 2022-2023 · Reputacion publica 100/100: 4,9/5 con mas de 16.000 resenas: la mejor valorada del registro · Historial de pagos 70/100: sin cifras de pagos publicadas ni verificadas","estado":"En el ranking, pero penalizada con -12 puntos por endurecer el drawdown al fondearse, y puntuada ademas por el regimen mas duro. Doble castigo a proposito.","fiabilidad_nota":80,"id":"myfundedfutures--rapid-50k"},{"puesto":32,"firma":"Apex Trader Funding","plan":"Intraday Trail 50K (Standard)","precio_tarifa":249,"precio_promo":24.9,"cupon":"SAVENOW","promo_caduca":"2026-09-23 (aprox., contador rodante en su web)","tipo_precio":"unico","activacion":139,"objetivo":3000,"dd_evaluacion":"Trailing intradia","dd_fondeada":"Trailing intradia","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":null,"consistencia_pct":50,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":250,"techo_cobros":"13.000 USD en 6 retiros y la cuenta se cierra","dias_min":5,"reparto":"100% del pago aprobado","buffer_cobro":2100,"broker":"Rithmic / Tradovate / WealthCharts","tradingview":"no","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing intradia · Dias reales hasta cobrar 25/100 (-4.5 pts): 5 dias que superen 250 USD; con tu historial eso son ~30 dias naturales (aciertas el 17% de los dias) — por encima de tu umbral de 5 dias · Reparto de beneficios 50/100 (-3.8 pts): 100% del pago aprobado","fiabilidad_por_que":"82/100 — Antiguedad de la firma 75/100: opera desde 2022: cuatro anos y un cambio de programa completo superado · Reputacion publica 75/100: 4,2/5 en Trustpilot con ~21.000 resenas: la nota mas baja de las grandes, pero con muchisimo volumen · Historial de pagos 90/100: 439 M USD pagados declarados desde 2022, sin incidentes de impago conocidos","estado":"En el ranking, sin penalizaciones.","fiabilidad_nota":82,"id":"apex-trader-funding--intraday-trail-50k-standard"},{"puesto":33,"firma":"Take Profit Trader","plan":"Test 50K -> PRO","precio_tarifa":170,"precio_promo":102,"cupon":"NOFEE40","promo_caduca":"sin fecha publicada (vigente el 11/09/2026)","tipo_precio":"mensual","activacion":130,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing intradia","cambia_fondearse":"SI — SE ENDURECE al fondearse","drawdown":2000,"perdida_diaria":1100,"consistencia_pct":null,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":0,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":3,"reparto":"80/20","buffer_cobro":2000,"broker":"CQG / Rithmic","tradingview":"si (via feed de CQG: NinjaTrader, TradingView y Tradovate)","ninjatrader":"si","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Tipo de drawdown 25/100 (-13.5 pts): Trailing al cierre (EOD) en la evaluacion y Trailing intradia al fondearse: se punta por el regimen mas duro · Penalizacion por endurecer el drawdown 0/100 (-12.0 pts): pasa de EOD a trailing intradia al llegar a cuenta fondeada · Regla de consistencia 50/100 (-5.0 pts): consistencia sin umbral conocido, condiciona cada cobro de la cuenta fondeada","fiabilidad_por_que":"64/100 — Antiguedad de la firma 65/100: fecha de fundacion NO verificada · Reputacion publica 70/100: documentacion publica muy detallada y verificada, que es senal de seriedad; valoracion publica NO medida · Historial de pagos 60/100: no publica ninguna cifra de pagos","estado":"En el ranking, pero penalizada con -12 puntos por endurecer el drawdown al fondearse, y puntuada ademas por el regimen mas duro. Doble castigo a proposito.","fiabilidad_nota":64,"id":"take-profit-trader--test-50k-pro"},{"puesto":"ref","firma":"REFERENCIA - Cuenta propia","plan":"Broker de descuento (NinjaTrader / AMP / Optimus)","precio_tarifa":0,"precio_promo":null,"cupon":null,"promo_caduca":null,"tipo_precio":"ninguno","activacion":0,"objetivo":0,"dd_evaluacion":"Sin drawdown","dd_fondeada":"Sin drawdown","cambia_fondearse":"no, el mismo en las dos fases","drawdown":0,"perdida_diaria":0,"consistencia_pct":null,"consistencia_donde":"no","min_diario_cobro":0,"techo_cobros":"sin tope de dinero ni de retiros","dias_min":0,"reparto":"100/0","buffer_cobro":0,"broker":"NinjaTrader / Tradovate / Ironbeam / AMP / Optimus","tradingview":"si","ninjatrader":"si","capital_riesgo":"TODO el capital depositado y la perdida puede superarlo","verificado":"parcial","fecha_consulta":"2026-08-27","lastra_nota":"Holgura del drawdown 40/100 (-5.4 pts): sin dato · Comisiones por contrato 55/100 (-0.9 pts): SIN DATO: no consta la comision por micro de esta firma","fiabilidad_por_que":"100/100 — Antiguedad de la firma 100/100: no aplica: no hay firma · Reputacion publica 100/100: no aplica: no hay firma · Historial de pagos 100/100: no hay contraparte que pueda dejar de pagarte","estado":"Fila de referencia, no es una fondeadora. Esta para tener contra que medir: es operar con capital propio.","fiabilidad_nota":100,"id":"referencia-cuenta-propia--broker-de-descuento-ninjatrader-amp-optimus"},{"puesto":"X","firma":"Topstep","plan":"Trading Combine 50K","precio_tarifa":49,"precio_promo":null,"cupon":null,"promo_caduca":null,"tipo_precio":"mensual","activacion":0,"objetivo":3000,"dd_evaluacion":"Trailing al cierre (EOD)","dd_fondeada":"Trailing al cierre (EOD)","cambia_fondearse":"no, el mismo en las dos fases","drawdown":2000,"perdida_diaria":1000,"consistencia_pct":null,"consistencia_donde":"cuenta_fondeada","min_diario_cobro":null,"techo_cobros":"SIN VERIFICAR","dias_min":null,"reparto":"100% primeros 10k luego 90/10","buffer_cobro":null,"broker":"TopstepX (propietario, de ProjectX Trading)","tradingview":"no (graficos de TradingView integrados DENTRO de TopstepX, pero no se ejecuta desde TradingView)","ninjatrader":"no","capital_riesgo":"solo lo pagado","verificado":"si","fecha_consulta":"2026-09-18","lastra_nota":"Regla de consistencia 50/100 (-5.0 pts): consistencia sin umbral conocido, condiciona cada cobro de la cuenta fondeada · Tipo de drawdown 75/100 (-4.5 pts): Trailing al cierre (EOD) · Techo total de cobros 55/100 (-2.8 pts): techo de cobros SIN VERIFICAR","fiabilidad_por_que":"76/100 — Antiguedad de la firma 100/100: mas de 12 anos operando: el historial mas largo del sector con diferencia · Reputacion publica 70/100: unica firma que publica sus tasas de exito reales (16,8% completa la Combine), lo que es un punto a favor; su valoracion publica NO se ha verificado · Historial de pagos 70/100: sin cifras de pagos verificadas en fuente oficial","estado":"DESCARTADA por 1 criterio eliminatorio — PLATAFORMA INCOMPATIBLE: no ejecuta ni desde TradingView ni desde NinjaTrader. La puntuacion se calcula igual que la de cualquier otro plan: si desactivaras esa regla entraria en el puesto 17 de 34 con 75.3 puntos.","fiabilidad_nota":76,"id":"topstep--trading-combine-50k"}]};</script>
+<script>
+/* Datos: primero la copia incrustada para pintar ya, despues el JSON de la red. */
+window.DATA = SNAPSHOT;
+(function () {
+  var url = 'fondeadoras.json?v=' + Date.now();
+  if (location.protocol === 'file:') return;          // abierto en local: solo snapshot
+  if (typeof fetch !== 'function') return;
+  fetch(url, { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      if (!d || !d.campos || !d.planes) throw new Error('JSON incompleto');
+      window.DATA = d;
+      if (window.__app) { window.__app.setState({ listo: true }); window.__app.pintar(); }
+    })
+    .catch(function () { /* sin red: se queda la copia incrustada */ });
+})();
+</script>
+<script>var PLANTILLA = [{"t":"el","g":"div","a":{"style":["height:100dvh;min-height:520px;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px"]},"k":[{"t":"el","g":"header","a":{"style":["flex:none;border-bottom:1px solid var(--line);background:var(--panel)"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;gap:8px;padding:10px 12px 8px"]},"k":[{"t":"el","g":"div","a":{"style":["flex:1;min-width:0"]},"k":[{"t":"el","g":"div","a":{"style":["font:700 13px/1.2 'IBM Plex Sans',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"]},"k":[{"t":"tx","p":[{"e":"meta.titulo"}]}]},{"t":"el","g":"div","a":{"style":["font:500 10px/1.4 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em;text-transform:uppercase;margin-top:2px"]},"k":[{"t":"tx","p":[{"e":"cabeceraSub"}]}]}]},{"t":"el","g":"button","a":{"title":["Cambiar tema"],"style":["flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font:500 10px 'JetBrains Mono',monospace;color:var(--fg2);cursor:pointer"],"class":["dh1"]},"k":[{"t":"tx","p":[{"e":"temaIcono"}]}],"ev":{"click":"onTema"}}]},{"t":"el","g":"div","a":{"style":["padding:0 12px 10px;display:flex;gap:8px"]},"k":[{"t":"el","g":"div","a":{"style":["flex:1;position:relative;display:flex;align-items:center"]},"k":[{"t":"el","g":"span","a":{"style":["position:absolute;left:11px;font:500 11px 'JetBrains Mono',monospace;color:var(--fg3);pointer-events:none"]},"k":[{"t":"tx","p":["/"]}]},{"t":"el","g":"input","a":{"placeholder":["Buscar firma o plan"],"aria-label":["Buscar firma o plan"],"style":["width:100%;height:44px;padding:0 38px 0 26px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:400 14px 'IBM Plex Sans',sans-serif;outline:none"],"style-focus":["border-color:var(--acc)"]},"v":[{"e":"q"}],"ev":{"input":"onQ"}},{"t":"if","e":"hayQ","k":[{"t":"el","g":"button","a":{"aria-label":["Limpiar busqueda"],"style":["position:absolute;right:4px;width:36px;height:36px;border:0;background:transparent;color:var(--fg3);font:500 15px 'JetBrains Mono',monospace;cursor:pointer"],"class":["dh2"]},"k":[{"t":"tx","p":["×"]}],"ev":{"click":"onQClear"}}]}]},{"t":"el","g":"button","a":{"title":["Solo favoritos"],"style":["flex:none;width:44px;height:44px;border:1px solid ",{"e":"favBorde"},";border-radius:8px;background:",{"e":"favFondo"},";color:",{"e":"favColor"},";font-size:17px;line-height:1;cursor:pointer"]},"k":[{"t":"tx","p":["★"]}],"ev":{"click":"onFavsToggle"}}]},{"t":"el","g":"div","a":{"style":["display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto"]},"k":[{"t":"el","g":"button","a":{"style":["flex:none;height:38px;padding:0 13px;border:1px solid ",{"e":"filtrosBorde"},";border-radius:19px;background:",{"e":"filtrosFondo"},";color:",{"e":"filtrosColor"},";font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"]},"k":[{"t":"tx","p":["Filtros",{"e":"filtrosSufijo"}]}],"ev":{"click":"onSheetFiltros"}},{"t":"el","g":"button","a":{"style":["flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"],"class":["dh1"]},"k":[{"t":"tx","p":[{"e":"ordenEtiqueta"}]}],"ev":{"click":"onSheetOrden"}},{"t":"el","g":"button","a":{"style":["flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"],"class":["dh1"]},"k":[{"t":"tx","p":["Metricas · 3"]}],"ev":{"click":"onSheetColumnas"}},{"t":"el","g":"button","a":{"style":["flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"],"class":["dh1"]},"k":[{"t":"tx","p":["CSV"]}],"ev":{"click":"onCSV"}},{"t":"if","e":"hayFiltros","k":[{"t":"el","g":"button","a":{"style":["flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:transparent;color:var(--bad);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"]},"k":[{"t":"tx","p":["Limpiar todo"]}],"ev":{"click":"onLimpiar"}}]}]}]},{"t":"el","g":"main","a":{"style":["flex:1;overflow-y:auto;overflow-x:hidden"]},"k":[{"t":"if","e":"esLista","k":[{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:11px 14px 7px;font:500 10px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"]},"k":[{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":[{"e":"recuento"}]}]},{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":[{"e":"ordenResumen"}]}]}]},{"t":"if","e":"esAncho","k":[{"t":"el","g":"div","a":{"style":["padding:0 12px 20px;overflow-x:auto"]},"k":[{"t":"el","g":"table","a":{"style":["width:100%;border-collapse:collapse;font-size:13px"]},"k":[{"t":"el","g":"thead","a":{},"k":[{"t":"el","g":"tr","a":{},"k":[{"t":"el","g":"th","a":{"style":["padding:0 0 7px;text-align:left;width:34px"]}},{"t":"for","e":"tablaCabeceras","as":"h","k":[{"t":"el","g":"th","a":{"title":["Ordenar"],"style":["padding:0 10px 7px;text-align:",{"e":"h.align"},";font:600 10px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:",{"e":"h.color"},";border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap"]},"k":[{"t":"tx","p":[{"e":"h.label"}]}],"ev":{"click":"h.onSort"}}]}]}]},{"t":"el","g":"tbody","a":{},"k":[{"t":"for","e":"filas","as":"f","k":[{"t":"el","g":"tr","a":{"style":["cursor:pointer;background:",{"e":"f.fondo"}],"class":["dh3"]},"k":[{"t":"el","g":"td","a":{"style":["padding:9px 0;text-align:center;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"button","a":{"aria-label":["Favorito"],"style":["width:28px;height:28px;border:0;background:transparent;color:",{"e":"f.favColor"},";font-size:14px;cursor:pointer"]},"k":[{"t":"tx","p":["★"]}],"ev":{"click":"f.onFav"}}]},{"t":"for","e":"f.celdas","as":"c","k":[{"t":"el","g":"td","a":{"style":["padding:9px 10px;text-align:",{"e":"c.align"},";border-bottom:1px solid var(--line);font-family:",{"e":"c.fuente"},";font-variant-numeric:tabular-nums;color:",{"e":"c.color"},";white-space:nowrap;max-width:230px;overflow:hidden;text-overflow:ellipsis"]},"k":[{"t":"tx","p":[{"e":"c.txt"}]}]}]}],"ev":{"click":"f.onAbrir"}}]}]}]}]}]},{"t":"if","e":"esEstrecho","k":[{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:9px;padding:2px 12px 22px;max-width:560px;margin:0 auto"]},"k":[{"t":"for","e":"tarjetas","as":"p","k":[{"t":"el","g":"article","a":{"style":["border:1px solid ",{"e":"p.borde"},";border-radius:11px;background:var(--panel);overflow:hidden"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:flex-start;gap:8px;padding:11px 12px 0"]},"k":[{"t":"el","g":"div","a":{"style":["flex:1;min-width:0"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;gap:7px"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em"]},"k":[{"t":"tx","p":[{"e":"p.puestoTxt"}]}]},{"t":"el","g":"span","a":{"style":["font:600 12px 'IBM Plex Sans',sans-serif;color:var(--acc);letter-spacing:-.01em"]},"k":[{"t":"tx","p":[{"e":"p.firma"}]}]}]},{"t":"el","g":"div","a":{"style":["font:500 14px/1.3 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"p.plan"}]}]}]},{"t":"el","g":"button","a":{"aria-label":["Favorito"],"style":["flex:none;width:44px;height:44px;margin:-8px -6px 0 0;border:0;background:transparent;color:",{"e":"p.favColor"},";font-size:17px;cursor:pointer"]},"k":[{"t":"tx","p":["★"]}],"ev":{"click":"p.onFav"}}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding:9px 12px 0"]},"k":[{"t":"el","g":"span","a":{"style":["font:700 27px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em"]},"k":[{"t":"tx","p":[{"e":"p.precioTxt"}]}]},{"t":"if","e":"p.hayDescuento","k":[{"t":"el","g":"span","a":{"style":["font:400 14px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--fg3);text-decoration:line-through"]},"k":[{"t":"tx","p":[{"e":"p.tarifaTxt"}]}]}]},{"t":"el","g":"span","a":{"style":["font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em"]},"k":[{"t":"tx","p":[{"e":"p.tipoTxt"}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px 0"]},"k":[{"t":"for","e":"p.badges","as":"b","k":[{"t":"el","g":"span","a":{"title":[{"e":"b.title"}],"style":["display:inline-flex;align-items:center;max-width:100%;padding:4px 8px;border:1px solid ",{"e":"b.borde"},";border-radius:6px;background:",{"e":"b.fondo"},";color:",{"e":"b.color"},";font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"]},"k":[{"t":"tx","p":[{"e":"b.txt"}]}]}]}]},{"t":"el","g":"div","a":{"style":["display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:11px 0 0;background:var(--line);border-top:1px solid var(--line)"]},"k":[{"t":"for","e":"p.metricas","as":"m","k":[{"t":"el","g":"div","a":{"style":["background:var(--panel);padding:8px 10px 9px;min-width:0"]},"k":[{"t":"el","g":"div","a":{"style":["font:500 9px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"]},"k":[{"t":"tx","p":[{"e":"m.label"}]}]},{"t":"el","g":"div","a":{"style":["font:500 13px/1.35 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"]},"k":[{"t":"tx","p":[{"e":"m.valor"}]}]}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;gap:1px;background:var(--line)"]},"k":[{"t":"el","g":"button","a":{"style":["flex:1;height:44px;border:0;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer"],"class":["dh2"]},"k":[{"t":"tx","p":["Ver ficha"]}],"ev":{"click":"p.onAbrir"}},{"t":"el","g":"button","a":{"style":["flex:1;height:44px;border:0;background:",{"e":"p.cmpFondo"},";color:",{"e":"p.cmpColor"},";font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":[{"e":"p.cmpTxt"}]}],"ev":{"click":"p.onComparar"}}]}]}]},{"t":"if","e":"vacio","k":[{"t":"el","g":"div","a":{"style":["padding:36px 16px;text-align:center;color:var(--fg3);font-size:13px"]},"k":[{"t":"tx","p":["Ningun plan cumple los filtros."]},{"t":"el","g":"br","a":{}},{"t":"el","g":"button","a":{"style":["margin-top:12px;height:40px;padding:0 15px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);cursor:pointer"]},"k":[{"t":"tx","p":["Limpiar filtros"]}],"ev":{"click":"onLimpiar"}}]}]}]}]}]}]},{"t":"if","e":"esComparar","k":[{"t":"el","g":"div","a":{"style":["padding:12px 12px 24px"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px"]},"k":[{"t":"el","g":"div","a":{"style":["font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"]},"k":[{"t":"tx","p":[{"e":"cmpResumen"}]}]},{"t":"el","g":"button","a":{"style":["height:34px;padding:0 11px;border:1px solid ",{"e":"difBorde"},";border-radius:17px;background:",{"e":"difFondo"},";color:",{"e":"difColor"},";font:500 11px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer"]},"k":[{"t":"tx","p":["Solo diferencias"]}],"ev":{"click":"onSoloDif"}}]},{"t":"if","e":"cmpVacio","k":[{"t":"el","g":"div","a":{"style":["padding:34px 14px;border:1px dashed var(--line2);border-radius:11px;text-align:center;color:var(--fg3);font-size:13px;line-height:1.6"]},"k":[{"t":"tx","p":["Elige 2 o 3 planes en la lista con el boton "]},{"t":"el","g":"span","a":{"style":["color:var(--fg2)"]},"k":[{"t":"tx","p":["Comparar"]}]},{"t":"tx","p":[" y apareceran aqui enfrentados."]}]}]},{"t":"if","e":"cmpListo","k":[{"t":"el","g":"div","a":{"style":["overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--panel)"]},"k":[{"t":"el","g":"table","a":{"style":["border-collapse:collapse;width:100%;min-width:",{"e":"cmpMin"}]},"k":[{"t":"el","g":"thead","a":{},"k":[{"t":"el","g":"tr","a":{},"k":[{"t":"el","g":"th","a":{"style":["position:sticky;left:0;z-index:2;background:var(--panel);padding:10px;text-align:left;border-bottom:1px solid var(--line);width:128px;min-width:128px"]}},{"t":"for","e":"cmpCols","as":"c","k":[{"t":"el","g":"th","a":{"style":["padding:10px;text-align:left;border-bottom:1px solid var(--line);border-left:1px solid var(--line);vertical-align:top;min-width:164px"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 10px 'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.03em"]},"k":[{"t":"tx","p":[{"e":"c.firma"}]}]},{"t":"el","g":"div","a":{"style":["font:500 12.5px/1.35 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"c.plan"}]}]},{"t":"el","g":"button","a":{"style":["margin-top:7px;height:30px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg3);font:500 10px 'JetBrains Mono',monospace;cursor:pointer"]},"k":[{"t":"tx","p":["QUITAR"]}],"ev":{"click":"c.onQuitar"}}]}]}]}]},{"t":"el","g":"tbody","a":{},"k":[{"t":"for","e":"cmpFilas","as":"r","k":[{"t":"el","g":"tr","a":{"style":["background:",{"e":"r.fondo"}]},"k":[{"t":"el","g":"th","a":{"style":["position:sticky;left:0;z-index:1;background:",{"e":"r.fondoLabel"},";padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);border-left:3px solid ",{"e":"r.marca"},";font:500 10.5px/1.4 'JetBrains Mono',monospace;color:var(--fg2);letter-spacing:.02em"]},"k":[{"t":"tx","p":[{"e":"r.label"}]}]},{"t":"for","e":"r.celdas","as":"c","k":[{"t":"el","g":"td","a":{"style":["padding:9px 10px;vertical-align:top;border-bottom:1px solid var(--line);border-left:1px solid var(--line);font:400 12.5px/1.5 ",{"e":"c.fuente"},";font-variant-numeric:tabular-nums;color:",{"e":"c.color"},";max-width:280px;overflow-wrap:anywhere"]},"k":[{"t":"tx","p":[{"e":"c.txt"}]}]}]}]}]}]}]}]}]}]}]},{"t":"if","e":"esCoste","k":[{"t":"el","g":"div","a":{"style":["padding:12px 12px 24px"]},"k":[{"t":"el","g":"div","a":{"style":["border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:13px 13px 6px"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 12px 'IBM Plex Sans',sans-serif"]},"k":[{"t":"tx","p":["Coste real hasta el primer cobro"]}]},{"t":"el","g":"div","a":{"style":["font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);margin-top:5px;text-wrap:pretty"]},"k":[{"t":"tx","p":["Los planes mensuales se cobran cada mes hasta que pasas; los de pago unico, una sola vez. La cuota de activacion se suma siempre."]}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;justify-content:space-between;margin-top:12px"]},"k":[{"t":"el","g":"span","a":{"style":["font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase"]},"k":[{"t":"tx","p":["Meses hasta pasar la evaluacion"]}]},{"t":"el","g":"span","a":{"style":["font:700 20px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--acc)"]},"k":[{"t":"tx","p":[{"e":"meses"}]}]}]},{"t":"el","g":"input","a":{"type":["range"],"min":["1"],"max":["12"],"step":["1"],"aria-label":["Meses hasta pasar la evaluacion"],"style":["width:100%"]},"v":[{"e":"meses"}],"ev":{"input":"onMeses"}},{"t":"el","g":"div","a":{"style":["display:flex;justify-content:space-between;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);margin:-6px 0 8px"]},"k":[{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":["1"]}]},{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":["6"]}]},{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":["12"]}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;justify-content:space-between;padding:12px 2px 7px;font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"]},"k":[{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":[{"e":"recuento"}]}]},{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":["orden: coste con promo"]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:7px"]},"k":[{"t":"for","e":"costes","as":"c","k":[{"t":"el","g":"div","a":{"style":["border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:10px 11px;cursor:pointer"],"class":["dh4"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;gap:7px"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 10px 'JetBrains Mono',monospace;color:var(--acc)"]},"k":[{"t":"tx","p":[{"e":"c.firma"}]}]},{"t":"el","g":"span","a":{"style":["font:500 12.5px/1.3 'IBM Plex Sans',sans-serif;flex:1;min-width:0;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"c.plan"}]}]},{"t":"el","g":"span","a":{"style":["font:500 9.5px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em"]},"k":[{"t":"tx","p":[{"e":"c.tipo"}]}]}]},{"t":"el","g":"div","a":{"style":["display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px"]},"k":[{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em"]},"k":[{"t":"tx","p":["A TARIFA"]}]},{"t":"el","g":"div","a":{"style":["font:500 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--fg2);margin-top:2px"]},"k":[{"t":"tx","p":[{"e":"c.tarifa"}]}]}]},{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em"]},"k":[{"t":"tx","p":["CON PROMO"]}]},{"t":"el","g":"div","a":{"style":["font:700 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;margin-top:2px"]},"k":[{"t":"tx","p":[{"e":"c.promo"}]}]}]},{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em"]},"k":[{"t":"tx","p":["AHORRO"]}]},{"t":"el","g":"div","a":{"style":["font:500 14px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:",{"e":"c.ahorroColor"},";margin-top:2px"]},"k":[{"t":"tx","p":[{"e":"c.ahorro"}]}]}]}]}],"ev":{"click":"c.onAbrir"}}]}]},{"t":"el","g":"p","a":{"style":["font:400 11px/1.6 'IBM Plex Sans',sans-serif;color:var(--fg3);margin:14px 2px 0;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"meta.coste_real_nota"}]}]},{"t":"el","g":"p","a":{"style":["font:400 11px/1.6 'IBM Plex Sans',sans-serif;color:var(--warn);margin:8px 2px 0;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"meta.coste_real_aviso"}]}]}]}]},{"t":"if","e":"esMetodo","k":[{"t":"el","g":"div","a":{"style":["padding:14px 14px 28px;max-width:720px"]},"k":[{"t":"el","g":"h2","a":{"style":["font:700 16px/1.3 'IBM Plex Sans',sans-serif;margin:0 0 4px;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"meta.metodo_titulo"}]}]},{"t":"el","g":"div","a":{"style":["font:500 10px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px"]},"k":[{"t":"tx","p":["Datos consultados el ",{"e":"fechaConsultaTxt"}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:10px"]},"k":[{"t":"for","e":"metodo","as":"m","k":[{"t":"el","g":"section","a":{"style":["border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:9px;background:var(--panel);padding:11px 12px"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 12px 'IBM Plex Sans',sans-serif;margin-bottom:5px"]},"k":[{"t":"tx","p":[{"e":"m.titulo"}]}]},{"t":"el","g":"div","a":{"style":["font:400 12.5px/1.65 'IBM Plex Sans',sans-serif;color:var(--fg2);text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"m.texto"}]}]}]}]}]},{"t":"el","g":"section","a":{"style":["margin-top:12px;border:1px solid var(--warn);border-radius:9px;background:var(--warnbg);padding:11px 12px"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 12px 'IBM Plex Sans',sans-serif;color:var(--warn);margin-bottom:5px"]},"k":[{"t":"tx","p":["Antes de pagar nada"]}]},{"t":"el","g":"div","a":{"style":["font:400 12.5px/1.65 'IBM Plex Sans',sans-serif;text-wrap:pretty"]},"k":[{"t":"tx","p":["Las condiciones de las prop firms cambian sin aviso y estas cifras se leyeron el ",{"e":"fechaConsultaTxt"},". Verifica precio, drawdown, cuota de activacion, regla de consistencia y plataforma en la web oficial de la firma antes de contratar."]}]}]},{"t":"el","g":"div","a":{"style":["margin-top:14px;font:400 11px/1.6 'JetBrains Mono',monospace;color:var(--fg3);text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"meta.nota_generacion"}]}]},{"t":"el","g":"div","a":{"style":["margin-top:10px;font:400 11px/1.6 'JetBrains Mono',monospace;color:var(--fg3);text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"meta.leyenda"}]}]}]}]}]},{"t":"el","g":"nav","a":{"style":["flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--panel);padding-bottom:env(safe-area-inset-bottom)"]},"k":[{"t":"for","e":"tabs","as":"t","k":[{"t":"el","g":"button","a":{"style":["height:54px;border:0;border-top:2px solid ",{"e":"t.marca"},";background:transparent;color:",{"e":"t.color"},";font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 2px;overflow:hidden"]},"k":[{"t":"el","g":"span","a":{"style":["white-space:nowrap"]},"k":[{"t":"tx","p":[{"e":"t.label"}]}]},{"t":"el","g":"span","a":{"style":["font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em;white-space:nowrap"]},"k":[{"t":"tx","p":[{"e":"t.sub"}]}]}],"ev":{"click":"t.onClick"}}]}]},{"t":"if","e":"hojaAbierta","k":[{"t":"el","g":"div","a":{"style":["position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:flex-end"]},"k":[{"t":"el","g":"div","a":{"style":["position:absolute;inset:0;background:rgba(0,0,0,.55);animation:fadeIn .16s ease"]},"ev":{"click":"onCerrarHoja"}},{"t":"el","g":"div","a":{"style":["position:relative;max-height:82dvh;display:flex;flex-direction:column;border-top:1px solid var(--line2);border-radius:16px 16px 0 0;background:var(--panel);box-shadow:var(--shadow);animation:sheetUp .2s cubic-bezier(.2,.8,.3,1)"]},"k":[{"t":"el","g":"div","a":{"style":["flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 13px 'IBM Plex Sans',sans-serif"]},"k":[{"t":"tx","p":[{"e":"hojaTitulo"}]}]},{"t":"el","g":"div","a":{"style":["display:flex;gap:6px"]},"k":[{"t":"if","e":"hojaEsFiltros","k":[{"t":"el","g":"button","a":{"style":["height:36px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--bad);font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":["Limpiar"]}],"ev":{"click":"onLimpiar"}}]},{"t":"el","g":"button","a":{"style":["height:36px;min-width:44px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--fg);font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":["Hecho"]}],"ev":{"click":"onCerrarHoja"}}]}]},{"t":"el","g":"div","a":{"style":["flex:1;overflow-y:auto;padding:4px 14px 20px"]},"k":[{"t":"if","e":"hojaEsFiltros","k":[{"t":"el","g":"div","a":{},"k":[{"t":"for","e":"facetas","as":"f","k":[{"t":"el","g":"div","a":{"style":["padding:12px 0;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg2)"]},"k":[{"t":"tx","p":[{"e":"f.label"}]}]},{"t":"el","g":"span","a":{"style":["font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em"]},"k":[{"t":"tx","p":[{"e":"f.grupo"}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:5px"]},"k":[{"t":"for","e":"f.valores","as":"v","k":[{"t":"el","g":"button","a":{"style":["display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:7px 10px;border:1px solid ",{"e":"v.borde"},";border-radius:8px;background:",{"e":"v.fondo"},";text-align:left;cursor:pointer"]},"k":[{"t":"el","g":"span","a":{"style":["flex:none;width:17px;height:17px;border:1px solid ",{"e":"v.marcaBorde"},";border-radius:4px;background:",{"e":"v.marcaFondo"},";color:var(--bg);font:700 11px/15px 'JetBrains Mono',monospace;text-align:center"]},"k":[{"t":"tx","p":[{"e":"v.tick"}]}]},{"t":"el","g":"span","a":{"style":["flex:1;min-width:0;font:400 12px/1.4 'IBM Plex Sans',sans-serif;color:",{"e":"v.color"},";overflow-wrap:anywhere"]},"k":[{"t":"tx","p":[{"e":"v.etiqueta"}]}]},{"t":"el","g":"span","a":{"style":["flex:none;font:500 10.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:",{"e":"v.nColor"}]},"k":[{"t":"tx","p":[{"e":"v.n"}]}]}],"ev":{"click":"v.onToggle"}}]}]}]}]},{"t":"for","e":"rangos","as":"r","k":[{"t":"el","g":"div","a":{"style":["padding:12px 0;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;justify-content:space-between;gap:8px"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg2)"]},"k":[{"t":"tx","p":[{"e":"r.label"}]}]},{"t":"el","g":"span","a":{"style":["font:500 10.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:",{"e":"r.color"}]},"k":[{"t":"tx","p":[{"e":"r.resumen"}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;gap:9px;margin-top:-2px"]},"k":[{"t":"el","g":"span","a":{"style":["flex:none;width:30px;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3)"]},"k":[{"t":"tx","p":["MIN"]}]},{"t":"el","g":"input","a":{"type":["range"],"min":[{"e":"r.min"}],"max":[{"e":"r.max"}],"step":[{"e":"r.step"}],"aria-label":["Minimo"],"style":["flex:1"]},"v":[{"e":"r.lo"}],"ev":{"input":"r.onLo"}}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;gap:9px;margin-top:-14px"]},"k":[{"t":"el","g":"span","a":{"style":["flex:none;width:30px;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3)"]},"k":[{"t":"tx","p":["MAX"]}]},{"t":"el","g":"input","a":{"type":["range"],"min":[{"e":"r.min"}],"max":[{"e":"r.max"}],"step":[{"e":"r.step"}],"aria-label":["Maximo"],"style":["flex:1"]},"v":[{"e":"r.hi"}],"ev":{"input":"r.onHi"}}]},{"t":"el","g":"div","a":{"style":["font:500 9.5px 'JetBrains Mono',monospace;color:var(--fg3);margin-top:-6px"]},"k":[{"t":"tx","p":["deja ",{"e":"r.n"}," planes"]}]}]}]}]}]},{"t":"if","e":"hojaEsOrden","k":[{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["display:flex;gap:6px;padding:10px 0 12px"]},"k":[{"t":"for","e":"dirs","as":"d","k":[{"t":"el","g":"button","a":{"style":["flex:1;height:44px;border:1px solid ",{"e":"d.borde"},";border-radius:8px;background:",{"e":"d.fondo"},";color:",{"e":"d.color"},";font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":[{"e":"d.label"}]}],"ev":{"click":"d.onClick"}}]}]},{"t":"for","e":"ordenGrupos","as":"g","k":[{"t":"el","g":"div","a":{"style":["padding:6px 0 10px"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:6px"]},"k":[{"t":"tx","p":[{"e":"g.grupo"}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-wrap:wrap;gap:5px"]},"k":[{"t":"for","e":"g.campos","as":"c","k":[{"t":"el","g":"button","a":{"style":["min-height:40px;padding:8px 11px;border:1px solid ",{"e":"c.borde"},";border-radius:8px;background:",{"e":"c.fondo"},";color:",{"e":"c.color"},";font:500 11.5px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":[{"e":"c.label"}]}],"ev":{"click":"c.onClick"}}]}]}]}]}]}]},{"t":"if","e":"hojaEsColumnas","k":[{"t":"el","g":"div","a":{},"k":[{"t":"el","g":"div","a":{"style":["font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);padding:10px 0 4px"]},"k":[{"t":"tx","p":["Elige las tres metricas que quieres ver en cada tarjeta. En pantalla ancha son tambien las columnas de la tabla."]}]},{"t":"for","e":"colGrupos","as":"g","k":[{"t":"el","g":"div","a":{"style":["padding:8px 0 10px;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"div","a":{"style":["font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:6px"]},"k":[{"t":"tx","p":[{"e":"g.grupo"}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:5px"]},"k":[{"t":"for","e":"g.campos","as":"c","k":[{"t":"el","g":"button","a":{"style":["display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:7px 10px;border:1px solid ",{"e":"c.borde"},";border-radius:8px;background:",{"e":"c.fondo"},";text-align:left;cursor:pointer"]},"k":[{"t":"el","g":"span","a":{"style":["flex:none;width:19px;font:700 10px 'JetBrains Mono',monospace;color:var(--acc)"]},"k":[{"t":"tx","p":[{"e":"c.pos"}]}]},{"t":"el","g":"span","a":{"style":["flex:1;min-width:0;font:400 12px/1.4 'IBM Plex Sans',sans-serif;color:",{"e":"c.color"}]},"k":[{"t":"tx","p":[{"e":"c.label"}]}]},{"t":"el","g":"span","a":{"style":["flex:none;font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em"]},"k":[{"t":"tx","p":[{"e":"c.tipo"}]}]}],"ev":{"click":"c.onClick"}}]}]}]}]}]}]}]}]}]}]},{"t":"if","e":"fichaAbierta","k":[{"t":"el","g":"div","a":{"style":["position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:var(--bg);animation:fadeIn .14s ease"]},"k":[{"t":"el","g":"div","a":{"style":["flex:none;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--panel)"]},"k":[{"t":"el","g":"div","a":{"style":["flex:1;min-width:0"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;align-items:center;gap:7px"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 10px 'JetBrains Mono',monospace;color:var(--fg3)"]},"k":[{"t":"tx","p":[{"e":"ficha.puestoTxt"}]}]},{"t":"el","g":"span","a":{"style":["font:600 12px 'IBM Plex Sans',sans-serif;color:var(--acc)"]},"k":[{"t":"tx","p":[{"e":"ficha.firma"}]}]}]},{"t":"el","g":"div","a":{"style":["font:600 15px/1.3 'IBM Plex Sans',sans-serif;margin-top:3px;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"ficha.plan"}]}]},{"t":"el","g":"div","a":{"style":["display:flex;align-items:baseline;gap:8px;margin-top:6px"]},"k":[{"t":"el","g":"span","a":{"style":["font:700 22px/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums"]},"k":[{"t":"tx","p":[{"e":"ficha.precioTxt"}]}]},{"t":"if","e":"ficha.hayDescuento","k":[{"t":"el","g":"span","a":{"style":["font:400 13px 'JetBrains Mono',monospace;color:var(--fg3);text-decoration:line-through"]},"k":[{"t":"tx","p":[{"e":"ficha.tarifaTxt"}]}]}]}]}]},{"t":"el","g":"div","a":{"style":["flex:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end"]},"k":[{"t":"el","g":"button","a":{"style":["width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--fg);font:400 17px 'JetBrains Mono',monospace;cursor:pointer"]},"k":[{"t":"tx","p":["×"]}],"ev":{"click":"onCerrarFicha"}},{"t":"el","g":"button","a":{"style":["width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:",{"e":"ficha.favColor"},";font-size:16px;cursor:pointer"]},"k":[{"t":"tx","p":["★"]}],"ev":{"click":"ficha.onFav"}}]}]},{"t":"el","g":"div","a":{"style":["flex:1;overflow-y:auto;padding:10px 12px 26px"]},"k":[{"t":"el","g":"div","a":{"style":["display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px"]},"k":[{"t":"for","e":"ficha.badges","as":"b","k":[{"t":"el","g":"span","a":{"title":[{"e":"b.title"}],"style":["padding:5px 9px;border:1px solid ",{"e":"b.borde"},";border-radius:6px;background:",{"e":"b.fondo"},";color:",{"e":"b.color"},";font:500 10.5px/1.3 'JetBrains Mono',monospace;white-space:nowrap"]},"k":[{"t":"tx","p":[{"e":"b.txt"}]}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;flex-direction:column;gap:7px"]},"k":[{"t":"for","e":"ficha.grupos","as":"g","k":[{"t":"el","g":"section","a":{"style":["border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden"]},"k":[{"t":"el","g":"button","a":{"style":["display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:46px;padding:11px 12px;border:0;background:transparent;cursor:pointer;text-align:left"]},"k":[{"t":"el","g":"span","a":{"style":["font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg)"]},"k":[{"t":"tx","p":[{"e":"g.grupo"}]}]},{"t":"el","g":"span","a":{"style":["display:flex;align-items:center;gap:8px;font:500 10px 'JetBrains Mono',monospace;color:var(--fg3)"]},"k":[{"t":"el","g":"span","a":{},"k":[{"t":"tx","p":[{"e":"g.n"}]}]},{"t":"el","g":"span","a":{"style":["font-size:11px;color:var(--fg2)"]},"k":[{"t":"tx","p":[{"e":"g.chevron"}]}]}]}],"ev":{"click":"g.onToggle"}},{"t":"if","e":"g.abierto","k":[{"t":"el","g":"div","a":{"style":["border-top:1px solid var(--line)"]},"k":[{"t":"for","e":"g.campos","as":"c","k":[{"t":"el","g":"div","a":{"style":["padding:9px 12px;border-bottom:1px solid var(--line)"]},"k":[{"t":"el","g":"div","a":{"style":["font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3)"]},"k":[{"t":"tx","p":[{"e":"c.label"}]}]},{"t":"el","g":"div","a":{"style":["font:400 ",{"e":"c.tam"},"/1.6 ",{"e":"c.fuente"},";font-variant-numeric:tabular-nums;color:",{"e":"c.color"},";margin-top:3px;overflow-wrap:anywhere;text-wrap:pretty"]},"k":[{"t":"tx","p":[{"e":"c.valor"}]}]}]}]}]}]}]}]}]},{"t":"el","g":"div","a":{"style":["display:flex;gap:7px;margin-top:12px"]},"k":[{"t":"el","g":"button","a":{"style":["flex:1;height:46px;border:1px solid ",{"e":"ficha.cmpBorde"},";border-radius:9px;background:",{"e":"ficha.cmpFondo"},";color:",{"e":"ficha.cmpColor"},";font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":[{"e":"ficha.cmpTxt"}]}],"ev":{"click":"ficha.onComparar"}},{"t":"el","g":"button","a":{"style":["flex:1;height:46px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--fg2);font:500 12.5px 'IBM Plex Sans',sans-serif;cursor:pointer"]},"k":[{"t":"tx","p":["Volver a la lista"]}],"ev":{"click":"onCerrarFicha"}}]},{"t":"el","g":"div","a":{"style":["font:400 10.5px/1.6 'JetBrains Mono',monospace;color:var(--fg3);margin-top:12px"]},"k":[{"t":"tx","p":["Leido en la documentacion oficial el ",{"e":"fechaConsultaTxt"},". Verificalo en la web de la firma antes de pagar."]}]}]}]}]}]}];</script>
+<script>
+
+class Component extends Logic {
+  state = {
+    listo: false, q: '', vista: 'lista', hoja: null, tema: 'oscuro',
+    enums: {}, rangos: {}, ordenKey: 'puesto', ordenDir: 'asc',
+    cols: ['precio_tarifa', 'drawdown', 'dias_min'],
+    favs: [], soloFavs: false, meses: 2, comparar: [], ficha: null,
+    abiertos: { Identidad: true, Precio: true, Reglas: true, Cobros: false, Plataforma: false, Fiabilidad: false },
+    soloDif: true, ancho: false
+  };
+
+  CLAVE = 'ff.comparador.v1';
+  DERIVADOS = [
+    { key: '_coste_tarifa', label: 'Coste real a tarifa', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true },
+    { key: '_coste_promo', label: 'Coste real con promo', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true },
+    { key: '_ahorro', label: 'Ahorro de la promo', tipo: 'numero', unidad: 'USD', grupo: 'Coste real (simulador)', ordenable: true }
+  ];
+
+  componentDidMount() {
+    const ti = this.props.temaInicial;
+    if (ti === 'claro' || ti === 'oscuro') {
+      document.documentElement.setAttribute('data-tema', ti);
+      this.setState({ tema: ti });
+    }
+    if (this.num(this.props.mesesInicial)) this.setState({ meses: this.props.mesesInicial });
+    this.restaurar();
+    this.esperarDatos();
+    this.medir();
+    window.addEventListener('resize', this.medir);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.medir);
+    clearTimeout(this._t);
+  }
+  componentDidUpdate() { this.guardar(); }
+
+  esperarDatos = () => {
+    if (window.DATA && window.DATA.campos) { this.setState({ listo: true }); return; }
+    this._t = setTimeout(this.esperarDatos, 60);
+  };
+  medir = () => {
+    const w = (this.base && this.base.offsetWidth) || window.innerWidth || 390;
+    const ancho = /movil/.test(location.hash) ? false : w >= 780;
+    if (ancho !== this.state.ancho) this.setState({ ancho });
+  };
+
+  restaurar() {
+    try {
+      const raw = localStorage.getItem(this.CLAVE);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      const ok = {};
+      ['enums', 'rangos', 'ordenKey', 'ordenDir', 'cols', 'favs', 'soloFavs', 'meses', 'tema', 'vista', 'abiertos', 'soloDif'].forEach(k => {
+        if (s[k] !== undefined && s[k] !== null) ok[k] = s[k];
+      });
+      if (ok.tema) document.documentElement.setAttribute('data-tema', ok.tema === 'claro' ? 'claro' : 'oscuro');
+      this.setState(ok);
+    } catch (e) { /* almacenamiento no disponible */ }
+  }
+  guardar() {
+    try {
+      const s = this.state;
+      localStorage.setItem(this.CLAVE, JSON.stringify({
+        enums: s.enums, rangos: s.rangos, ordenKey: s.ordenKey, ordenDir: s.ordenDir,
+        cols: s.cols, favs: s.favs, soloFavs: s.soloFavs, meses: s.meses, tema: s.tema,
+        vista: s.vista, abiertos: s.abiertos, soloDif: s.soloDif
+      }));
+    } catch (e) { /* almacenamiento no disponible */ }
+  }
+
+  // ---------- datos ----------
+  D() { return window.DATA || { meta: {}, campos: [], planes: [] }; }
+  campo(key) { return this.D().campos.find(c => c.key === key) || this.DERIVADOS.find(c => c.key === key) || { key, label: key, tipo: 'texto' }; }
+
+  num(v) { return typeof v === 'number' && isFinite(v); }
+  miles(v) { return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(v); }
+  fmt(v, c) {
+    if (v === null || v === undefined || v === '') return '—';
+    if (c.tipo === 'numero' && this.num(v)) {
+      if (c.unidad === 'USD') return this.miles(v) + ' USD';
+      if (c.unidad === '%') return this.miles(v) + ' %';
+      if (c.unidad === 'dias') return v === 1 ? '1 dia' : this.miles(v) + ' dias';
+      return this.miles(v);
+    }
+    if (c.tipo === 'fecha') return this.fecha(v);
+    return String(v);
+  }
+  fmtCorto(v, c) {
+    if (v === null || v === undefined || v === '') return '—';
+    if (c.tipo === 'numero' && this.num(v)) {
+      if (c.unidad === 'USD') return this.miles(v) + ' $';
+      if (c.unidad === '%') return this.miles(v) + '%';
+      if (c.unidad === 'dias') return this.miles(v) + ' d';
+      return this.miles(v);
+    }
+    return String(v);
+  }
+  fecha(s) {
+    const m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(s || ''));
+    return m ? m[3] + '/' + m[2] + '/' + m[1] : String(s || '—');
+  }
+  mensual(p) { return String(p.tipo_precio || '') === 'mensual'; }
+  costeTarifa(p, m) { return (p.precio_tarifa || 0) * (this.mensual(p) ? m : 1) + (p.activacion || 0); }
+  costePromo(p, m) {
+    const base = this.num(p.precio_promo) ? p.precio_promo : (p.precio_tarifa || 0);
+    return base * (this.mensual(p) ? m : 1) + (p.activacion || 0);
+  }
+  diasPromo(p) {
+    const m = /(\d{4})-(\d{2})-(\d{2})/.exec(String(p.promo_caduca || ''));
+    if (!m) return null;
+    const fin = new Date(+m[1], +m[2] - 1, +m[3], 23, 59, 59);
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return Math.round((fin - hoy) / 86400000);
+  }
+  tvOk(p) { return /^si/i.test(String(p.tradingview || '')); }
+  excluido(p) { return /DESCARTADA/i.test(String(p.estado || '')); }
+  penalizado(p) { return /penalizada/i.test(String(p.estado || '')); }
+  referencia(p) { return /^REFERENCIA/i.test(String(p.firma || '')); }
+
+  valorEnum(p, key) {
+    const v = p[key];
+    return (v === null || v === undefined || v === '') ? '(sin dato)' : String(v);
+  }
+  extremos(key) {
+    const vs = this.D().planes.map(p => p[key]).filter(v => this.num(v));
+    if (!vs.length) return { min: 0, max: 1 };
+    let min = Math.floor(Math.min.apply(null, vs)), max = Math.ceil(Math.max.apply(null, vs));
+    if (min === max) max = min + 1;
+    return { min, max };
+  }
+  rangoActivo(key) {
+    const r = this.state.rangos[key];
+    if (!r) return null;
+    const e = this.extremos(key);
+    if (r[0] <= e.min && r[1] >= e.max) return null;
+    return r;
+  }
+
+  pasa(p, omitir) {
+    const s = this.state;
+    const q = s.q.trim().toLowerCase();
+    if (q && !((String(p.firma) + ' ' + String(p.plan)).toLowerCase().includes(q))) return false;
+    if (s.soloFavs && s.favs.indexOf(p.id) < 0) return false;
+    for (const key in s.enums) {
+      if (key === omitir) continue;
+      const sel = s.enums[key];
+      if (sel && sel.length && sel.indexOf(this.valorEnum(p, key)) < 0) return false;
+    }
+    for (const key in s.rangos) {
+      if (key === omitir) continue;
+      const r = this.rangoActivo(key);
+      if (!r) continue;
+      const v = p[key];
+      if (!this.num(v)) return false;
+      if (v < r[0] || v > r[1]) return false;
+    }
+    return true;
+  }
+  filtrados(omitir) { return this.D().planes.filter(p => this.pasa(p, omitir)); }
+
+  ordenar(lista) {
+    const s = this.state, key = s.ordenKey, dir = s.ordenDir === 'desc' ? -1 : 1;
+    const c = this.campo(key);
+    const val = p => {
+      if (key === '_coste_tarifa') return this.costeTarifa(p, s.meses);
+      if (key === '_coste_promo') return this.costePromo(p, s.meses);
+      if (key === '_ahorro') return this.costeTarifa(p, s.meses) - this.costePromo(p, s.meses);
+      return p[key];
+    };
+    return lista.slice().sort((a, b) => {
+      const va = val(a), vb = val(b);
+      const na = va === null || va === undefined || va === '', nb = vb === null || vb === undefined || vb === '';
+      if (na && nb) return 0;
+      if (na) return 1;
+      if (nb) return -1;
+      if (c.tipo === 'numero' && this.num(va) && this.num(vb)) return (va - vb) * dir;
+      return String(va).localeCompare(String(vb), 'es') * dir;
+    });
+  }
+  visibles() {
+    const l = this.filtrados();
+    if (this.state.vista === 'coste') {
+      const m = this.state.meses;
+      const v = p => (!this.num(p.precio_tarifa) && !this.num(p.precio_promo)) ? Infinity : this.costePromo(p, m);
+      return l.slice().sort((a, b) => v(a) - v(b));
+    }
+    return this.ordenar(l);
+  }
+  nFiltros() {
+    const s = this.state; let n = 0;
+    for (const k in s.enums) if (s.enums[k] && s.enums[k].length) n++;
+    for (const k in s.rangos) if (this.rangoActivo(k)) n++;
+    if (s.soloFavs) n++;
+    if (s.q.trim()) n++;
+    return n;
+  }
+
+  // ---------- acciones ----------
+  set = (o) => this.setState(o);
+  onQ = e => this.setState({ q: e.target.value });
+  onQClear = () => this.setState({ q: '' });
+  onTema = () => {
+    const t = this.state.tema === 'claro' ? 'oscuro' : 'claro';
+    document.documentElement.setAttribute('data-tema', t);
+    this.setState({ tema: t });
+  };
+  onFavsToggle = () => this.setState({ soloFavs: !this.state.soloFavs });
+  onLimpiar = () => this.setState({ enums: {}, rangos: {}, q: '', soloFavs: false });
+  toggleEnum(key, valor) {
+    const cur = (this.state.enums[key] || []).slice();
+    const i = cur.indexOf(valor);
+    if (i < 0) cur.push(valor); else cur.splice(i, 1);
+    const enums = Object.assign({}, this.state.enums);
+    if (cur.length) enums[key] = cur; else delete enums[key];
+    this.setState({ enums });
+  }
+  setRango(key, i, v) {
+    const e = this.extremos(key);
+    const cur = (this.state.rangos[key] || [e.min, e.max]).slice();
+    cur[i] = +v;
+    if (cur[0] > cur[1]) cur[i === 0 ? 1 : 0] = cur[i];
+    this.setState({ rangos: Object.assign({}, this.state.rangos, { [key]: cur }) });
+  }
+  toggleFav(id) {
+    const favs = this.state.favs.slice();
+    const i = favs.indexOf(id);
+    if (i < 0) favs.push(id); else favs.splice(i, 1);
+    this.setState({ favs });
+  }
+  toggleComparar(id) {
+    const c = this.state.comparar.slice();
+    const i = c.indexOf(id);
+    if (i >= 0) c.splice(i, 1);
+    else { if (c.length >= 3) c.shift(); c.push(id); }
+    this.setState({ comparar: c });
+  }
+  toggleCol(key) {
+    const cols = this.state.cols.slice();
+    const i = cols.indexOf(key);
+    if (i >= 0) { if (cols.length > 1) cols.splice(i, 1); }
+    else { if (cols.length >= 3) cols.shift(); cols.push(key); }
+    this.setState({ cols });
+  }
+  ordenarPor(key) {
+    if (this.state.ordenKey === key) this.setState({ ordenDir: this.state.ordenDir === 'asc' ? 'desc' : 'asc' });
+    else this.setState({ ordenKey: key, ordenDir: 'asc' });
+  }
+  csv = () => {
+    const campos = this.D().campos;
+    const filas = this.visibles();
+    const esc = v => '"' + String(v === null || v === undefined ? '' : v).replace(/"/g, '""') + '"';
+    const m = this.state.meses;
+    const cab = campos.map(c => c.label).concat(['Coste real a tarifa (' + m + 'm)', 'Coste real con promo (' + m + 'm)', 'Ahorro']);
+    const cuerpo = filas.map(p => campos.map(c => esc(p[c.key])).concat([
+      esc(this.costeTarifa(p, m)), esc(this.costePromo(p, m)), esc(this.costeTarifa(p, m) - this.costePromo(p, m))
+    ]).join(';'));
+    const txt = '\ufeff' + cab.map(esc).join(';') + '\n' + cuerpo.join('\n');
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([txt], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'fondeadoras_seleccion.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    } catch (e) { /* descarga no disponible */ }
+  };
+
+  // ---------- presentacion ----------
+  badges(p) {
+    const b = [];
+    const d = this.diasPromo(p);
+    const umbral = this.num(this.props.avisoPromoDias) ? this.props.avisoPromoDias : 7;
+    if (d !== null) {
+      const col = d <= 0 ? 'var(--bad)' : (d < umbral ? 'var(--warn)' : 'var(--fg2)');
+      const bg = d <= 0 ? 'var(--badbg)' : (d < umbral ? 'var(--warnbg)' : 'transparent');
+      b.push({
+        txt: d < 0 ? 'PROMO CADUCADA' : (d === 0 ? 'LA PROMO CADUCA HOY' : 'PROMO: ' + d + (d === 1 ? ' DIA' : ' DIAS')),
+        color: col, fondo: bg, borde: col, title: String(p.promo_caduca || '')
+      });
+    }
+    if (p.cupon) b.push({ txt: 'CUPON ' + String(p.cupon).split(' ')[0], color: 'var(--fg)', fondo: 'var(--chip)', borde: 'var(--line2)', title: String(p.cupon) });
+    if (this.tvOk(p)) b.push({ txt: 'TRADINGVIEW', color: 'var(--ok)', fondo: 'var(--okbg)', borde: 'var(--ok)', title: String(p.tradingview) });
+    if (this.excluido(p)) b.push({ txt: 'EXCLUIDA DEL RANKING', color: 'var(--bad)', fondo: 'var(--badbg)', borde: 'var(--bad)', title: String(p.estado) });
+    else if (this.penalizado(p)) b.push({ txt: 'PENALIZADA −12', color: 'var(--warn)', fondo: 'var(--warnbg)', borde: 'var(--warn)', title: String(p.estado) });
+    if (this.referencia(p)) b.push({ txt: 'FILA DE REFERENCIA', color: 'var(--fg2)', fondo: 'var(--chip)', borde: 'var(--line2)', title: String(p.estado) });
+    return b;
+  }
+  precioTxt(p) {
+    const v = this.num(p.precio_promo) ? p.precio_promo : p.precio_tarifa;
+    if (!this.num(v)) return 's/precio';
+    return this.miles(v) + ' $';
+  }
+  puestoTxt(p) { return this.num(p.puesto) ? '#' + p.puesto : String(p.puesto || '—'); }
+
+  renderVals() {
+    const s = this.state, D = this.D(), meta = D.meta || {};
+    if (!s.listo) {
+      return {
+        meta: { titulo: 'Comparador de fondeadoras' }, cabeceraSub: 'Cargando datos…',
+        tarjetas: [], filas: [], tabs: [], facetas: [], rangos: [], metodo: [], costes: [],
+        esLista: true, esEstrecho: true, recuento: '—',
+        temaIcono: 'NOC', filtrosSufijo: '', ordenEtiqueta: 'Orden: Puesto ↑', ordenResumen: ''
+      };
+    }
+    const vis = this.visibles();
+    const nF = this.nFiltros();
+    const acc = 'var(--acc)', fg = 'var(--fg)', fg2 = 'var(--fg2)', fg3 = 'var(--fg3)', linea = 'var(--line)', panel2 = 'var(--panel2)';
+    const mono = "'JetBrains Mono',monospace", sans = "'IBM Plex Sans',sans-serif";
+
+    // tarjetas
+    const colCampos = s.cols.map(k => this.campo(k));
+    const tarjetas = vis.map(p => ({
+      id: p.id, firma: p.firma, plan: p.plan, puestoTxt: this.puestoTxt(p),
+      precioTxt: this.precioTxt(p),
+      tarifaTxt: this.num(p.precio_tarifa) ? this.miles(p.precio_tarifa) + ' $' : '',
+      hayDescuento: this.num(p.precio_promo) && this.num(p.precio_tarifa) && p.precio_promo < p.precio_tarifa,
+      tipoTxt: (p.tipo_precio ? String(p.tipo_precio).toUpperCase() : 'S/TIPO') + (p.activacion ? ' + ' + this.miles(p.activacion) + ' $ ACTIVACION' : ''),
+      borde: this.excluido(p) ? 'var(--bad)' : (s.comparar.indexOf(p.id) >= 0 ? acc : linea),
+      favColor: s.favs.indexOf(p.id) >= 0 ? 'var(--warn)' : fg3,
+      badges: this.badges(p),
+      metricas: colCampos.map(c => ({ label: c.label, valor: this.fmt(p[c.key], c) })),
+      cmpTxt: s.comparar.indexOf(p.id) >= 0 ? 'En el comparador' : 'Comparar',
+      cmpFondo: s.comparar.indexOf(p.id) >= 0 ? 'var(--accbg)' : panel2,
+      cmpColor: s.comparar.indexOf(p.id) >= 0 ? acc : fg2,
+      onFav: e => { e.stopPropagation(); this.toggleFav(p.id); },
+      onComparar: e => { e.stopPropagation(); this.toggleComparar(p.id); },
+      onAbrir: () => this.setState({ ficha: p.id })
+    }));
+
+    // tabla ancha
+    const cabCampos = [this.campo('puesto'), this.campo('firma'), this.campo('plan'), this.campo('precio_promo')].concat(colCampos);
+    const tablaCabeceras = cabCampos.map(c => ({
+      label: c.label + (s.ordenKey === c.key ? (s.ordenDir === 'asc' ? ' ↑' : ' ↓') : ''),
+      align: c.tipo === 'numero' ? 'right' : 'left',
+      color: s.ordenKey === c.key ? acc : fg3,
+      onSort: e => { e.stopPropagation(); this.ordenarPor(c.key); }
+    }));
+    const filas = vis.map(p => ({
+      id: p.id,
+      fondo: s.comparar.indexOf(p.id) >= 0 ? 'var(--accbg)' : 'transparent',
+      favColor: s.favs.indexOf(p.id) >= 0 ? 'var(--warn)' : fg3,
+      onFav: e => { e.stopPropagation(); this.toggleFav(p.id); },
+      onAbrir: () => this.setState({ ficha: p.id }),
+      celdas: cabCampos.map(c => ({
+        txt: c.key === 'puesto' ? this.puestoTxt(p) : this.fmtCorto(p[c.key], c),
+        align: c.tipo === 'numero' ? 'right' : 'left',
+        fuente: c.tipo === 'numero' ? mono : sans,
+        color: c.key === 'firma' ? acc : (c.key === 'plan' ? fg : fg2)
+      }))
+    }));
+
+    // facetas
+    const facetas = D.campos.filter(c => c.filtrable && (c.tipo === 'enum' || c.tipo === 'texto' || c.tipo === 'booleano')).map(c => {
+      const base = this.filtrados(c.key);
+      const todos = {};
+      D.planes.forEach(p => { const v = this.valorEnum(p, c.key); todos[v] = (todos[v] || 0); });
+      base.forEach(p => { const v = this.valorEnum(p, c.key); todos[v] = (todos[v] || 0) + 1; });
+      const sel = s.enums[c.key] || [];
+      const valores = Object.keys(todos).sort((a, b) => todos[b] - todos[a] || a.localeCompare(b, 'es')).map(v => {
+        const activo = sel.indexOf(v) >= 0;
+        return {
+          valor: v, etiqueta: v, n: todos[v], tick: activo ? '×' : '',
+          activo, borde: activo ? acc : linea, fondo: activo ? 'var(--accbg)' : 'transparent',
+          marcaBorde: activo ? acc : 'var(--line2)', marcaFondo: activo ? acc : 'transparent',
+          color: todos[v] === 0 && !activo ? fg3 : fg,
+          nColor: todos[v] === 0 ? fg3 : fg2,
+          onToggle: () => this.toggleEnum(c.key, v)
+        };
+      });
+      return { key: c.key, label: c.label, grupo: c.grupo, valores };
+    });
+
+    // rangos
+    const rangos = D.campos.filter(c => c.filtrable && c.tipo === 'numero').map(c => {
+      const e = this.extremos(c.key);
+      const r = s.rangos[c.key] || [e.min, e.max];
+      const activo = !!this.rangoActivo(c.key);
+      const step = (e.max - e.min) > 600 ? 10 : ((e.max - e.min) > 60 ? 1 : 1);
+      return {
+        key: c.key, label: c.label, min: e.min, max: e.max, step, lo: r[0], hi: r[1],
+        resumen: this.fmtCorto(r[0], c) + ' – ' + this.fmtCorto(r[1], c),
+        color: activo ? acc : fg3,
+        n: this.filtrados().length,
+        onLo: ev => this.setRango(c.key, 0, ev.target.value),
+        onHi: ev => this.setRango(c.key, 1, ev.target.value)
+      };
+    });
+
+    // orden
+    const ordenables = D.campos.filter(c => c.ordenable).concat(this.DERIVADOS);
+    const grupos = [];
+    ordenables.forEach(c => {
+      let g = grupos.find(x => x.grupo === c.grupo);
+      if (!g) { g = { grupo: c.grupo, campos: [] }; grupos.push(g); }
+      g.campos.push({
+        label: c.label, borde: s.ordenKey === c.key ? acc : linea,
+        fondo: s.ordenKey === c.key ? 'var(--accbg)' : panel2,
+        color: s.ordenKey === c.key ? acc : fg2,
+        onClick: () => this.ordenarPor(c.key)
+      });
+    });
+    const dirs = [
+      { label: 'Ascendente', borde: s.ordenDir === 'asc' ? acc : linea, fondo: s.ordenDir === 'asc' ? 'var(--accbg)' : panel2, color: s.ordenDir === 'asc' ? acc : fg2, onClick: () => this.setState({ ordenDir: 'asc' }) },
+      { label: 'Descendente', borde: s.ordenDir === 'desc' ? acc : linea, fondo: s.ordenDir === 'desc' ? 'var(--accbg)' : panel2, color: s.ordenDir === 'desc' ? acc : fg2, onClick: () => this.setState({ ordenDir: 'desc' }) }
+    ];
+
+    // columnas
+    const colGrupos = [];
+    D.campos.filter(c => c.key !== 'firma' && c.key !== 'plan').forEach(c => {
+      let g = colGrupos.find(x => x.grupo === c.grupo);
+      if (!g) { g = { grupo: c.grupo, campos: [] }; colGrupos.push(g); }
+      const i = s.cols.indexOf(c.key);
+      g.campos.push({
+        label: c.label, tipo: (c.tipo + (c.unidad ? ' · ' + c.unidad : '')).toUpperCase(),
+        pos: i >= 0 ? String(i + 1) : '',
+        borde: i >= 0 ? acc : linea, fondo: i >= 0 ? 'var(--accbg)' : 'transparent',
+        color: i >= 0 ? acc : fg,
+        onClick: () => this.toggleCol(c.key)
+      });
+    });
+
+    // comparador
+    const cmpPlanes = s.comparar.map(id => D.planes.find(p => p.id === id)).filter(Boolean);
+    const cmpFilas = [];
+    if (cmpPlanes.length >= 2) {
+      D.meta.grupos.forEach(gr => {
+        const campos = D.campos.filter(c => c.grupo === gr);
+        campos.forEach(c => {
+          const vals = cmpPlanes.map(p => this.fmt(p[c.key], c));
+          const dif = vals.some(v => v !== vals[0]);
+          if (s.soloDif && !dif) return;
+          cmpFilas.push({
+            label: c.label, marca: dif ? acc : 'transparent',
+            fondo: dif && !s.soloDif ? 'var(--accbg)' : 'transparent',
+            fondoLabel: dif ? 'var(--panel2)' : 'var(--panel)',
+            celdas: vals.map(v => ({ txt: v, fuente: c.tipo === 'numero' ? mono : sans, color: dif ? fg : fg2 }))
+          });
+        });
+      });
+    }
+    const cmpCols = cmpPlanes.map(p => ({ firma: p.firma, plan: p.plan, onQuitar: () => this.toggleComparar(p.id) }));
+
+    // coste real
+    const costes = vis.map(p => {
+      const t = this.costeTarifa(p, s.meses), pr = this.costePromo(p, s.meses);
+      const sinPrecio = !this.num(p.precio_tarifa) && !this.num(p.precio_promo);
+      return {
+        firma: p.firma, plan: p.plan,
+        tipo: (p.tipo_precio ? String(p.tipo_precio) : 's/tipo').toUpperCase(),
+        tarifa: sinPrecio ? 'sin precio' : this.miles(t) + ' $',
+        promo: sinPrecio ? 'sin precio' : this.miles(pr) + ' $',
+        ahorro: sinPrecio ? 'n/d' : (t - pr > 0 ? '−' + this.miles(t - pr) + ' $' : '—'),
+        ahorroColor: t - pr > 0 ? 'var(--ok)' : fg3,
+        onAbrir: () => this.setState({ ficha: p.id })
+      };
+    });
+
+    // ficha
+    const fp = s.ficha ? D.planes.find(p => p.id === s.ficha) : null;
+    let ficha = null;
+    if (fp) {
+      ficha = {
+        firma: fp.firma, plan: fp.plan, puestoTxt: this.puestoTxt(fp),
+        precioTxt: this.precioTxt(fp),
+        tarifaTxt: this.num(fp.precio_tarifa) ? this.miles(fp.precio_tarifa) + ' $' : '',
+        hayDescuento: this.num(fp.precio_promo) && this.num(fp.precio_tarifa) && fp.precio_promo < fp.precio_tarifa,
+        favColor: s.favs.indexOf(fp.id) >= 0 ? 'var(--warn)' : fg3,
+        onFav: () => this.toggleFav(fp.id),
+        badges: this.badges(fp),
+        cmpTxt: s.comparar.indexOf(fp.id) >= 0 ? 'Quitar del comparador' : 'Anadir al comparador',
+        cmpBorde: s.comparar.indexOf(fp.id) >= 0 ? acc : linea,
+        cmpFondo: s.comparar.indexOf(fp.id) >= 0 ? 'var(--accbg)' : panel2,
+        cmpColor: s.comparar.indexOf(fp.id) >= 0 ? acc : fg2,
+        grupos: (D.meta.grupos || []).map(gr => {
+          const campos = D.campos.filter(c => c.grupo === gr);
+          const abierto = !!s.abiertos[gr];
+          return {
+            grupo: gr, n: campos.length + ' campos', abierto, chevron: abierto ? '▲' : '▼',
+            onToggle: () => this.setState({ abiertos: Object.assign({}, s.abiertos, { [gr]: !abierto }) }),
+            campos: campos.map(c => {
+              const largo = c.tipo === 'texto' && String(fp[c.key] || '').length > 90;
+              return {
+                label: c.label, valor: this.fmt(fp[c.key], c),
+                fuente: c.tipo === 'numero' || c.tipo === 'fecha' ? mono : sans,
+                tam: largo ? '12px' : '13.5px',
+                color: fp[c.key] === null || fp[c.key] === undefined || fp[c.key] === '' ? fg3 : (largo ? fg2 : fg)
+              };
+            })
+          };
+        })
+      };
+    }
+
+    const tabs = [
+      { k: 'lista', label: 'Lista', sub: vis.length + '/' + D.planes.length },
+      { k: 'comparar', label: 'Comparar', sub: s.comparar.length + '/3' },
+      { k: 'coste', label: 'Coste real', sub: s.meses + ' mes' + (s.meses === 1 ? '' : 'es') },
+      { k: 'metodo', label: 'Metodo', sub: 'avisos' }
+    ].map(t => ({
+      label: t.label, sub: t.sub,
+      marca: s.vista === t.k ? acc : 'transparent',
+      color: s.vista === t.k ? fg : fg3,
+      onClick: () => this.setState({ vista: t.k })
+    }));
+
+    const ordenCampo = this.campo(s.ordenKey);
+
+    return {
+      meta, metodo: meta.metodo || [],
+      fechaConsultaTxt: this.fecha(meta.fecha_consulta),
+      cabeceraSub: (meta.subtitulo || '') + ' · ' + D.planes.length + ' planes · ' + this.fecha(meta.fecha_consulta),
+      q: s.q, hayQ: !!s.q, onQ: this.onQ, onQClear: this.onQClear,
+      onTema: this.onTema, temaIcono: s.tema === 'claro' ? 'DÍA' : 'NOC',
+      favBorde: s.soloFavs ? 'var(--warn)' : linea, favFondo: s.soloFavs ? 'var(--warnbg)' : panel2, favColor: s.soloFavs ? 'var(--warn)' : fg3,
+      onFavsToggle: this.onFavsToggle, onLimpiar: this.onLimpiar, onCSV: this.csv,
+      hayFiltros: nF > 0,
+      filtrosSufijo: nF > 0 ? ' · ' + nF : '',
+      filtrosBorde: nF > 0 ? acc : linea, filtrosFondo: nF > 0 ? 'var(--accbg)' : panel2, filtrosColor: nF > 0 ? acc : fg2,
+      ordenEtiqueta: 'Orden: ' + ordenCampo.label + (s.ordenDir === 'asc' ? ' ↑' : ' ↓'),
+      ordenResumen: s.vista === 'coste' ? 'coste con promo ↑' : ordenCampo.label.toLowerCase() + (s.ordenDir === 'asc' ? ' ↑' : ' ↓'),
+      recuento: vis.length + ' de ' + D.planes.length + ' planes',
+      onSheetFiltros: () => this.setState({ hoja: 'filtros' }),
+      onSheetOrden: () => this.setState({ hoja: 'orden' }),
+      onSheetColumnas: () => this.setState({ hoja: 'columnas' }),
+      onCerrarHoja: () => this.setState({ hoja: null }),
+      hojaAbierta: !!s.hoja, hojaEsFiltros: s.hoja === 'filtros', hojaEsOrden: s.hoja === 'orden', hojaEsColumnas: s.hoja === 'columnas',
+      hojaTitulo: s.hoja === 'filtros' ? 'Filtros' : (s.hoja === 'orden' ? 'Ordenar por' : 'Metricas de la tarjeta'),
+      esLista: s.vista === 'lista', esComparar: s.vista === 'comparar', esCoste: s.vista === 'coste', esMetodo: s.vista === 'metodo',
+      esAncho: s.vista === 'lista' && s.ancho, esEstrecho: s.vista === 'lista' && !s.ancho,
+      vacio: vis.length === 0,
+      tarjetas, filas, tablaCabeceras, facetas, rangos, ordenGrupos: grupos, dirs, colGrupos, costes, tabs,
+      cmpCols, cmpFilas, cmpVacio: cmpPlanes.length < 2, cmpListo: cmpPlanes.length >= 2,
+      cmpMin: (128 + cmpPlanes.length * 180) + 'px',
+      cmpResumen: cmpPlanes.length + ' de 3 planes seleccionados · ' + cmpFilas.length + ' filas',
+      soloDif: s.soloDif, onSoloDif: () => this.setState({ soloDif: !s.soloDif }),
+      difBorde: s.soloDif ? acc : linea, difFondo: s.soloDif ? 'var(--accbg)' : panel2, difColor: s.soloDif ? acc : fg2,
+      meses: s.meses, onMeses: e => this.setState({ meses: +e.target.value }),
+      ficha, fichaAbierta: !!ficha, onCerrarFicha: () => this.setState({ ficha: null })
+    };
+  }
+}
+
+
+var PROPS = {"temaInicial": "oscuro", "mesesInicial": 2, "avisoPromoDias": 7};
+var app = new Component(document.getElementById('root'), PLANTILLA, PROPS);
+window.__app = app;
+app.montar();
+
+</script>
+</body>
+</html>
