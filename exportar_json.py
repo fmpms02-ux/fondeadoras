@@ -278,6 +278,11 @@ def main():
     grupos = [g for g in ORDEN_GRUPOS if any(c["grupo"] == g for c in esquema)]
     grupos += [g for g in dict.fromkeys(c["grupo"] for c in esquema) if g not in grupos]
     nota_gen = limpiar(wb["Comparativa"]["A2"].value)
+    # "generado" es cuando se regenero el Excel, no cuando se exporta: si la
+    # publicacion diaria corre sin que el refresco haya cambiado nada, la web
+    # no debe presumir de datos mas nuevos de lo que son.
+    m = re.search(r"Generado el (\d{2}/\d{2}/\d{4} \d{2}:\d{2})", nota_gen or "")
+    generado = m.group(1) if m else dt.datetime.now().strftime("%d/%m/%Y %H:%M")
 
     salida = {
         "meta": {
@@ -287,7 +292,7 @@ def main():
             "n_planes": len(planes),
             "fecha_consulta": fechas[-1] if fechas else None,
             "fecha_consulta_min": fechas[0] if fechas else None,
-            "generado": dt.datetime.now().strftime("%d/%m/%Y %H:%M"),
+            "generado": generado,
             "fuente": ruta.name,
             "grupos": grupos,
             "meses_default": meses,

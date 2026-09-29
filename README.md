@@ -1,5 +1,7 @@
 # Comparador de fondeadoras — del Excel al móvil
 
+> **Desde el 29/09/2026 la actualización es automática** (`publicar.py`, cada día a las 10:00). Las secciones «Uso» y «Actualizar» de abajo describen el flujo manual original. El estado actual está en [LEEME.md](LEEME.md).
+
 ## La cadena completa
 
 ```

@@ -1,0 +1,7 @@
+# Intermedios que regenera publicar.py: lo que se publica es docs/
+/fondeadoras.json
+/artifact.html
+__pycache__/
+# El Excel vive en OneDrive; aqui no se sube
+*.xlsx
+node_modules/
