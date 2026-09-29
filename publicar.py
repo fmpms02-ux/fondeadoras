@@ -57,10 +57,14 @@ def main():
         print("AVISO: sin jsdom, la app se publica sin pasar las pruebas.")
 
     ejecutar("git", "add", "-A")
-    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=AQUI).returncode == 0:
+    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=AQUI).returncode != 0:
+        ejecutar("git", "commit", "--quiet", "-m", f"Datos del {datetime.now():%d/%m/%Y}")
+    # Se sube todo lo pendiente, no solo lo de hoy: si ayer fallo el push
+    # (sin red, sesion caducada), su commit se quedo en local esperando.
+    pendientes = int(ejecutar("git", "rev-list", "--count", "@{u}..HEAD").stdout.strip() or 0)
+    if not pendientes:
         print("Sin cambios: la web ya tiene estos datos.")
         return
-    ejecutar("git", "commit", "--quiet", "-m", f"Datos del {datetime.now():%d/%m/%Y}")
     ejecutar("git", "push", "--quiet")
     print("Publicado. GitHub Pages sirve la version nueva en uno o dos minutos.")
 
