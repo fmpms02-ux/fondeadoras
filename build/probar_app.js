@@ -121,6 +121,14 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   ok('la ficha trae los grupos de campos',
      cuerpo.includes('IDENTIDAD') || cuerpo.includes('Identidad'));
   ok('la ficha trae el aviso de verificacion', /antes de pagar/i.test(cuerpo));
+  const boton = () => [...$('button')].find(b => /al comparador|del comparador/.test(b.textContent));
+  boton().dispatchEvent(new window.Event('click', { bubbles: true }));
+  await esperar();
+  ok('"Anadir al comparador" de la ficha lo anade',
+     app.state.comparar.indexOf(app.state.ficha) >= 0 && /Quitar del comparador/.test(boton().textContent));
+  boton().dispatchEvent(new window.Event('click', { bubbles: true }));
+  await esperar();
+  ok('y un segundo clic lo quita', app.state.comparar.indexOf(app.state.ficha) < 0);
   app.setState({ ficha: null }); await esperar();
 
   console.log('\n— comparador —');
