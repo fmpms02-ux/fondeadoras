@@ -878,8 +878,6 @@ class Component extends DCLogic {
         precioColor: !this.num(fp.precio_promo) && this.num(fp.precio_tarifa) ? fg2 : fg,
         favColor: s.favs.indexOf(fp.id) >= 0 ? 'var(--warn)' : fg3,
         onFav: () => this.toggleFav(fp.id),
-        // Faltaba en el diseno de Claude Design: el boton "Anadir al comparador"
-        // de la ficha llamaba a ficha.onComparar y no existia. Anadido el 29/09/2026.
         onComparar: () => this.toggleComparar(fp.id),
         badges: this.badges(fp),
         cmpTxt: s.comparar.indexOf(fp.id) >= 0 ? 'Quitar del comparador' : 'Anadir al comparador',
