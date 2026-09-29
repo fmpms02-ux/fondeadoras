@@ -73,6 +73,10 @@ class Compilador(HTMLParser):
     # --- ganchos del parser ---
     def handle_starttag(self, tag, attrs):
         a = self._dict_attrs(attrs)
+        # Claude Design escribe las tablas como <sc-raw-table>, <sc-raw-tr>...
+        # para que el parser del navegador no saque los <sc-for> de la tabla.
+        # Aqui la plantilla ya no pasa por ese parser: vuelven a ser tablas.
+        tag = tag[len("sc-raw-"):] if tag.startswith("sc-raw-") else tag
 
         if tag == "sc-if":
             nodo = {"t": "if", "e": self._expr(a.get("value", "")), "k": []}
@@ -91,6 +95,11 @@ class Compilador(HTMLParser):
         clases = []
 
         for nombre, valor in a.items():
+            # Un diseno sacado de un artefacto viene ya serializado por el
+            # navegador, que pasa los atributos a minusculas; Claude Design
+            # conserva el camelCase como sc-camel-on-click (= onClick).
+            if nombre.startswith("sc-camel-"):
+                nombre = nombre[len("sc-camel-"):].replace("-", "")
             if IGNORAR.match(nombre):
                 continue
             if nombre in EVENTOS:

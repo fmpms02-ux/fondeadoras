@@ -42,8 +42,10 @@ except ImportError:
 # grupo:     seccion de la ficha y del comparador (el orden lo fija ORDEN_GRUPOS)
 # filtrable: los enum salen como facetas con casillas; los numero, como rangos
 # ordenable: aparece en la hoja "Ordenar por"
+# oculto:    no sale en fichas, filtros ni columnas elegibles (el diseno del
+#            29/09 ordena por precio y no enseña el puesto)
 MAPA_COLUMNAS = {
-    "Puesto": dict(key="puesto", tipo="numero", grupo="Identidad", ordenable=True),
+    "Puesto": dict(key="puesto", tipo="numero", grupo="Identidad", ordenable=True, oculto=True),
     "Firma": dict(key="firma", tipo="enum", grupo="Identidad", filtrable=True, ordenable=True),
     "Plan": dict(key="plan", tipo="texto", grupo="Identidad", ordenable=True),
     "Estado y motivo de exclusion": dict(key="estado", tipo="texto", grupo="Identidad"),
@@ -278,6 +280,13 @@ def main():
     grupos = [g for g in ORDEN_GRUPOS if any(c["grupo"] == g for c in esquema)]
     grupos += [g for g in dict.fromkeys(c["grupo"] for c in esquema) if g not in grupos]
     nota_gen = limpiar(wb["Comparativa"]["A2"].value)
+    # A1 es "Comparativa de fondeadoras — cuenta de 50.000 USD": el diseno pinta
+    # las dos mitades por separado (titulo arriba, subtitulo en la linea de datos).
+    titulo, _, resto = (limpiar(wb["Comparativa"]["A1"].value) or "").partition(" — ")
+    if resto:
+        subtitulo = resto[:1].upper() + resto[1:]
+    elif not (subtitulo and len(subtitulo) < 60):
+        subtitulo = None
     # "generado" es cuando se regenero el Excel, no cuando se exporta: si la
     # publicacion diaria corre sin que el refresco haya cambiado nada, la web
     # no debe presumir de datos mas nuevos de lo que son.
@@ -287,8 +296,8 @@ def main():
     salida = {
         "meta": {
             "esquema_version": 2,
-            "titulo": limpiar(wb["Comparativa"]["A1"].value) or "Comparador de fondeadoras",
-            "subtitulo": subtitulo if subtitulo and len(subtitulo) < 60 else "Cuenta de 50.000 USD",
+            "titulo": titulo or "Comparador de fondeadoras",
+            "subtitulo": subtitulo or "Cuenta de 50.000 USD",
             "n_planes": len(planes),
             "fecha_consulta": fechas[-1] if fechas else None,
             "fecha_consulta_min": fechas[0] if fechas else None,

@@ -19,7 +19,7 @@ no aquí.
 | `build/construir_app.py` | Une el diseño de Claude Design con los datos y genera `docs/`. | Sí |
 | `build/runtime.js` | Intérprete de plantillas de ~5 KB que sustituye al runtime de Claude Design (sin React ni Babel). | Sí |
 | `build/probar_app.js` | 36 comprobaciones automáticas sobre la app ya construida. | Sí |
-| `design_src/diseno.html` | El diseño original exportado de Claude Design. Si cambias el diseño, se sustituye este archivo. | Sí |
+| `design_src/diseno.html` | El diseño de Claude Design. Desde el 29/09/2026 es **el del artefacto** (lista ordenada por precio con promo, sin puesto a la vista, tabla en pantalla ancha); el del 18/09 queda en el historial de Git. Si cambias el diseño, se sustituye este archivo. | Sí |
 | `publicar.py` | La cadena completa de cada día (ver abajo). | Sí |
 | `README.md` | Documentación técnica original del 18/09 (cómo se construyó la app). | Sí |
 | `LEEME.md` | Este archivo. | Sí |
@@ -82,6 +82,13 @@ uno (`localStorage`).
   desde el shell.
 - **Si el Excel pierde una columna** o no se puede leer, `exportar_json.py` falla,
   `publicar.py` se para y la web sigue con los datos del día anterior.
+- **Cambiar el diseño.** Vale tanto el `.dc.html` exportado de Claude Design
+  como el HTML sacado de un artefacto publicado. El segundo viene ya pasado por
+  el navegador, y Claude Design escribe `onClick` como `sc-camel-on-click` y las
+  tablas como `<sc-raw-table>`. `construir_app.py` entiende las dos formas.
+  Tras cambiarlo: `python build/construir_app.py`, y luego
+  `node build/probar_app.js`. Si el diseño cambia el orden inicial o las
+  métricas por defecto, hay que ajustar esas pruebas, que las comprueban.
 - **Columna nueva en el Excel:** se exporta como texto y se avisa. Para darle
   tipo, grupo o filtro, se declara en `MAPA_COLUMNAS` de `exportar_json.py`.
 - **La fecha «generado»** es la de la última regeneración del Excel, no la de la

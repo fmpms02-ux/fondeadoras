@@ -48,15 +48,19 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   app.setState({ ancho: false }); await esperar();
   let tarjetas = $('article');
   ok('pinta una tarjeta por plan', tarjetas.length === 35, tarjetas.length + ' tarjetas');
-  ok('la primera tarjeta es el puesto 1',
-     /#1/.test(tarjetas[0].textContent) && /Tradeify/.test(tarjetas[0].textContent));
-  ok('muestra precio con promo y tarifa tachada', /123/.test(tarjetas[0].textContent));
+  // Diseno del 29/09: arranca ordenada por precio con promo (o tarifa si no
+  // hay promo), sin puesto a la vista; la fila de referencia (0 $) va primero.
+  ok('arranca ordenada por precio con promo',
+     app.state.ordenKey === 'precio_promo' && app.state.ordenDir === 'asc' &&
+     /REFERENCIA/.test(tarjetas[0].textContent));
+  ok('muestra precio con promo y tarifa tachada',
+     [...tarjetas].some(t => [...t.querySelectorAll('*')].some(e => /line-through/.test(e.getAttribute('style') || ''))));
   ok('muestra las 3 metricas por defecto',
-     tarjetas[0].textContent.includes('Precio tarifa') &&
+     tarjetas[0].textContent.includes('Objetivo') &&
      tarjetas[0].textContent.includes('Drawdown') &&
      tarjetas[0].textContent.includes('Dias min.'));
   ok('badge de TradingView', /TRADINGVIEW/.test(tarjetas[0].textContent));
-  ok('contador de la promo', /PROMO/.test(tarjetas[0].textContent));
+  ok('contador de la promo', [...tarjetas].some(t => /PROMO/.test(t.textContent)));
   ok('nav con 4 pestanas', $('nav button').length === 4);
 
   console.log('\n— buscador —');
@@ -91,18 +95,22 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   ok('limpiar filtros restaura', $('article').length === 35);
 
   console.log('\n— orden —');
+  // Se parte de otro orden para que el primer clic sea ascendente. El precio
+  // que ordena es el efectivo: el de promo, o el de tarifa si no hay promo.
+  const efectivo = p => typeof p.precio_promo === 'number' ? p.precio_promo : p.precio_tarifa;
+  app.setState({ ordenKey: 'puesto', ordenDir: 'asc' }); await esperar();
   app.ordenarPor('precio_promo'); await esperar();
-  let precios = app.visibles().map(p => p.precio_promo).filter(v => typeof v === 'number');
+  let precios = app.visibles().map(efectivo).filter(v => typeof v === 'number');
   ok('ordena ascendente por precio', precios.every((v, i) => i === 0 || precios[i - 1] <= v),
      precios[0] + ' … ' + precios[precios.length - 1]);
   app.ordenarPor('precio_promo'); await esperar();
-  precios = app.visibles().map(p => p.precio_promo).filter(v => typeof v === 'number');
+  precios = app.visibles().map(efectivo).filter(v => typeof v === 'number');
   ok('el segundo clic invierte el sentido',
      precios.every((v, i) => i === 0 || precios[i - 1] >= v));
   app.ordenarPor('fiabilidad_nota'); await esperar();
   ok('se puede ordenar por la nota de fiabilidad derivada',
      app.state.ordenKey === 'fiabilidad_nota' && $('article').length === 35);
-  app.setState({ ordenKey: 'puesto', ordenDir: 'asc' }); await esperar();
+  app.setState({ ordenKey: 'precio_promo', ordenDir: 'asc' }); await esperar();
 
   console.log('\n— ficha —');
   const verFicha = [...$('button')].find(b => b.textContent.trim() === 'Ver ficha');
