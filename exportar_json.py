@@ -42,6 +42,10 @@ except ImportError:
 # grupo:     seccion de la ficha y del comparador (el orden lo fija ORDEN_GRUPOS)
 # filtrable: los enum salen como facetas con casillas; los numero, como rangos
 # ordenable: aparece en la hoja "Ordenar por"
+# ayuda:     aclaracion que la app pone entre parentesis en el TITULO DEL FILTRO
+#            (no en la ficha ni en las columnas, donde el nombre corto basta)
+# _si_no:    el filtro se reduce a si / no / sin confirmar; el texto completo
+#            del Excel pasa a un campo aparte, "<key>_detalle", solo para la ficha
 # oculto:    no sale en fichas, filtros ni columnas elegibles (el diseno del
 #            29/09 ordena por precio y no enseña el puesto)
 MAPA_COLUMNAS = {
@@ -57,7 +61,8 @@ MAPA_COLUMNAS = {
     "Cupon": dict(key="cupon", tipo="texto", grupo="Precio"),
     "Promo caduca": dict(key="promo_caduca", tipo="texto", grupo="Precio"),
     "Tipo precio": dict(key="tipo_precio", tipo="enum", grupo="Precio",
-                        filtrable=True, ordenable=True),
+                        filtrable=True, ordenable=True,
+                        ayuda="pago unico o cuota mensual"),
     "Activacion": dict(key="activacion", tipo="numero", unidad="USD", grupo="Precio",
                        filtrable=True, ordenable=True),
 
@@ -68,7 +73,8 @@ MAPA_COLUMNAS = {
     "Drawdown en cuenta fondeada": dict(key="dd_fondeada", tipo="enum", grupo="Reglas",
                                         filtrable=True),
     "Cambia al fondearse": dict(key="cambia_fondearse", tipo="enum", grupo="Reglas",
-                                filtrable=True),
+                                filtrable=True,
+                                ayuda="el tipo de drawdown"),
     "Drawdown": dict(key="drawdown", tipo="numero", unidad="USD", grupo="Reglas",
                      filtrable=True, ordenable=True),
     "Perdida diaria": dict(key="perdida_diaria", tipo="numero", unidad="USD", grupo="Reglas",
@@ -88,13 +94,16 @@ MAPA_COLUMNAS = {
                          filtrable=True, ordenable=True),
 
     "Broker": dict(key="broker", tipo="texto", grupo="Plataforma"),
-    "TradingView": dict(key="tradingview", tipo="enum", grupo="Plataforma", filtrable=True),
-    "NinjaTrader": dict(key="ninjatrader", tipo="enum", grupo="Plataforma", filtrable=True),
+    "TradingView": dict(key="tradingview", tipo="enum", grupo="Plataforma", filtrable=True,
+                        _si_no=True),
+    "NinjaTrader": dict(key="ninjatrader", tipo="enum", grupo="Plataforma", filtrable=True,
+                        _si_no=True),
 
-    "Capital propio en riesgo": dict(key="capital_riesgo", tipo="enum", grupo="Fiabilidad",
-                                     filtrable=True),
+    # Sin filtro desde el 01/10/2026, por decision de Fernando: casi todos los
+    # planes tienen el mismo valor y el filtro no separaba nada. Siguen en la ficha.
+    "Capital propio en riesgo": dict(key="capital_riesgo", tipo="enum", grupo="Fiabilidad"),
     "Verificado en fuente oficial": dict(key="verificado", tipo="enum", grupo="Fiabilidad",
-                                         filtrable=True, ordenable=True),
+                                         ordenable=True),
     "Fecha consulta": dict(key="fecha_consulta", tipo="fecha", grupo="Fiabilidad", ordenable=True),
     "QUE LE LASTRA LA NOTA": dict(key="lastra_nota", tipo="texto", grupo="Fiabilidad"),
     "Fiabilidad: por que esa nota": dict(key="fiabilidad_por_que", tipo="texto", grupo="Fiabilidad"),
@@ -242,6 +251,37 @@ def leer_comparativa(hoja, avisos):
     return campos, planes, subtitulo, leyenda
 
 
+def si_no(valor):
+    """'si (ejecucion via Tradovate)' -> ('si', 'ejecucion via Tradovate')."""
+    t = str(valor or "").strip()
+    m = re.match(r"(si|sí|no)\b[\s:,.—-]*(.*)$", t, re.I | re.S)
+    if not m:
+        return "sin confirmar", (t if t and t.lower() != "sin confirmar" else None)
+    corto = "no" if m.group(1).lower() == "no" else "si"
+    detalle = m.group(2).strip()
+    if detalle.startswith("(") and detalle.endswith(")"):
+        detalle = detalle[1:-1].strip()
+    return corto, (detalle or None)
+
+
+def separar_si_no(campos, planes):
+    """Reduce los campos _si_no a si/no/sin confirmar y saca el detalle aparte."""
+    salida = []
+    for c in campos:
+        salida.append(c)
+        if not c.get("_si_no"):
+            continue
+        hay_detalle = False
+        for p in planes:
+            p[c["key"]], detalle = si_no(p.get(c["key"]))
+            p[c["key"] + "_detalle"] = detalle
+            hay_detalle = hay_detalle or bool(detalle)
+        if hay_detalle:      # un campo siempre vacio solo ensucia la ficha
+            salida.append(dict(key=c["key"] + "_detalle", label=c["label"] + ": detalle",
+                               tipo="texto", grupo=c["grupo"]))
+    return salida
+
+
 def leer_metodo(hoja):
     bloques, titulo = [], None
     for fila in hoja.iter_rows(values_only=True):
@@ -302,6 +342,8 @@ def main():
             sys.exit("ERROR: salen %d planes y la web publicada tiene %d. Parece un Excel "
                      "incompleto; no se exporta nada. Si la caida es real, repite con --sin-suelo."
                      % (len(planes), antes))
+
+    campos = separar_si_no(campos, planes)
 
     esquema = []
     for c in campos:

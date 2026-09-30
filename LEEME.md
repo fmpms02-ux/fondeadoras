@@ -111,6 +111,20 @@ uno (`localStorage`).
   Tras cambiarlo: `python build/construir_app.py`, y luego
   `node build/probar_app.js`. Si el diseño cambia el orden inicial o las
   métricas por defecto, hay que ajustar esas pruebas, que las comprueban.
+- **Filtros (01/10/2026).** Se deciden en `MAPA_COLUMNAS` de `exportar_json.py`,
+  no en el diseño, y solo afectan a la web:
+  - `ayuda="..."` añade una aclaración entre paréntesis al título del filtro
+    (Tipo precio, Cambia al fondearse). En la ficha y en las columnas sigue el
+    nombre corto.
+  - `_si_no=True` reduce el filtro a si / no / sin confirmar (TradingView,
+    NinjaTrader). El texto completo del Excel pasa a un campo aparte,
+    «TradingView: detalle», que solo sale en la ficha. «sin confirmar» aparece
+    como opción cuando algún plan lo tiene.
+  - Capital propio en riesgo y Verificado en fuente oficial ya no tienen filtro;
+    siguen en la ficha.
+  - La aclaración del título depende de **una línea añadida a mano** en
+    `design_src/diseno.html` (`c.ayuda`), que no viene de Claude Design. Si se
+    reexporta el diseño sin ella, las pruebas fallan y no se publica.
 - **Columna nueva en el Excel:** se exporta como texto y se avisa. Para darle
   tipo, grupo o filtro, se declara en `MAPA_COLUMNAS` de `exportar_json.py`.
 - **La fecha «generado»** es la de la última regeneración del Excel, no la de la

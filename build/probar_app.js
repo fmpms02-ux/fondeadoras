@@ -100,6 +100,24 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   app.setState({ hoja: 'filtros' }); await esperar();
   const facetas = [...$('button')].filter(b => /Trailing intradia/.test(b.textContent));
   ok('la hoja de filtros lista las facetas', facetas.length > 0, facetas.length + ' coincidencias');
+  // Filtros del 01/10/2026: aclaraciones entre parentesis, TradingView y
+  // NinjaTrader reducidos a si/no/sin confirmar, y dos filtros retirados.
+  // Solo lo pintado: doc.body.textContent incluiria los datos incrustados.
+  const hojaTxt = doc.getElementById('root').textContent;
+  ok('los titulos de filtro llevan su aclaracion',
+     hojaTxt.includes('Tipo precio (pago unico o cuota mensual)') &&
+     hojaTxt.includes('Cambia al fondearse (el tipo de drawdown'));
+  const SI_NO = ['si', 'no', 'sin confirmar'];
+  ok('TradingView y NinjaTrader solo valen si / no / sin confirmar',
+     window.DATA.planes.every(p => SI_NO.includes(p.tradingview) && SI_NO.includes(p.ninjatrader)),
+     [...new Set(window.DATA.planes.map(p => p.tradingview))].join(' | '));
+  const filtrables = window.DATA.campos.filter(c => c.filtrable).map(c => c.key);
+  ok('sin filtro de capital en riesgo ni de verificado',
+     !filtrables.includes('capital_riesgo') && !filtrables.includes('verificado') &&
+     !hojaTxt.includes('solo lo pagado'));   // el valor solo salia como opcion de ese filtro
+  ok('el detalle de TradingView va a la ficha, no al filtro',
+     window.DATA.campos.some(c => c.key === 'tradingview_detalle' && !c.filtrable) &&
+     window.DATA.planes.some(p => p.tradingview_detalle));
   facetas[0].dispatchEvent(new window.Event('click', { bubbles: true }));
   await esperar();
   const nIntradia = window.DATA.planes.filter(p => p.dd_evaluacion === 'Trailing intradia').length;

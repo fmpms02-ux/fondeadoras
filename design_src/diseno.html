@@ -777,7 +777,9 @@ class Component extends DCLogic {
           onToggle: () => this.toggleEnum(c.key, v)
         };
       });
-      return { key: c.key, label: c.label, grupo: c.grupo, valores };
+      // Anadido a mano el 01/10/2026 (no viene de Claude Design): aclaracion
+      // entre parentesis en el titulo del filtro, si el campo trae "ayuda".
+      return { key: c.key, label: c.label + (c.ayuda ? ' (' + c.ayuda + ')' : ''), grupo: c.grupo, valores };
     });
 
     // rangos
