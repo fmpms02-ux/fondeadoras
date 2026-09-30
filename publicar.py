@@ -6,7 +6,7 @@ publicar.py — Lleva los datos del dia del Excel a la web de GitHub Pages.
     1. git pull            por si se ha tocado algo desde github.com
     2. exportar_json.py    comparativa_fondeadoras.xlsx (OneDrive) -> fondeadoras.json
     3. construir_app.py    fondeadoras.json + diseno -> docs/
-    4. probar_app.js       comprobaciones sobre la app construida (38 a 30/09/2026)
+    4. probar_app.js       comprobaciones sobre la app construida (39 a 30/09/2026)
     5. commit y push       solo si docs/ ha cambiado
 
 Lo lanza cada manana el Programador de tareas de Windows a traves de

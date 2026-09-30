@@ -15,7 +15,7 @@ no aquí.
 | Ruta | Qué es | ¿Se sube a GitHub? |
 |---|---|---|
 | `docs/` | **La web publicada**: `index.html`, `fondeadoras.json` y `manifest.webmanifest`. GitHub Pages sirve esta carpeta. Se regenera sola: no se edita a mano. | Sí |
-| `exportar_json.py` | Excel → `fondeadoras.json`. Avisa de columnas nuevas, planes sin precio y promociones a punto de caducar. | Sí |
+| `exportar_json.py` | Excel → `fondeadoras.json`. Avisa de columnas nuevas, planes sin precio y promociones a punto de caducar. Desde el 30/09/2026 **deja fuera la fila de referencia** (cuenta propia en bróker de descuento): no es un plan que se pueda comprar y, al costar 0 $, encabezaba la lista sin que se entendiera qué era. Sigue en el ranking y en el panel. | Sí |
 | `build/construir_app.py` | Une el diseño de Claude Design con los datos y genera `docs/`. | Sí |
 | `build/runtime.js` | Intérprete de plantillas de ~5 KB que sustituye al runtime de Claude Design (sin React ni Babel). | Sí |
 | `build/probar_app.js` | Comprobaciones automáticas sobre la app ya construida. Desde el 30/09/2026 el número de planes esperado se lee de `docs/fondeadoras.json` en vez de estar escrito a mano (era 35), para que un alta o una baja en el registro no bloquee la publicación. | Sí |

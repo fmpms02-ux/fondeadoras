@@ -56,10 +56,17 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   let tarjetas = $('article');
   ok('pinta una tarjeta por plan', tarjetas.length === N, tarjetas.length + ' de ' + N + ' tarjetas');
   // Diseno del 29/09: arranca ordenada por precio con promo (o tarifa si no
-  // hay promo), sin puesto a la vista; la fila de referencia (0 $) va primero.
+  // hay promo), sin puesto a la vista. Desde el 30/09 la fila de referencia
+  // (cuenta propia, 0 $) ya no se publica: la primera tarjeta es el plan
+  // comprable mas barato.
+  const efectivo0 = p => typeof p.precio_promo === 'number' ? p.precio_promo : p.precio_tarifa;
+  const masBarato = Math.min(...window.DATA.planes.map(efectivo0).filter(v => typeof v === 'number'));
   ok('arranca ordenada por precio con promo',
      app.state.ordenKey === 'precio_promo' && app.state.ordenDir === 'asc' &&
-     /REFERENCIA/.test(tarjetas[0].textContent));
+     efectivo0(app.visibles()[0]) === masBarato, 'primero: ' + efectivo0(app.visibles()[0]) + ' $');
+  ok('la fila de referencia no se publica',
+     !window.DATA.planes.some(p => /^REFERENCIA/i.test(String(p.firma || ''))) &&
+     ![...tarjetas].some(t => /REFERENCIA|FILA DE REFERENCIA/.test(t.textContent)));
   ok('muestra precio con promo y tarifa tachada',
      [...tarjetas].some(t => [...t.querySelectorAll('*')].some(e => /line-through/.test(e.getAttribute('style') || ''))));
   ok('muestra las 3 metricas por defecto',

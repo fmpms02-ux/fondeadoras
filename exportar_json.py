@@ -218,6 +218,20 @@ def leer_comparativa(hoja, avisos):
 
         planes.append(p)
 
+    # La fila de referencia (operar con cuenta propia en un broker de
+    # descuento) NO se publica en la web desde el 30/09/2026, por decision de
+    # Fernando: no es un plan que se pueda comprar y, al costar 0 $, encabezaba
+    # la lista ordenada por precio sin que se entendiera que era. Sigue en el
+    # ranking y en el panel, que es donde sirve de vara de medir.
+    referencia = [p for p in planes
+                  if p.get("puesto") == "ref"
+                  or str(p.get("firma") or "").upper().startswith("REFERENCIA")]
+    if referencia:
+        # INFO y no AVISO: es el comportamiento buscado, no algo que revisar.
+        print("    INFO   fila de referencia fuera de la web (a proposito): "
+              + ", ".join(str(p.get("plan")) for p in referencia))
+        planes = [p for p in planes if p not in referencia]
+
     planes.sort(key=lambda x: (not isinstance(x["puesto"], int), x["puesto"]
                                if isinstance(x["puesto"], int) else 0))
     return campos, planes, subtitulo, leyenda
