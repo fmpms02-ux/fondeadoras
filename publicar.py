@@ -6,7 +6,7 @@ publicar.py — Lleva los datos del dia del Excel a la web de GitHub Pages.
     1. git pull            por si se ha tocado algo desde github.com
     2. exportar_json.py    comparativa_fondeadoras.xlsx (OneDrive) -> fondeadoras.json
     3. construir_app.py    fondeadoras.json + diseno -> docs/
-    4. probar_app.js       36 comprobaciones sobre la app construida
+    4. probar_app.js       comprobaciones sobre la app construida (38 a 30/09/2026)
     5. commit y push       solo si docs/ ha cambiado
 
 Lo lanza cada manana el Programador de tareas de Windows a traves de
@@ -44,7 +44,7 @@ def main():
     ejecutar("git", "pull", "--ff-only", "--quiet")
     ejecutar(sys.executable, "exportar_json.py", "--excel", str(EXCEL), "--salida", "fondeadoras.json")
     ejecutar(sys.executable, str(Path("build") / "construir_app.py"))
-    # Las 36 comprobaciones de la app ya construida. Necesitan node y jsdom
+    # Las comprobaciones de la app ya construida. Necesitan node y jsdom
     # (npm install --no-save jsdom); si faltan se avisa, pero no se bloquea.
     if (AQUI / "node_modules" / "jsdom").exists():
         r = subprocess.run(["node", str(Path("build") / "probar_app.js")], cwd=AQUI,

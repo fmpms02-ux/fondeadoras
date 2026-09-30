@@ -8,6 +8,13 @@ const { JSDOM } = require('jsdom');
 const ruta = path.join(__dirname, '..', 'docs', 'index.html');
 const html = fs.readFileSync(ruta, 'utf8');
 
+// Numero de planes que se publican. Antes estaba escrito a mano (35) y
+// cualquier alta o baja del registro tumbaba la publicacion. Desde el
+// 30/09/2026 se lee del fondeadoras.json que sirve la web: los planes
+// marcados como no disponibles (disponible=no en fondeadoras.csv) no llegan.
+const N = JSON.parse(fs.readFileSync(
+  path.join(__dirname, '..', 'docs', 'fondeadoras.json'), 'utf8')).planes.length;
+
 const errores = [];
 const dom = new JSDOM(html, {
   runScripts: 'dangerously',
@@ -38,7 +45,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   const app = window.__app;
   console.log('\n— arranque —');
   ok('la app se ha instanciado', !!app);
-  ok('los datos estan cargados', !!(window.DATA && window.DATA.planes.length === 35),
+  ok('los datos estan cargados', !!(window.DATA && N > 0 && window.DATA.planes.length === N),
      window.DATA ? window.DATA.planes.length + ' planes' : 'sin DATA');
   ok('state.listo', app && app.state.listo === true);
 
@@ -47,7 +54,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   console.log('\n— lista (movil) —');
   app.setState({ ancho: false }); await esperar();
   let tarjetas = $('article');
-  ok('pinta una tarjeta por plan', tarjetas.length === 35, tarjetas.length + ' tarjetas');
+  ok('pinta una tarjeta por plan', tarjetas.length === N, tarjetas.length + ' de ' + N + ' tarjetas');
   // Diseno del 29/09: arranca ordenada por precio con promo (o tarifa si no
   // hay promo), sin puesto a la vista; la fila de referencia (0 $) va primero.
   ok('arranca ordenada por precio con promo',
@@ -71,7 +78,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   await esperar();
   tarjetas = $('article');
   const soloApex = [...tarjetas].every(t => /Apex/i.test(t.textContent));
-  ok('filtra por texto', tarjetas.length > 0 && tarjetas.length < 35 && soloApex,
+  ok('filtra por texto', tarjetas.length > 0 && tarjetas.length < N && soloApex,
      tarjetas.length + ' resultados, todos Apex: ' + soloApex);
   ok('el foco del buscador sobrevive al repintado',
      doc.querySelector('input[placeholder="Buscar firma o plan"]') === input);
@@ -80,7 +87,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   input.value = '';
   input.dispatchEvent(new window.Event('input', { bubbles: true }));
   await esperar();
-  ok('al vaciar vuelven los 35', $('article').length === 35);
+  ok('al vaciar vuelven todos', $('article').length === N);
 
   console.log('\n— filtros —');
   app.setState({ hoja: 'filtros' }); await esperar();
@@ -92,7 +99,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   ok('al marcar una faceta se filtra', app.state.enums.dd_evaluacion &&
      app.filtrados().length === nIntradia, app.filtrados().length + ' de ' + nIntradia);
   app.setState({ enums: {}, hoja: null }); await esperar();
-  ok('limpiar filtros restaura', $('article').length === 35);
+  ok('limpiar filtros restaura', $('article').length === N);
 
   console.log('\n— orden —');
   // Se parte de otro orden para que el primer clic sea ascendente. El precio
@@ -109,7 +116,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
      precios.every((v, i) => i === 0 || precios[i - 1] >= v));
   app.ordenarPor('fiabilidad_nota'); await esperar();
   ok('se puede ordenar por la nota de fiabilidad derivada',
-     app.state.ordenKey === 'fiabilidad_nota' && $('article').length === 35);
+     app.state.ordenKey === 'fiabilidad_nota' && $('article').length === N);
   app.setState({ ordenKey: 'precio_promo', ordenDir: 'asc' }); await esperar();
 
   console.log('\n— ficha —');
@@ -160,7 +167,7 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   console.log('\n— tabla en pantalla ancha —');
   app.setState({ vista: 'lista', ancho: true }); await esperar();
   ok('pinta la tabla', $('table thead th').length > 0, $('table thead th').length + ' columnas');
-  ok('una fila por plan', $('table tbody tr').length === 35, $('table tbody tr').length);
+  ok('una fila por plan', $('table tbody tr').length === N, $('table tbody tr').length);
   app.setState({ ancho: false }); await esperar();
 
   console.log('\n— persistencia —');

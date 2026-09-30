@@ -18,7 +18,7 @@ no aquí.
 | `exportar_json.py` | Excel → `fondeadoras.json`. Avisa de columnas nuevas, planes sin precio y promociones a punto de caducar. | Sí |
 | `build/construir_app.py` | Une el diseño de Claude Design con los datos y genera `docs/`. | Sí |
 | `build/runtime.js` | Intérprete de plantillas de ~5 KB que sustituye al runtime de Claude Design (sin React ni Babel). | Sí |
-| `build/probar_app.js` | 36 comprobaciones automáticas sobre la app ya construida. | Sí |
+| `build/probar_app.js` | Comprobaciones automáticas sobre la app ya construida. Desde el 30/09/2026 el número de planes esperado se lee de `docs/fondeadoras.json` en vez de estar escrito a mano (era 35), para que un alta o una baja en el registro no bloquee la publicación. | Sí |
 | `design_src/diseno.html` | El diseño de Claude Design. Desde el 29/09/2026 es **el del artefacto** (lista ordenada por precio con promo, sin puesto a la vista, tabla en pantalla ancha); el del 18/09 queda en el historial de Git. Si cambias el diseño, se sustituye este archivo. | Sí |
 | `publicar.py` | La cadena completa de cada día (ver abajo). | Sí |
 | `README.md` | Documentación técnica original del 18/09 (cómo se construyó la app). | Sí |
