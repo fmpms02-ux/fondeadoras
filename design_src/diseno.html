@@ -47,7 +47,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(
 <div style="display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto">
 <button sc-camel-on-click="{{ onSheetFiltros }}" style="flex:none;height:38px;padding:0 13px;border:1px solid {{ filtrosBorde }};border-radius:19px;background:{{ filtrosFondo }};color:{{ filtrosColor }};font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer">Filtros{{ filtrosSufijo }}</button>
 <button sc-camel-on-click="{{ onSheetOrden }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">{{ ordenEtiqueta }}</button>
-<button sc-camel-on-click="{{ onSheetColumnas }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">Metricas · 3</button>
+<button sc-camel-on-click="{{ onSheetColumnas }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">{{ colsEtiqueta }}</button>
 <button sc-camel-on-click="{{ onCSV }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="border-color:var(--line2);color:var(--fg)">CSV</button>
 <sc-if value="{{ hayFiltros }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ onLimpiar }}" style="flex:none;height:38px;padding:0 13px;border:1px solid var(--line);border-radius:19px;background:transparent;color:var(--bad);font:500 12px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer">Limpiar todo</button></sc-if>
 </div>
@@ -57,7 +57,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(
 
 <sc-if value="{{ esLista }}" hint-placeholder-val="{{ true }}">
 <div>
-<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:11px 14px 7px;font:500 10px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"><span>{{ recuento }}</span><span>{{ ordenResumen }}</span></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:11px 14px 7px;font:500 10px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase"><span>{{ recuento }}</span></div>
 
 <sc-if value="{{ esAncho }}" hint-placeholder-val="{{ false }}">
 <div style="padding:0 12px 20px;overflow-x:auto">
@@ -109,14 +109,15 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(
 </sc-for>
 </div>
 
-<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:11px 0 0;background:var(--line);border-top:1px solid var(--line)">
+<sc-if value="{{ p.hayMetricas }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:11px 0 0;background:var(--line);border-top:1px solid var(--line)">
 <sc-for list="{{ p.metricas }}" as="m" hint-placeholder-count="3">
 <div style="background:var(--panel);padding:8px 10px 9px;min-width:0">
 <div style="font:500 9px/1.3 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.label }}</div>
 <div style="font:500 13px/1.35 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.valor }}</div>
 </div>
 </sc-for>
-</div>
+</div></sc-if>
+<div style="height:11px"></div>
 
 <div style="display:flex;gap:1px;background:var(--line)">
 <button sc-camel-on-click="{{ p.onAbrir }}" style="flex:1;height:44px;border:0;background:var(--panel2);color:var(--fg2);font:500 12px 'IBM Plex Sans',sans-serif;cursor:pointer" style-hover="color:var(--fg)">Ver ficha</button>
@@ -255,14 +256,12 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(
 <div style="padding:12px 0;border-bottom:1px solid var(--line)">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px">
 <span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--fg2)">{{ f.label }}</span>
-<span style="font:500 9px 'JetBrains Mono',monospace;color:var(--fg3);letter-spacing:.04em">{{ f.grupo }}</span>
 </div>
 <div style="display:flex;flex-direction:column;gap:5px">
 <sc-for list="{{ f.valores }}" as="v" hint-placeholder-count="3">
 <button sc-camel-on-click="{{ v.onToggle }}" style="display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:7px 10px;border:1px solid {{ v.borde }};border-radius:8px;background:{{ v.fondo }};text-align:left;cursor:pointer">
 <span style="flex:none;width:17px;height:17px;border:1px solid {{ v.marcaBorde }};border-radius:4px;background:{{ v.marcaFondo }};color:var(--bg);font:700 11px/15px 'JetBrains Mono',monospace;text-align:center">{{ v.tick }}</span>
 <span style="flex:1;min-width:0;font:400 12px/1.4 'IBM Plex Sans',sans-serif;color:{{ v.color }};overflow-wrap:anywhere">{{ v.etiqueta }}</span>
-<span style="flex:none;font:500 10.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:{{ v.nColor }}">{{ v.n }}</span>
 </button>
 </sc-for>
 </div>
@@ -310,7 +309,11 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:3px solid var(
 
 <sc-if value="{{ hojaEsColumnas }}" hint-placeholder-val="{{ false }}">
 <div>
-<div style="font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);padding:10px 0 4px">Elige las tres metricas que quieres ver en cada tarjeta. En pantalla ancha son tambien las columnas de la tabla.</div>
+<div style="font:400 11.5px/1.55 'IBM Plex Sans',sans-serif;color:var(--fg2);padding:10px 0 4px">Plan y Precio con promo se muestran siempre. Elige hasta 5 columnas mas; salen en la tabla y en las tarjetas.</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0 6px">
+<span style="font:500 10.5px/1.4 'JetBrains Mono',monospace;color:{{ colsAvisoColor }}">{{ colsAviso }}</span>
+<sc-if value="{{ noEsDefecto }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ onColsDefecto }}" style="flex:none;height:36px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--fg2);font:500 11px 'IBM Plex Sans',sans-serif;white-space:nowrap;cursor:pointer" style-hover="color:var(--fg);border-color:var(--line2)">Volver al defecto</button></sc-if>
+</div>
 <sc-for list="{{ colGrupos }}" as="g" hint-placeholder-count="5">
 <div style="padding:8px 0 10px;border-bottom:1px solid var(--line)">
 <div style="font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:6px">{{ g.grupo }}</div>
@@ -394,7 +397,7 @@ class Component extends DCLogic {
   state = {
     listo: false, q: '', vista: 'lista', hoja: null, tema: 'oscuro',
     enums: {}, rangos: {}, ordenKey: 'precio_promo', ordenDir: 'asc',
-    cols: ['objetivo', 'drawdown', 'dias_min'],
+    cols: ['objetivo', 'drawdown', 'dias_min', 'activacion', 'perdida_diaria'],
     favs: [], soloFavs: false, meses: 2, comparar: [], ficha: null,
     abiertos: { Identidad: true, Precio: true, Reglas: true, Cobros: false, Plataforma: false, Fiabilidad: false },
     soloDif: true, ancho: false
@@ -444,26 +447,29 @@ class Component extends DCLogic {
       ['enums', 'rangos', 'cols', 'favs', 'soloFavs', 'meses', 'tema', 'vista', 'abiertos', 'soloDif'].forEach(k => {
         if (s[k] !== undefined && s[k] !== null) ok[k] = s[k];
       });
-      if (s.ver !== 3) delete ok.cols;
+      if (s.ver !== 4) delete ok.cols;
       else ok.cols = this.sanearCols(ok.cols);
       if (ok.tema) document.documentElement.setAttribute('data-tema', ok.tema === 'claro' ? 'claro' : 'oscuro');
       this.setState(ok);
     } catch (e) { /* almacenamiento no disponible */ }
   }
-  sanearCols(cols) {
-    const def = ['objetivo', 'drawdown', 'dias_min'];
-    const prohibidas = ['firma', 'plan', 'precio_tarifa', 'precio_promo', 'puesto', 'cupon'];
-    const D = window.DATA;
-    const valida = k => prohibidas.indexOf(k) < 0 && (!D || D.campos.some(c => c.key === k && !c.oculto));
-    const out = (Array.isArray(cols) ? cols : []).filter(valida).slice(0, 3);
-    for (const k of def) { if (out.length >= 3) break; if (out.indexOf(k) < 0) out.push(k); }
-    return out;
+  COLS_DEF = ['objetivo', 'drawdown', 'dias_min', 'activacion', 'perdida_diaria'];
+  COLS_MAX = 5;
+  colElegible(c) {
+    return c && c.filtrable && !c.oculto && ['firma', 'plan', 'precio_tarifa', 'precio_promo', 'puesto', 'cupon'].indexOf(c.key) < 0;
   }
+  sanearCols(cols) {
+    if (!Array.isArray(cols)) return this.COLS_DEF.slice();
+    const D = window.DATA;
+    const valida = k => !D || this.colElegible(D.campos.find(c => c.key === k));
+    return cols.filter((k, i) => valida(k) && cols.indexOf(k) === i).slice(0, this.COLS_MAX);
+  }
+  onColsDefecto = () => this.setState({ cols: this.COLS_DEF.slice() });
   guardar() {
     try {
       const s = this.state;
       localStorage.setItem(this.CLAVE, JSON.stringify({
-        ver: 3, enums: s.enums, rangos: s.rangos, ordenKey: s.ordenKey, ordenDir: s.ordenDir,
+        ver: 4, enums: s.enums, rangos: s.rangos, ordenKey: s.ordenKey, ordenDir: s.ordenDir,
         cols: s.cols, favs: s.favs, soloFavs: s.soloFavs, meses: s.meses, tema: s.tema,
         vista: s.vista, abiertos: s.abiertos, soloDif: s.soloDif
       }));
@@ -640,8 +646,8 @@ class Component extends DCLogic {
   toggleCol(key) {
     const cols = this.state.cols.slice();
     const i = cols.indexOf(key);
-    if (i >= 0) return;
-    else { if (cols.length >= 3) cols.shift(); cols.push(key); }
+    if (i >= 0) cols.splice(i, 1);
+    else { if (cols.length >= this.COLS_MAX) return; cols.push(key); }
     this.setState({ cols });
   }
   ordenarPor(key) {
@@ -722,7 +728,12 @@ class Component extends DCLogic {
       borde: this.excluido(p) ? 'var(--bad)' : (s.comparar.indexOf(p.id) >= 0 ? acc : linea),
       favColor: s.favs.indexOf(p.id) >= 0 ? 'var(--warn)' : fg3,
       badges: this.badges(p),
-      metricas: colCampos.map(c => ({ label: c.label, valor: this.fmt(p[c.key], c) })),
+      metricas: (() => {
+        const m = colCampos.map(c => ({ label: c.label, valor: this.fmt(p[c.key], c) }));
+        while (m.length % 3) m.push({ label: '', valor: '' });
+        return m;
+      })(),
+      hayMetricas: colCampos.length > 0,
       cmpTxt: s.comparar.indexOf(p.id) >= 0 ? 'En el comparador' : 'Comparar',
       cmpFondo: s.comparar.indexOf(p.id) >= 0 ? 'var(--accbg)' : panel2,
       cmpColor: s.comparar.indexOf(p.id) >= 0 ? acc : fg2,
@@ -734,7 +745,7 @@ class Component extends DCLogic {
     // tabla ancha
     const cabCampos = [this.campo('plan'), this.campo('precio_promo')].concat(colCampos);
     const tablaCabeceras = cabCampos.map(c => ({
-      label: c.label + (s.ordenKey === c.key ? (s.ordenDir === 'asc' ? ' ↑' : ' ↓') : ''),
+      label: (c.key === 'plan' ? 'Plan-Fondeadora' : (c.key === 'precio_promo' ? 'Precio' : c.label)) + (s.ordenKey === c.key ? (s.ordenDir === 'asc' ? ' ↑' : ' ↓') : ''),
       align: c.tipo === 'numero' ? 'right' : 'left',
       color: s.ordenKey === c.key ? acc : fg3,
       onSort: e => { e.stopPropagation(); this.ordenarPor(c.key); }
@@ -777,8 +788,6 @@ class Component extends DCLogic {
           onToggle: () => this.toggleEnum(c.key, v)
         };
       });
-      // Anadido a mano el 01/10/2026 (no viene de Claude Design): aclaracion
-      // entre parentesis en el titulo del filtro, si el campo trae "ayuda".
       return { key: c.key, label: c.label + (c.ayuda ? ' (' + c.ayuda + ')' : ''), grupo: c.grupo, valores };
     });
 
@@ -818,15 +827,18 @@ class Component extends DCLogic {
 
     // columnas
     const colGrupos = [];
-    D.campos.filter(c => !c.oculto && ['firma', 'plan', 'precio_tarifa', 'precio_promo', 'cupon'].indexOf(c.key) < 0).forEach(c => {
+    const colsSel = this.sanearCols(s.cols);
+    const lleno = colsSel.length >= this.COLS_MAX;
+    D.campos.filter(c => this.colElegible(c)).forEach(c => {
       let g = colGrupos.find(x => x.grupo === c.grupo);
       if (!g) { g = { grupo: c.grupo, campos: [] }; colGrupos.push(g); }
-      const i = s.cols.indexOf(c.key);
+      const i = colsSel.indexOf(c.key);
+      const bloqueado = i < 0 && lleno;
       g.campos.push({
         label: c.label, tipo: (c.tipo + (c.unidad ? ' · ' + c.unidad : '')).toUpperCase(),
         pos: i >= 0 ? String(i + 1) : '',
         borde: i >= 0 ? acc : linea, fondo: i >= 0 ? 'var(--accbg)' : 'transparent',
-        color: i >= 0 ? acc : fg,
+        color: i >= 0 ? acc : (bloqueado ? fg3 : fg),
         onClick: () => this.toggleCol(c.key)
       });
     });
@@ -938,8 +950,14 @@ class Component extends DCLogic {
       onSheetOrden: () => this.setState({ hoja: 'orden' }),
       onSheetColumnas: () => this.setState({ hoja: 'columnas' }),
       onCerrarHoja: () => this.setState({ hoja: null }),
+      colsEtiqueta: 'Columnas · ' + colsSel.length + '/' + this.COLS_MAX,
+      colsAviso: lleno ? 'Has llegado al maximo de ' + this.COLS_MAX + '. Quita una para anadir otra.' : 'Puedes elegir ' + (this.COLS_MAX - colsSel.length) + ' mas.',
+      colsAvisoColor: lleno ? 'var(--warn)' : fg3,
+      esDefecto: colsSel.join() === this.COLS_DEF.join(),
+      noEsDefecto: colsSel.join() !== this.COLS_DEF.join(),
+      onColsDefecto: this.onColsDefecto,
       hojaAbierta: !!s.hoja, hojaEsFiltros: s.hoja === 'filtros', hojaEsOrden: s.hoja === 'orden', hojaEsColumnas: s.hoja === 'columnas',
-      hojaTitulo: s.hoja === 'filtros' ? 'Filtros' : (s.hoja === 'orden' ? 'Ordenar por' : 'Metricas de la tarjeta'),
+      hojaTitulo: s.hoja === 'filtros' ? 'Filtros' : (s.hoja === 'orden' ? 'Ordenar por' : 'Columnas'),
       esLista: s.vista === 'lista', esComparar: s.vista === 'comparar', esCoste: s.vista === 'coste', esMetodo: s.vista === 'metodo',
       esAncho: s.vista === 'lista' && s.ancho, esEstrecho: s.vista === 'lista' && !s.ancho,
       vacio: vis.length === 0,

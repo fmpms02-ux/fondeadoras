@@ -122,9 +122,15 @@ uno (`localStorage`).
     como opción cuando algún plan lo tiene.
   - Capital propio en riesgo y Verificado en fuente oficial ya no tienen filtro;
     siguen en la ficha.
-  - La aclaración del título depende de **una línea añadida a mano** en
-    `design_src/diseno.html` (`c.ayuda`), que no viene de Claude Design. Si se
-    reexporta el diseño sin ella, las pruebas fallan y no se publica.
+  - La aclaración del título la pinta el diseño (`c.ayuda`), incorporado por
+    Claude Design el 01/10/2026.
+- **Columnas (01/10/2026, diseño de Claude Design).** Plan y Precio con promo
+  siempre; hasta 5 más, elegidas entre los campos que tienen filtro. Por
+  defecto: Objetivo, Drawdown, Días mín., Activación y Pérdida diaria. La
+  elección se guarda en el navegador de cada uno (`ver: 4` en `localStorage`)
+  hasta que pulse «Volver al defecto». Si mañana se quiere otro juego por
+  defecto o otro máximo, es `COLS_DEF` / `COLS_MAX` en el diseño: pídeselo a
+  Design y ajusta las pruebas de «columnas», que los comprueban.
 - **Columna nueva en el Excel:** se exporta como texto y se avisa. Para darle
   tipo, grupo o filtro, se declara en `MAPA_COLUMNAS` de `exportar_json.py`.
 - **La fecha «generado»** es la de la última regeneración del Excel, no la de la

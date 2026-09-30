@@ -202,8 +202,30 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   console.log('\n— persistencia —');
   ok('guarda en localStorage', !!window.localStorage.getItem('ff.comparador.v1'));
   const guardado = JSON.parse(window.localStorage.getItem('ff.comparador.v1'));
-  ok('guarda el comparador y las metricas',
-     Array.isArray(guardado.cols) && guardado.cols.length === 3);
+  // Columnas (diseno del 01/10/2026): Plan y Precio fijas + hasta 5 elegibles.
+  const DEF = ['objetivo', 'drawdown', 'dias_min', 'activacion', 'perdida_diaria'];
+  ok('guarda el comparador y las columnas',
+     Array.isArray(guardado.cols) && guardado.cols.join() === DEF.join() && guardado.ver === 4,
+     JSON.stringify(guardado.cols));
+
+  console.log('\n— columnas —');
+  app.setState({ ancho: true, vista: 'lista' }); await esperar();
+  ok('la tabla lleva Plan, Precio y las 5 por defecto',
+     $('table thead th').length >= 7 &&
+     [...$('table thead th')].some(th => /Plan-Fondeadora/.test(th.textContent)),
+     [...$('table thead th')].map(th => th.textContent.trim()).join(' | '));
+  app.toggleCol('drawdown'); await esperar();
+  ok('se puede quitar una columna', app.state.cols.indexOf('drawdown') < 0 && app.state.cols.length === 4);
+  app.toggleCol('consistencia_pct'); await esperar();
+  app.toggleCol('min_diario_cobro'); await esperar();
+  ok('no deja pasar de 5', app.state.cols.length === 5 && app.state.cols.indexOf('min_diario_cobro') < 0,
+     app.state.cols.join());
+  ok('solo se eligen campos que tienen filtro',
+     app.state.cols.every(k => window.DATA.campos.some(c => c.key === k && c.filtrable)));
+  ok('la eleccion se guarda',
+     JSON.parse(window.localStorage.getItem('ff.comparador.v1')).cols.indexOf('consistencia_pct') >= 0);
+  app.onColsDefecto(); await esperar();
+  ok('"Volver al defecto" recupera las 5', app.state.cols.join() === DEF.join());
 
   console.log('\n— consola —');
   ok('sin errores de JavaScript', errores.length === 0, errores.slice(0, 3).join(' | '));
