@@ -337,10 +337,10 @@ def main():
         "titulo": titulo, "css": css_final, "runtime": runtime,
         "snapshot": snapshot, "cargador": CARGADOR, "plantilla": arbol_json,
         "logica": logica, "arranque": arranque, "icono": ICONO,
-    }, encoding="utf-8")
+    }, encoding="utf-8", newline="\n")     # LF: ver .gitattributes
 
     (salida / "manifest.webmanifest").write_text(
-        json.dumps(MANIFEST, ensure_ascii=False, indent=2), encoding="utf-8")
+        json.dumps(MANIFEST, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     (salida / "fondeadoras.json").write_text(
         json.dumps(datos, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

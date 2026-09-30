@@ -231,6 +231,11 @@ def leer_comparativa(hoja, avisos):
         print("    INFO   fila de referencia fuera de la web (a proposito): "
               + ", ".join(str(p.get("plan")) for p in referencia))
         planes = [p for p in planes if p not in referencia]
+        # Y con ella, el trozo de la leyenda que explica su color: los trozos
+        # van separados por varios espacios ("Verde: ...   Rojo: ...   Gris: ...").
+        if leyenda:
+            leyenda = "   ".join(t for t in re.split(r"\s{2,}", leyenda)
+                                 if "referencia" not in t.lower())
 
     planes.sort(key=lambda x: (not isinstance(x["puesto"], int), x["puesto"]
                                if isinstance(x["puesto"], int) else 0))
@@ -243,6 +248,10 @@ def leer_metodo(hoja):
         a = limpiar(fila[0])
         b = limpiar(fila[1]) if len(fila) > 1 else None
         if a and b:
+            # El bloque que explica la fila de referencia no va a la web: esa
+            # fila no se publica (ver leer_comparativa). En el Excel se queda.
+            if "fila de referencia" in a.lower():
+                continue
             bloques.append({"titulo": a, "texto": b})
         elif a and titulo is None:
             titulo = a
@@ -263,6 +272,8 @@ def main():
     ap.add_argument("--excel", default=str(aqui / "comparativa_fondeadoras.xlsx"))
     ap.add_argument("--salida", default=str(aqui / "fondeadoras.json"))
     ap.add_argument("--compacto", action="store_true", help="sin sangrado (mas pequeno)")
+    ap.add_argument("--sin-suelo", action="store_true",
+                    help="no abortar aunque salgan muchos menos planes que en la publicacion anterior")
     args = ap.parse_args()
 
     ruta = Path(args.excel)
@@ -277,6 +288,20 @@ def main():
     campos, planes, subtitulo, leyenda = leer_comparativa(wb["Comparativa"], avisos)
     metodo_titulo, metodo = leer_metodo(wb["Metodo y avisos"]) if "Metodo y avisos" in wb.sheetnames else (None, [])
     meses = leer_coste_real(wb["Coste real"]) if "Coste real" in wb.sheetnames else 2
+
+    # Suelo: las pruebas de la app leen el numero de planes de este mismo JSON,
+    # asi que un Excel a medio escribir (5 planes en vez de 33) las pasaria. Se
+    # compara con lo ultimo publicado: una baja normal pasa, un desplome no.
+    publicado = aqui / "docs" / "fondeadoras.json"
+    if publicado.exists() and not args.sin_suelo:
+        try:
+            antes = len(json.loads(publicado.read_text(encoding="utf-8")).get("planes", []))
+        except ValueError:
+            antes = 0
+        if len(planes) * 2 < antes:
+            sys.exit("ERROR: salen %d planes y la web publicada tiene %d. Parece un Excel "
+                     "incompleto; no se exporta nada. Si la caida es real, repite con --sin-suelo."
+                     % (len(planes), antes))
 
     esquema = []
     for c in campos:

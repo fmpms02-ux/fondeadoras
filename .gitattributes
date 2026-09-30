@@ -1,0 +1,5 @@
+# Finales de linea LF en todas partes. El repositorio se toca desde Windows
+# (publicar.py, Claude Code) y desde Linux (Cowork): sin esto, Windows deja los
+# ficheros en CRLF y desde Linux se ven enteros como modificados.
+* text=auto eol=lf
+*.json -text

@@ -15,12 +15,13 @@ no aquí.
 | Ruta | Qué es | ¿Se sube a GitHub? |
 |---|---|---|
 | `docs/` | **La web publicada**: `index.html`, `fondeadoras.json` y `manifest.webmanifest`. GitHub Pages sirve esta carpeta. Se regenera sola: no se edita a mano. | Sí |
-| `exportar_json.py` | Excel → `fondeadoras.json`. Avisa de columnas nuevas, planes sin precio y promociones a punto de caducar. Desde el 30/09/2026 **deja fuera la fila de referencia** (cuenta propia en bróker de descuento): no es un plan que se pueda comprar y, al costar 0 $, encabezaba la lista sin que se entendiera qué era. Sigue en el ranking y en el panel. | Sí |
+| `exportar_json.py` | Excel → `fondeadoras.json`. Avisa de columnas nuevas, planes sin precio y promociones a punto de caducar. Desde el 30/09/2026 **deja fuera la fila de referencia** (cuenta propia en bróker de descuento): no es un plan que se pueda comprar y, al costar 0 $, encabezaba la lista sin que se entendiera qué era. Sigue en el ranking y en el panel. Con ella se quitan el bloque «La fila de referencia» de Método y su color en la leyenda. **Aborta** si salen menos de la mitad de los planes de la última publicación (Excel a medio escribir); si la caída es real, `--sin-suelo`. | Sí |
 | `build/construir_app.py` | Une el diseño de Claude Design con los datos y genera `docs/`. | Sí |
 | `build/runtime.js` | Intérprete de plantillas de ~5 KB que sustituye al runtime de Claude Design (sin React ni Babel). | Sí |
 | `build/probar_app.js` | Comprobaciones automáticas sobre la app ya construida. Desde el 30/09/2026 el número de planes esperado se lee de `docs/fondeadoras.json` en vez de estar escrito a mano (era 35), para que un alta o una baja en el registro no bloquee la publicación. | Sí |
 | `design_src/diseno.html` | El diseño de Claude Design. Desde el 29/09/2026 es **el del artefacto** (lista ordenada por precio con promo, sin puesto a la vista, tabla en pantalla ancha); el del 18/09 queda en el historial de Git. Si cambias el diseño, se sustituye este archivo. | Sí |
-| `publicar.py` | La cadena completa de cada día (ver abajo). | Sí |
+| `publicar.py` | La cadena completa de cada día (ver abajo). Por defecto solo sube `docs/`. | Sí |
+| `.gitattributes` | Fija finales de línea LF. El repositorio se toca desde Windows y desde Linux (Cowork); sin esto, desde Linux todos los ficheros parecían modificados. | Sí |
 | `README.md` | Documentación técnica original del 18/09 (cómo se construyó la app). | Sí |
 | `LEEME.md` | Este archivo. | Sí |
 | `fondeadoras.json`, `artifact.html` | Intermedios que genera `publicar.py`. | No (`.gitignore`) |
@@ -41,13 +42,29 @@ Automático, todos los días:
              2. exportar_json.py    (Excel de OneDrive → fondeadoras.json)
              3. construir_app.py    (→ docs/)
              4. probar_app.js       (si falla, no se publica nada)
-             5. commit y push       (solo si docs/ ha cambiado)
+             5. commit y push       (SOLO docs/, y solo si ha cambiado)
          → GitHub Pages sirve la versión nueva en uno o dos minutos
 ```
 
 Para publicar a mano, doble clic en **`Publicar web fondeadoras.bat`**, en la
 raíz de `Claude_Asesor_Plan_Trading`. Si no hay cambios no hace nada, así que
 se puede lanzar las veces que haga falta.
+
+### Los cambios de código no se suben solos
+
+`publicar.py` solo confirma `docs/`. Si hay otros ficheros modificados
+(`exportar_json.py`, `build/`, `design_src/`, este LEEME…), los deja sin subir
+y lo avisa en el registro. Para subirlos a propósito:
+
+```
+python publicar.py --todo "Qué cambia y por qué"
+```
+
+Motivo: el 30/09/2026 una ejecución rutinaria publicó unas ediciones que otra
+sesión tenía a medias, porque entonces se subía todo lo que hubiera en la
+carpeta. **Ojo:** la app de `docs/` se construye con el código que haya en
+disco, esté confirmado o no. Si el registro avisa de cambios sin subir, lo
+publicado ya los lleva: termina el cambio y súbelo con `--todo`, o deshazlo.
 
 Registro de cada ejecución: `Control fondeadoras/Registro central/publicar_web.log`
 (en OneDrive).
@@ -80,8 +97,13 @@ uno (`localStorage`).
 - **Esta carpeta está fuera de OneDrive a propósito.** Git crea y borra ficheros
   de bloqueo constantemente, y en la carpeta sincronizada no se puede borrar
   desde el shell.
-- **Si el Excel pierde una columna** o no se puede leer, `exportar_json.py` falla,
+- **Si el Excel no se puede leer**, le falta la hoja o la cabecera, o salen menos
+  de la mitad de los planes de la última publicación, `exportar_json.py` falla,
   `publicar.py` se para y la web sigue con los datos del día anterior.
+- **Si el Excel pierde una columna suelta**, la exportación NO se para: lo avisa
+  («Columnas declaradas que ya NO estan en el Excel») y ese campo sale vacío.
+  Las pruebas solo lo frenan si rompe la app. Mira el registro tras cambiar
+  columnas en `generar_comparativa.py`.
 - **Cambiar el diseño.** Vale tanto el `.dc.html` exportado de Claude Design
   como el HTML sacado de un artefacto publicado. El segundo viene ya pasado por
   el navegador, y Claude Design escribe `onClick` como `sc-camel-on-click` y las

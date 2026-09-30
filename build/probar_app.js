@@ -170,6 +170,10 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   app.setState({ vista: 'metodo' }); await esperar();
   ok('el metodo trae los 10 bloques del Excel', $('section').length >= 10, $('section').length);
   ok('incluye la leyenda', /Verde: compatible/.test(doc.body.textContent));
+  // La fila de referencia no se publica: tampoco su bloque ni su color.
+  ok('el metodo no explica una fila de referencia que no sale',
+     !window.DATA.meta.metodo.some(b => /fila de referencia/i.test(b.titulo)) &&
+     !/Gris: fila de referencia/.test(doc.body.textContent));
 
   console.log('\n— tabla en pantalla ancha —');
   app.setState({ vista: 'lista', ancho: true }); await esperar();
