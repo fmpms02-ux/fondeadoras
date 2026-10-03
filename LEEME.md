@@ -36,7 +36,9 @@ Automático, todos los días:
 ```
 08:15  Tarea de Claude "refresco-diario-fondeadoras"
          re-verifica las firmas → fondeadoras.csv → comparativa_fondeadoras.xlsx
-10:00  Programador de tareas de Windows → "Publicar web fondeadoras.bat /auto"
+10:00, 13:00 y 19:00  Programador de tareas de Windows → "Publicar web fondeadoras.bat /auto"
+         (tres pasadas desde el 03/10/2026: ese dia el refresco termino a las 10:09
+          y la de las 10:00 no vio cambios; si no hay nada nuevo, no hace nada)
          → publicar.py:
              1. git pull
              2. exportar_json.py    (Excel de OneDrive → fondeadoras.json)
