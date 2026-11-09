@@ -98,6 +98,12 @@ MAPA_COLUMNAS = {
                         _si_no=True),
     "NinjaTrader": dict(key="ninjatrader", tipo="enum", grupo="Plataforma", filtrable=True,
                         _si_no=True),
+    # Anadido el 09/11/2026, peticion de Fernando: si / solo semi / no / sin dato.
+    # El dato sale de politica_automatizacion_fondeadoras.csv (Control Trading
+    # Automatico), cruzado por firma al generar la comparativa.
+    "Automatizacion": dict(key="automatizacion", tipo="enum", grupo="Plataforma",
+                           filtrable=True,
+                           ayuda="bots propios; solo semi = la orden se pone a mano"),
 
     # Sin filtro desde el 01/10/2026, por decision de Fernando: casi todos los
     # planes tienen el mismo valor y el filtro no separaba nada. Siguen en la ficha.
