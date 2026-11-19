@@ -73,7 +73,17 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
      tarjetas[0].textContent.includes('Objetivo') &&
      tarjetas[0].textContent.includes('Drawdown') &&
      tarjetas[0].textContent.includes('Dias min.'));
-  ok('badge de TradingView', /TRADINGVIEW/.test(tarjetas[0].textContent));
+  // Hasta el 19/11/2026 se exigia la etiqueta en la PRIMERA tarjeta, y desde el
+  // 14/11 la primera (la mas barata) era Livox, que solo opera desde ATAS: la app
+  // acertaba al no ponerla y la prueba tumbaba la publicacion. Se comprueba cada
+  // tarjeta contra su propio plan (tarjetas[i] es app.visibles()[i]).
+  const visibles = app.visibles();
+  const iSi = visibles.findIndex(p => p.tradingview === 'si');
+  const iNo = visibles.findIndex(p => p.tradingview !== 'si');
+  ok('badge de TradingView solo en los planes que lo tienen',
+     iSi >= 0 && /TRADINGVIEW/.test(tarjetas[iSi].textContent) &&
+     (iNo < 0 || !/TRADINGVIEW/.test(tarjetas[iNo].textContent)),
+     'con: ' + (visibles[iSi] || {}).firma + ' · sin: ' + (visibles[iNo] || {}).firma);
   ok('contador de la promo', [...tarjetas].some(t => /PROMO/.test(t.textContent)));
   ok('nav con 4 pestanas', $('nav button').length === 4);
 
