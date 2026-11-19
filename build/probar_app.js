@@ -121,6 +121,12 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   ok('TradingView y NinjaTrader solo valen si / no / sin confirmar',
      window.DATA.planes.every(p => SI_NO.includes(p.tradingview) && SI_NO.includes(p.ninjatrader)),
      [...new Set(window.DATA.planes.map(p => p.tradingview))].join(' | '));
+  // ATAS (19/11/2026): mismo trato, en Plataforma, y nada suelto en "Otros".
+  ok('ATAS es filtro si / no / sin confirmar en Plataforma',
+     window.DATA.campos.some(c => c.key === 'atas' && c.grupo === 'Plataforma' && c.filtrable) &&
+     window.DATA.planes.every(p => SI_NO.includes(p.atas)) &&
+     !window.DATA.campos.some(c => c.grupo === 'Otros'),
+     [...new Set(window.DATA.planes.map(p => p.atas))].join(' | '));
   const filtrables = window.DATA.campos.filter(c => c.filtrable).map(c => c.key);
   ok('sin filtro de capital en riesgo ni de verificado',
      !filtrables.includes('capital_riesgo') && !filtrables.includes('verificado') &&

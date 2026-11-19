@@ -98,6 +98,9 @@ MAPA_COLUMNAS = {
                         _si_no=True),
     "NinjaTrader": dict(key="ninjatrader", tipo="enum", grupo="Plataforma", filtrable=True,
                         _si_no=True),
+    # Columna del Excel desde el 06/10/2026 (ATAS pasa a plataforma valida). Hasta
+    # el 19/11 no estaba declarada y salia como filtro de texto en el grupo "Otros".
+    "ATAS": dict(key="atas", tipo="enum", grupo="Plataforma", filtrable=True, _si_no=True),
     # Anadido el 09/11/2026, peticion de Fernando: si / solo semi / no / sin dato.
     # El dato sale de politica_automatizacion_fondeadoras.csv (Control Trading
     # Automatico), cruzado por firma al generar la comparativa.
@@ -262,7 +265,8 @@ def si_no(valor):
     t = str(valor or "").strip()
     m = re.match(r"(si|sí|no)\b[\s:,.—-]*(.*)$", t, re.I | re.S)
     if not m:
-        return "sin confirmar", (t if t and t.lower() != "sin confirmar" else None)
+        # "sin verificar" (ATAS) es lo mismo que "sin confirmar": no es un detalle.
+        return "sin confirmar", (t if t and t.lower() not in ("sin confirmar", "sin verificar") else None)
     corto = "no" if m.group(1).lower() == "no" else "si"
     detalle = m.group(2).strip()
     if detalle.startswith("(") and detalle.endswith(")"):
