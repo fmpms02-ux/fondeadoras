@@ -68,6 +68,15 @@ carpeta. **Ojo:** la app de `docs/` se construye con el código que haya en
 disco, esté confirmado o no. Si el registro avisa de cambios sin subir, lo
 publicado ya los lleva: termina el cambio y súbelo con `--todo`, o deshazlo.
 
+**Si la publicación falla, salta una notificación de Windows** (desde el
+19/11/2026), con la última línea de error del registro. La lanza
+`Publicar web fondeadoras.bat` llamando a
+`Control fondeadoras/Registro central/avisar_fallo_web.ps1` (en OneDrive). Del
+14 al 19/11 la web estuvo parada porque una prueba exigía la etiqueta
+TradingView en la primera tarjeta, y la más barata pasó a ser Livox (solo ATAS).
+**Una prueba que falla por un cambio legítimo de los datos es un fallo de la
+prueba:** compruébalo contra el dato antes de tocar la app.
+
 Registro de cada ejecución: `Control fondeadoras/Registro central/publicar_web.log`
 (en OneDrive).
 
@@ -122,6 +131,8 @@ uno (`localStorage`).
     NinjaTrader). El texto completo del Excel pasa a un campo aparte,
     «TradingView: detalle», que solo sale en la ficha. «sin confirmar» aparece
     como opción cuando algún plan lo tiene.
+  - ATAS (19/11/2026) recibe el mismo trato que TradingView y NinjaTrader
+    («sin verificar» del Excel cuenta como «sin confirmar»).
   - Capital propio en riesgo y Verificado en fuente oficial ya no tienen filtro;
     siguen en la ficha.
   - La aclaración del título la pinta el diseño (`c.ayuda`), incorporado por
