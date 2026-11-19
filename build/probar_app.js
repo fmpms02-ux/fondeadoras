@@ -218,11 +218,13 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   console.log('\n— persistencia —');
   ok('guarda en localStorage', !!window.localStorage.getItem('ff.comparador.v1'));
   const guardado = JSON.parse(window.localStorage.getItem('ff.comparador.v1'));
-  // Columnas (diseno del 01/10/2026): Plan y Precio fijas + hasta 5 elegibles.
+  // Columnas: Plan y Precio fijas + hasta 10 elegibles (diseno del 19/11/2026;
+  // del 01/10 al 19/11 eran 5). Por defecto siguen siendo 5. ver 5 en localStorage.
   const DEF = ['objetivo', 'drawdown', 'dias_min', 'activacion', 'perdida_diaria'];
+  const MAX = 10;
   ok('guarda el comparador y las columnas',
-     Array.isArray(guardado.cols) && guardado.cols.join() === DEF.join() && guardado.ver === 4,
-     JSON.stringify(guardado.cols));
+     Array.isArray(guardado.cols) && guardado.cols.join() === DEF.join() && guardado.ver === 5,
+     JSON.stringify(guardado.cols) + ' ver ' + guardado.ver);
 
   console.log('\n— columnas —');
   app.setState({ ancho: true, vista: 'lista' }); await esperar();
@@ -230,18 +232,44 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
      $('table thead th').length >= 7 &&
      [...$('table thead th')].some(th => /Plan-Fondeadora/.test(th.textContent)),
      [...$('table thead th')].map(th => th.textContent.trim()).join(' | '));
+  // La clase llega evaluada, no como "{{ c.clase }}" (construir_app.py, 19/11/2026).
+  ok('la columna Plan queda fija al hacer scroll',
+     [...$('table thead th')].some(th => th.classList.contains('fijo2') && /Plan-Fondeadora/.test(th.textContent)) &&
+     !doc.getElementById('root').innerHTML.includes('{{'));
   app.toggleCol('drawdown'); await esperar();
   ok('se puede quitar una columna', app.state.cols.indexOf('drawdown') < 0 && app.state.cols.length === 4);
-  app.toggleCol('consistencia_pct'); await esperar();
-  app.toggleCol('min_diario_cobro'); await esperar();
-  ok('no deja pasar de 5', app.state.cols.length === 5 && app.state.cols.indexOf('min_diario_cobro') < 0,
-     app.state.cols.join());
+  const elegibles = window.DATA.campos.filter(c => app.colElegible(c)).map(c => c.key);
+  for (const k of elegibles) { if (app.state.cols.indexOf(k) < 0) { app.toggleCol(k); await esperar(); } }
+  ok('admite hasta 10 y no deja pasar de ahi', app.state.cols.length === MAX,
+     app.state.cols.length + ' columnas de ' + elegibles.length + ' elegibles');
+  ok('la tabla llega a 12 columnas (Plan, Precio y 10)',
+     $('table thead th').length >= MAX + 2, $('table thead th').length + ' cabeceras');
   ok('solo se eligen campos que tienen filtro',
      app.state.cols.every(k => window.DATA.campos.some(c => c.key === k && c.filtrable)));
   ok('la eleccion se guarda',
-     JSON.parse(window.localStorage.getItem('ff.comparador.v1')).cols.indexOf('consistencia_pct') >= 0);
+     JSON.parse(window.localStorage.getItem('ff.comparador.v1')).cols.length === MAX);
   app.onColsDefecto(); await esperar();
   ok('"Volver al defecto" recupera las 5', app.state.cols.join() === DEF.join());
+
+  console.log('\n— actualizar datos —');
+  const espera = (n) => new Promise(r => setTimeout(r, n));
+  ok('hay boton "Actualizar datos"', [...$('button')].some(b => /Actualizar datos/.test(b.textContent)));
+  // Sin red (en las pruebas no hay fetch): aviso y se quedan los datos que habia.
+  const antes = window.DATA;
+  app.actualizar(); await espera(200);
+  ok('si falla la carga, avisa y conserva los datos',
+     window.DATA === antes && !app.state.actualizando && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'error');
+  // Con red simulada: datos nuevos sin perder columnas ni filtros.
+  const nuevos = JSON.parse(JSON.stringify(antes));
+  nuevos.meta.generado = '31/12/2099 23:59';
+  window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve(nuevos) });
+  app.setState({ cols: DEF.slice(0, 3), enums: { tipo_precio: ['unico'] } }); await esperar();
+  app.actualizar(); await espera(200);
+  ok('si carga, repinta con los datos nuevos y conserva columnas y filtros',
+     window.DATA.meta.generado === '31/12/2099 23:59' && app.state.cols.join() === DEF.slice(0, 3).join() &&
+     (app.state.enums.tipo_precio || []).join() === 'unico' && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'ok');
+  delete window.fetch;
+  app.setState({ enums: {} }); app.onColsDefecto(); await esperar();
 
   console.log('\n— consola —');
   ok('sin errores de JavaScript', errores.length === 0, errores.slice(0, 3).join(' | '));

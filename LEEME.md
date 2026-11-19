@@ -137,13 +137,21 @@ uno (`localStorage`).
     siguen en la ficha.
   - La aclaración del título la pinta el diseño (`c.ayuda`), incorporado por
     Claude Design el 01/10/2026.
-- **Columnas (01/10/2026, diseño de Claude Design).** Plan y Precio con promo
-  siempre; hasta 5 más, elegidas entre los campos que tienen filtro. Por
+- **Columnas (01/10/2026, ampliado a 10 el 19/11/2026; diseño de Claude Design).** Plan y Precio con promo
+  siempre; hasta 10 más (antes 5), elegidas entre los campos que tienen filtro. Por
   defecto: Objetivo, Drawdown, Días mín., Activación y Pérdida diaria. La
   elección se guarda en el navegador de cada uno (`ver: 4` en `localStorage`)
   hasta que pulse «Volver al defecto». Si mañana se quiere otro juego por
   defecto o otro máximo, es `COLS_DEF` / `COLS_MAX` en el diseño: pídeselo a
   Design y ajusta las pruebas de «columnas», que los comprueban.
+- **Botón «Actualizar datos» (19/11/2026).** Vuelve a pedir `fondeadoras.json`
+  sin recargar ni perder filtros, columnas ni comparador; si falla, avisa y se
+  quedan los datos que había. Al lado muestra la hora del Excel.
+- **Dónde vive el diseño (19/11/2026).** Claude Design se ha movido a Claude: el
+  proyecto es ahora el artefacto https://claude.ai/artifact/RvfFjGJ4iqiDWXCWuX8wwa
+  (página `project/Comparador de fondeadoras.dc.html`). Ese `.dc.html` es el que
+  se copia a `design_src/diseno.html`. `construir_app.py` entiende también
+  `class="{{ ... }}"`, que el diseño usa desde ese día.
 - **Columna nueva en el Excel:** se exporta como texto y se avisa. Para darle
   tipo, grupo o filtro, se declara en `MAPA_COLUMNAS` de `exportar_json.py`.
 - **La fecha «generado»** es la de la última regeneración del Excel, no la de la

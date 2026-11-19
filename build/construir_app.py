@@ -117,7 +117,9 @@ class Compilador(HTMLParser):
             nodo["a"][nombre] = self._partes(valor)
 
         if clases:
-            nodo["a"]["class"] = [" ".join(clases)]
+            # _partes, no texto fijo: desde el 19/11/2026 el diseno usa
+            # class="{{ c.clase }}" (columnas fijas y fila seleccionada de la tabla).
+            nodo["a"]["class"] = self._partes(" ".join(clases))
 
         self.pila[-1].append(nodo)
         if tag not in VACIOS:
