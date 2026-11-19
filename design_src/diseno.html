@@ -703,7 +703,8 @@ class Component extends DCLogic {
     const fallo = () => {
       if (this._desmontado) return;
       this.setState({ actualizando: false });
-      this.avisar('No se pudo actualizar. Se mantienen los datos que habia.', 'error');
+      const g = this.horaDatos((this.D().meta || {}).generado);
+      this.avisar('No se ha podido comprobar si hay datos nuevos.' + (g ? ' Sigues viendo los del ' + g + '.' : ' Se mantienen los datos que habia.'), 'error');
     };
     let tope = null;
     try {
@@ -719,9 +720,15 @@ class Component extends DCLogic {
           if (this._desmontado) return;
           if (!this.datosValidos(d)) throw new Error('forma inesperada');
           if (!d.meta || typeof d.meta !== 'object') d.meta = {};
+          // Mismo Excel que el que ya se ve: no hay nada nuevo, y se dice asi.
+          const antes = (this.D().meta || {}).generado;
+          const igual = !!d.meta.generado && d.meta.generado === antes;
+          const g = this.horaDatos(d.meta.generado);
           window.DATA = d;
           this.setState({ listo: true, actualizando: false, datosRev: this.state.datosRev + 1, cols: this.sanearCols(this.state.cols) });
-          this.avisar('Datos actualizados' + (d.meta.generado ? ' · ' + this.horaDatos(d.meta.generado) : '') + '.', 'ok');
+          this.avisar(igual
+            ? 'Ya tienes los ultimos datos (Excel del ' + g + ').'
+            : 'Datos actualizados' + (g ? ': Excel del ' + g : '') + '.', 'ok');
         })
         .catch(() => { clearTimeout(tope); fallo(); });
     } catch (e) { clearTimeout(tope); fallo(); }

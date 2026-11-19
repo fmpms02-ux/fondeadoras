@@ -258,7 +258,15 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   const antes = window.DATA;
   app.actualizar(); await espera(200);
   ok('si falla la carga, avisa y conserva los datos',
-     window.DATA === antes && !app.state.actualizando && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'error');
+     window.DATA === antes && !app.state.actualizando && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'error' &&
+     /No se ha podido comprobar si hay datos nuevos/.test(app.state.avisoDatos.txt), app.state.avisoDatos && app.state.avisoDatos.txt);
+  // Mismo Excel que el que ya se ve: no es un error ni una novedad (19/11/2026).
+  const mismos = JSON.parse(JSON.stringify(antes));
+  window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve(mismos) });
+  app.actualizar(); await espera(200);
+  ok('si no hay datos nuevos, lo dice asi',
+     app.state.avisoDatos && app.state.avisoDatos.tipo === 'ok' && /Ya tienes los ultimos datos/.test(app.state.avisoDatos.txt),
+     app.state.avisoDatos && app.state.avisoDatos.txt);
   // Con red simulada: datos nuevos sin perder columnas ni filtros.
   const nuevos = JSON.parse(JSON.stringify(antes));
   nuevos.meta.generado = '31/12/2099 23:59';
@@ -267,7 +275,8 @@ const esperar = () => new Promise(r => setTimeout(r, 60));
   app.actualizar(); await espera(200);
   ok('si carga, repinta con los datos nuevos y conserva columnas y filtros',
      window.DATA.meta.generado === '31/12/2099 23:59' && app.state.cols.join() === DEF.slice(0, 3).join() &&
-     (app.state.enums.tipo_precio || []).join() === 'unico' && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'ok');
+     (app.state.enums.tipo_precio || []).join() === 'unico' && !!app.state.avisoDatos && app.state.avisoDatos.tipo === 'ok' &&
+     /Datos actualizados/.test(app.state.avisoDatos.txt), app.state.avisoDatos && app.state.avisoDatos.txt);
   delete window.fetch;
   app.setState({ enums: {} }); app.onColsDefecto(); await esperar();
 
