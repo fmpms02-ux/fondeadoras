@@ -152,6 +152,11 @@ uno (`localStorage`).
   (página `project/Comparador de fondeadoras.dc.html`). Ese `.dc.html` es el que
   se copia a `design_src/diseno.html`. `construir_app.py` entiende también
   `class="{{ ... }}"`, que el diseño usa desde ese día.
+  **Flujo desde el 19/11/2026:** los cambios de diseño los hace Claude Code en
+  el artefacto y después aquí. Antes de editar, comprueba que el `.dc.html` del
+  artefacto sigue igual que `design_src/diseno.html`: si no, alguien lo ha
+  editado y hay que enseñárselo a Fernando antes de seguir. Detalle en el
+  `CLAUDE.md` del proyecto (OneDrive).
 - **Columna nueva en el Excel:** se exporta como texto y se avisa. Para darle
   tipo, grupo o filtro, se declara en `MAPA_COLUMNAS` de `exportar_json.py`.
 - **La fecha «generado»** es la de la última regeneración del Excel, no la de la
